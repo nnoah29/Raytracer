@@ -11,35 +11,35 @@
 
 #include "Camera.hpp"
 
-Vecteur Camera::getPosition() const override {
+Vecteur Camera::getPosition() const{
     return position;
 }
 
-Vecteur Camera::getRotation() const override {
+Vecteur Camera::getRotation() const{
     return rotation;
 }
 
-Resolution Camera::getResolution() const override {
+Resolution Camera::getResolution() const{
     return resolution;
 }
-float Camera::getFOV() const override {
+float Camera::getFOV() const{
     return fov;
 }
 
-void Camera::setResolution(int width, int height) override {
+void Camera::setResolution(int width, int height){
     resolution.width = width;
     resolution.height = height;
 }
 
-void Camera::setPosition(const Vecteur& position) override {
+void Camera::setPosition(const Vecteur& position){
     this->position = position;
 }
 
-void Camera::setRotation(const Vecteur& rotation) override {
+void Camera::setRotation(const Vecteur& rotation){
     this->rotation = rotation;
 }
 
-void Camera::setFOV(float fov) override {
+void Camera::setFOV(float fov){
     this->fov = fov;
 }
 

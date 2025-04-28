@@ -39,28 +39,6 @@ public:
         return (len > 0) ? (*this * (1.0f / len)) : Vecteur(0, 0, 0);
     }
 
-    Vecteur operator+(const Vecteur& v1, const Vecteur& v2) const {
-        return {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
-    }
-
-    Vecteur operator-(const Vecteur& v1, const Vecteur& v2) const {
-        return {v1.x - v2.x, v1.y - v2.y, v1.z - v2.z};
-    }
-
-    Vecteur operator*(const Vecteur& v1, const Vecteur& v2) const {
-        return {v1.x * v2.x, v1.y * v2.y, v1.z * v2.z};
-    }
-
-    Vecteur operator*(const Vecteur& v1, float t) const
-    {
-        return {v1.x * t, v1.y * t, v1.z * t};
-    }
-
-    Vecteur operator*(float t, const Vecteur& v1) const
-    {
-        return {v1.x * t, v1.y * t, v1.z * t};
-    }
-
     float lengthSquared() const {
         return x * x + y * y + z * z;
     }
