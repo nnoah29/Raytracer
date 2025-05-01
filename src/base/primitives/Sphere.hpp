@@ -11,12 +11,22 @@
 
 #ifndef SPHERE_HPP
 #define SPHERE_HPP
-#include "../../interfaces/IPrimitive.hpp"
+#include "APrimitive.hpp"
 
 
-class Sphere : public IPrimitive {
+class Sphere : public APrimitive {
 
+    public:
+    Sphere(dataPrimitive& data, const std::string& name) : APrimitive(data, name) {};
 
+    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact p) const override
+    {
+        (void)ray;
+        (void)t_min;
+        (void)t_max;
+        (void)p;
+        return false;
+    }
 };
 
 

@@ -10,3 +10,10 @@
 */
 
 #include "cone.hpp"
+#include "../Factory.hpp"
+
+extern "C" void RegisterPlugin(Factory* f) {
+    f->registerPrimitive("cone", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
+        return std::make_shared<cone>(data, name);
+    });
+}

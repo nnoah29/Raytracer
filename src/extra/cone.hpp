@@ -11,11 +11,21 @@
 
 #ifndef CONE_HPP
 #define CONE_HPP
+#include "APrimitive.hpp"
 
 
+class cone final : public APrimitive {
+    public:
+    cone(dataPrimitive& data, const std::string& name) : APrimitive(data, name) {};
 
-class cone {
-
+    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact p) const override
+    {
+        (void)ray;
+        (void)t_min;
+        (void)t_max;
+        (void)p;
+        return false;
+    }
 };
 
 

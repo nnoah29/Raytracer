@@ -43,10 +43,12 @@ void Camera::setFOV(float fov){
     this->fov = fov;
 }
 
-void Camera::initCamera()
-{
-
-}
+Camera::Camera(float fov, Resolution resolution, Point position, Vecteur rotation) : viewport(fov, aspectRatio, position) {
+    this->fov = fov;
+    this->resolution = resolution;
+    this->position = position;
+    this->rotation = rotation;
+};
 
 Ray Camera::generateRay(auto i, auto j) const
 {

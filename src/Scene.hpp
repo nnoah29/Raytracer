@@ -11,11 +11,26 @@
 
 #ifndef SCENE_HPP
 #define SCENE_HPP
+#include <memory>
+#include <vector>
 
+#include "Camera.hpp"
+#include "ILight.hpp"
+#include "IPrimitive.hpp"
 
+using Objs = std::vector<std::shared_ptr<IPrimitive>>;
+using Light = std::vector<std::shared_ptr<ILight>>;
 
 class Scene {
+    Objs objs;
+    Light lights;
+    Camera camera;
 
+    void loadObjects(const TabDataPrimitives& ps);
+    void loadLights(const TabDataLights& ls);
+
+public:
+    Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls);
 };
 
 

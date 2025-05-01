@@ -10,6 +10,14 @@
 */
 
 #include <iostream>
+#include <thread>
+
+#include "../src/Factory.hpp"
+#include "../src/PluginsLoader.hpp"
+#include "../src/Raytracer.hpp"
+#include "../src/Render.hpp"
+#include "../src/SceneLoader.hpp"
+/// Logique du programme
 /// 1. La caméra génère un rayon → (x, y)
 /// 2. Le rayon touche une primitive ? → Oui ? → continue
 /// 3. Je regarde où ça touche et quelle est la normale
@@ -20,13 +28,23 @@
 /// 5. Je combine ça avec la couleur du matériau
 /// 6. J’écris la couleur dans l’image finale
 ///
+
 int main(int argc, char *argv[])
 {
-    std::cout << "Hello World!" << std::endl;
-    std::cout << argc << std::endl;
-    std::cout << argv[0] << std::endl;
-}
+    try {
+        Factory factory;
+        PluginsLoader     loader_p(argv, &factory);
+        const SceneLoader loader_s(std::string(argv[1]), argc);
 
-// TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+        Scene scene = loader_s.createScene();
+        Render render(0, 0);
+        Raytracer raytracer(scene, render);
+        raytracer.render();
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
+    (void)argc;
+    std::cout << "Hello World!" << std::endl;
+}
 

@@ -22,3 +22,20 @@ bool hit_sphere(const Point& center, double radius, const Ray& r) {
     const auto discriminant = b*b - 4*a*c;
     return (discriminant >= 0);
 }
+
+
+
+// for (int i = 0; i <= 10000; ++i) {
+//         std::cout << "\r\33[2K" << "ok(" << i << ")" << std::flush; // Affiche sur la même ligne
+//         std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Pause plus rapide
+//     }
+
+#include "../src/Factory.hpp"
+#include "Sphere.hpp" // ta primitive concrète
+
+extern "C" void RegisterPlugin(Factory* f) {
+    f->registerPrimitive("nom de la primitives", [](dataPrimitive data, std::string name) -> std::shared_ptr<IPrimitive> {
+        return std::make_shared<Sphere>(data, name); // Sphere est un exemple
+    });
+}
+

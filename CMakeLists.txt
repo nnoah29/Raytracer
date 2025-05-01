@@ -3,6 +3,8 @@ project(RAYTRACER VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_PROGRESS_REPORT ON)
+
 
 # === Options de compilation ===
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -fPIC -fno-gnu-unique")
@@ -59,11 +61,27 @@ add_executable(raytracer ${CORE_SOURCES}
         src/base/camera/Camera.hpp
         src/interfaces/ICamera.hpp
         src/interfaces/ILight.hpp
-        src/interfaces/IPrimitive.hpp)
+        src/interfaces/IPrimitive.hpp
+        src/PluginsLoader.cpp
+        src/PluginsLoader.hpp
+        src/Factory.cpp
+        src/Factory.hpp
+        src/interfaces/APrimitive.hpp
+        includes/Color.hpp
+        includes/my.hpp
+        includes/Ray.hpp
+        includes/Vecteur.hpp
+        src/Raytracer.cpp
+        src/Raytracer.hpp)
+
+add_custom_command(TARGET raytracer POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:raytracer> ${CMAKE_SOURCE_DIR}/raytracer
+)
+
 
 # === SFML ===
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
-target_link_libraries(raytracer sfml-graphics sfml-window sfml-system)
+target_link_libraries(raytracer sfml-graphics sfml-window sfml-system config++)
 
 # === Créer les plugins dynamiques (.so) ===
 foreach(plugin_src ${EXTRA_SOURCES})
@@ -73,13 +91,20 @@ foreach(plugin_src ${EXTRA_SOURCES})
             src/extra/cylinder.hpp
             src/interfaces/ICamera.hpp
             src/interfaces/ILight.hpp
-            src/interfaces/IPrimitive.hpp)
+            src/interfaces/IPrimitive.hpp
+            src/interfaces/APrimitive.hpp
+            includes/Color.hpp
+            includes/my.hpp
+            includes/Ray.hpp
+            includes/Vecteur.hpp
+            src/Factory.cpp
+            src/Factory.hpp)
     set_target_properties(${plugin_name} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${PLUGINS_DIR}
     )
 endforeach()
 
-# === Cible clean améliorée ===
+# === Cible cleanl ===
 add_custom_target(fclean
     COMMAND ${CMAKE_COMMAND} --build . --target clean
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/CMakeFiles
@@ -88,6 +113,7 @@ add_custom_target(fclean
     COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/cmake_install.cmake
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${PLUGINS_DIR}
     COMMAND ${CMAKE_COMMAND} -E remove raytracer
+    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_SOURCE_DIR}/raytracer
     COMMENT "🧹 [FCLEAN] Full clean : build files, plugins, binaries removed."
 )
 

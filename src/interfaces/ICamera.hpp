@@ -11,17 +11,9 @@
 
 #ifndef ICAMERA_HPP
 #define ICAMERA_HPP
+#include "my.hpp"
 #include "../../includes/Ray.hpp"
 #include "../../includes/Vecteur.hpp"
-
-typedef struct Resolution {
-    int width;
-    int height;
-
-    Resolution(int width, int height) : width(width), height(height) {}
-    Resolution() : width(0), height(0) {}
-} Resolution;
-
 
 class ICamera {
     public:
