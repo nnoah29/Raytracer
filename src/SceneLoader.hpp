@@ -20,7 +20,7 @@
 
 class SceneLoader {
 private:
-    std::shared_ptr<dataCamera> c;
+    std::shared_ptr<dataCamera> c = std::make_shared<dataCamera>(0.0);
     std::vector<std::shared_ptr<dataPrimitive>> ps;
     std::vector<std::shared_ptr<dataLight>> ls;
     libconfig::Config cfg;

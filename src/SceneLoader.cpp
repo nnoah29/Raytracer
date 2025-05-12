@@ -15,18 +15,27 @@
 SceneLoader::SceneLoader(const std::string& path, int ac)
 {
     if (!std::filesystem::exists(path)) throw std::runtime_error("No Scene Found");
-    cfg.readFile(path);
+    try {
+        cfg.readFile(path);
+    } catch (const libconfig::FileIOException& fioex) {
+        std::cerr << "I/O error while reading file." << std::endl;
+    } catch (const libconfig::ParseException& pex) {
+        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
+    }
+    std::cout << "Scene Loading..." << std::endl;
     loadCamera(cfg.lookup("camera"));
     loadPrimitives(cfg.lookup("primitives"));
     loadLights(cfg.lookup("lights"));
+    std::cout << "Scene Loaded" << std::endl;
     (void)ac;
 }
 
 void SceneLoader::loadCamera(const libconfig::Setting& camera) const
 {
+    std::cout << "Camera Loading..." << std::endl;
     if (camera.exists("resolution")) {
         const auto& res = camera["resolution"];
-        if (res.exists("width"))  c->resolution.width = res["width"];
+        if (res.exists("width")) c->resolution.width = res["width"];
         if (res.exists("height")) c->resolution.height = res["height"];
     }
 
@@ -45,10 +54,12 @@ void SceneLoader::loadCamera(const libconfig::Setting& camera) const
     }
 
     if (camera.exists("fieldOfView")) c->fov = camera["fieldOfView"];
+    std::cout << "Camera Loaded" << std::endl;
 }
 
 void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
 {
+    std::cout << "Primitives Loading..." << std::endl;
     for (int i = 0; i < primitives.getLength(); i++) {
         const libconfig::Setting& p = primitives[i];
         std::string name = p.getName();
@@ -108,7 +119,6 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
                 data.transform.shear.y = item["shear"]["y"];
                 data.transform.shear.z = item["shear"]["z"];
             }
-
             // formes planes
             if (item.exists("axis") && item.exists("position")) {
                 std::string axis = item["axis"];
@@ -125,13 +135,15 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
                     data.reference = {0, 0, pos};
                 }
             }
-
             ps.push_back(std::make_shared<dataPrimitive>(data));
         }
     }
+    std::cout << "Primitives Loaded" << std::endl;
 }
 
-void SceneLoader::loadLights(const libconfig::Setting& light) {
+void SceneLoader::loadLights(const libconfig::Setting& light)
+{
+    std::cout << "Lights Loading..." << std::endl;
     if (light.exists("ambient"))
         ambient_intensity = light["ambient"];
     if (light.exists("diffuse"))
@@ -162,6 +174,7 @@ void SceneLoader::loadLights(const libconfig::Setting& light) {
             ls.push_back(std::make_shared<dataLight>(l));
         }
     }
+    std::cout << "Lights Loaded" << std::endl;
 }
 
 Scene SceneLoader::createScene(Factory& f) const {

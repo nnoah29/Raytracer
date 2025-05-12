@@ -25,9 +25,6 @@
 typedef struct Resolution {
     int width;
     int height;
-
-    Resolution(int width, int height) : width(width), height(height) {}
-    Resolution() : width(0), height(0) {}
 } Resolution;
 
 
@@ -142,9 +139,9 @@ typedef struct dataPrimitive {
 typedef struct dataCamera {
     // Propriétés géométriques de base
     float fov{};
-    Resolution resolution;
-    Point position;
-    Vecteur rotation;
+    Resolution resolution{0, 0};
+    Point position{};
+    Vecteur rotation{};
 
     // Propriétés génériques supplémentaires
     std::map<std::string, float> float_params;
