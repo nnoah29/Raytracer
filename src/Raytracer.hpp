@@ -26,9 +26,9 @@ class Raytracer {
 private:
     const Scene& _scene;
     Render& _render;
+    int sample_per_pixel = 10;
 
     Color traceRay(const Ray& ray, int depth = 0);
-    bool hitAnything(const Ray& ray, float t_min, float t_max, PointOfImpact& rec);
 };
 
 

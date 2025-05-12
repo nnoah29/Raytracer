@@ -58,7 +58,7 @@ public:
     void setPosition(const Vecteur& position) override;
     void setRotation(const Vecteur& rotation) override;
     void setFOV(float fov) override;
-    Ray generateRay(auto i, auto j) const;
+    Ray generateRay(int i, int j) const;
 
     Camera(float fov, Resolution resolution, Point position, Vecteur rotation);
     Camera(const Camera& camera) = delete;

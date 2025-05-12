@@ -10,6 +10,7 @@
 */
 
 #include "../includes/Vecteur.hpp"
+#include "my.hpp"
 
 Vecteur operator+(const Vecteur& v1, const Vecteur& v2) {
     return {v1.x + v2.x, v1.y + v2.y, v1.z + v2.z};
@@ -35,7 +36,7 @@ Vecteur operator/(const Vecteur& v1, float t) {
     return (1 / t) * v1;
 }
 
-double dot(const Vecteur& v1, const Vecteur& v2) {
+float dot(const Vecteur& v1, const Vecteur& v2) {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
@@ -46,4 +47,5 @@ Vecteur cross(const Vecteur& v1, const Vecteur& v2) {
 Vecteur unitVector(const Vecteur& v) {
     return v / v.length();
 }
+
 

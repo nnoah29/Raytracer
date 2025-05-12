@@ -24,6 +24,9 @@ class Color {
     Color operator*(float f)        const { return {r * f,   g * f,   b * f  }; }
     Color operator*(const Color& c) const { return {r * c.r, g * c.g, b * c.b}; }
     Color operator+(const Color& c) const { return {r + c.r, g + c.g, b + c.b}; }
+    Color operator+=(const Color& c) { r += c.r; g += c.g; b += c.b; return *this; }
+    Color operator-=(const Color& c) { r -= c.r; g -= c.g; b -= c.b; return *this; }
+
 };
 
 

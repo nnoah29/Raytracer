@@ -33,6 +33,10 @@ bool hit_sphere(const Point& center, double radius, const Ray& r) {
 #include "../src/Factory.hpp"
 #include "Sphere.hpp" // ta primitive concrète
 
+bool surrounds(float min, float x, float max) {
+    return min < x && x < max;
+}
+
 extern "C" void RegisterPlugin(Factory* f) {
     f->registerPrimitive("nom de la primitives", [](dataPrimitive data, std::string name) -> std::shared_ptr<IPrimitive> {
         return std::make_shared<Sphere>(data, name); // Sphere est un exemple

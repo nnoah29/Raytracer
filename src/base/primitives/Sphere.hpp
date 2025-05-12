@@ -14,18 +14,35 @@
 #include "APrimitive.hpp"
 
 
-class Sphere : public APrimitive {
+class Sphere final : public APrimitive {
 
     public:
     Sphere(dataPrimitive& data, const std::string& name): APrimitive(data, name){}
 
     bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact p) const override
     {
-        (void)ray;
-        (void)t_min;
-        (void)t_max;
-        (void)p;
-        return false;
+        const Point oc = position - ray.origin();
+        const auto a = ray.direction().lengthSquared();
+        const auto b = dot(ray.direction(), oc);
+        const auto c = oc.lengthSquared() - data.radius * data.radius;
+
+        const auto discriminant = b * b - a * c;
+        if (discriminant < 0)
+            return false;
+        const auto sqrt_discriminant = std::sqrt(discriminant);
+
+        auto root = (b - sqrt_discriminant) / a;
+        if (!surrounds(t_min, root, t_max)) {
+            root = (b + sqrt_discriminant) / a;
+            if (!surrounds(t_min, root, t_max))
+                return false;
+        }
+
+        p.t = root;
+        p.p = ray.at(p.t);
+        const Vecteur out_normal = (p.p - position) / data.radius;
+        p.set_face_normal(ray, out_normal);
+        return true;
     }
 };
 

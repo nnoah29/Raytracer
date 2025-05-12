@@ -50,7 +50,7 @@ Camera::Camera(float fov, Resolution resolution, Point position, Vecteur rotatio
     this->rotation = rotation;
 };
 
-Ray Camera::generateRay(auto i, auto j) const
+Ray Camera::generateRay(int i, int j) const
 {
     const float u = (i + 0.5f) / resolution.width;
     const float v = 1.0f - (j + 0.5f) / resolution.height;

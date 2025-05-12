@@ -74,7 +74,9 @@ add_executable(raytracer ${CORE_SOURCES}
         src/Raytracer.cpp
         src/Raytracer.hpp
         includes/conf.hpp
-        includes/Material.hpp)
+        includes/Material.hpp
+        src/base/camera/Camera.cpp
+        src/base/camera/Camera.hpp)
 
 add_custom_command(TARGET raytracer POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:raytracer> ${CMAKE_SOURCE_DIR}/raytracer

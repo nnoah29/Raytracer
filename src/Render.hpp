@@ -19,10 +19,10 @@ class Render {
     sf::Image image;
     sf::Texture texture;
     sf::Sprite sprite;
-    int width, height;
     std::string path;
 
     public:
+    int width, height;
     Render(int width, int height);
 
     void draw_pixel(int i, int j, const Color& c);

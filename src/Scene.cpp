@@ -14,12 +14,11 @@
 #include "base/primitives/Sphere.hpp"
 
 Scene::Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls, const Factory& f)
-: camera(c->fov, c->resolution, c->position, c->rotation), factory(f)
+: factory(f), camera(c->fov, c->resolution, c->position, c->rotation)
 {
     loadObjects(ps);
     loadLights(ls);
 }
-
 
 void Scene::loadObjects(const TabDataPrimitives& ps)
 {
@@ -31,7 +30,6 @@ void Scene::loadObjects(const TabDataPrimitives& ps)
     }
 }
 
-//creer une instance de l'objet et rempli les infos de l'objet par rapport au constructeur
 void Scene::loadLights(const TabDataLights& ls)
 {
     (void)ls;

@@ -25,14 +25,30 @@ using Light = std::vector<std::shared_ptr<ILight>>;
 class Scene {
     Objs objs;
     Light lights;
-    Camera camera;
     Factory factory;
 
     void loadObjects(const TabDataPrimitives& ps);
     void loadLights(const TabDataLights& ls);
 
 public:
+    Camera camera;
     Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls, const Factory& f);
+
+    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact p) const
+    {
+        PointOfImpact p_temps;
+        bool hit_anything = false;
+        auto closest_so_far = t_max;
+
+        for (const auto& obj : objs) {
+            if (obj->hit(ray, t_min, closest_so_far, p_temps)) {
+                hit_anything = true;
+                closest_so_far = p_temps.t;
+                p = p_temps;
+            }
+        }
+        return hit_anything;
+    }
 };
 
 

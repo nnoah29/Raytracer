@@ -15,23 +15,27 @@ Raytracer::Raytracer(const Scene& scene, Render& render) : _scene(scene), _rende
 
 void Raytracer::render()
 {
-
+    for (int j = 0; j < _render.height; j++) {
+        for (int i = 0; i < _render.width; i++) {
+            Color color(0, 0, 0);
+            for (int s = 0; s < sample_per_pixel; s++) {
+                Ray r = _scene.camera.generateRay(i, j);
+                color += traceRay(r, 10);
+            }
+            _render.draw_pixel(i, j, color);
+        }
+    }
+    _render.draw("exemple");
+    _render.display();
 }
 
 Color Raytracer::traceRay(const Ray& ray, int depth)
 {
     (void)depth;
     (void)ray;
+    sample_per_pixel = 10;
     return {0.0f, 0.0f, 0.0f};
 }
 
-bool Raytracer::hitAnything(const Ray& ray, float t_min, float t_max, PointOfImpact& rec)
-{
-    (void)ray;
-    (void)t_min;
-    (void)t_max;
-    (void)rec;
-    return true;
-}
 
 

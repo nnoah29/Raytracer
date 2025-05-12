@@ -159,5 +159,9 @@ typedef struct dataLight
 using TabDataPrimitives = std::vector<std::shared_ptr<dataPrimitive>>;
 using TabDataLights = std::vector<std::shared_ptr<dataLight>>;
 
+float dot(const Vecteur& v1, const Vecteur& v2);
+bool surrounds(float min, float x, float max);
+Vecteur operator/(const Vecteur& v1, float t);
+
 
 #endif //MY_HPP
