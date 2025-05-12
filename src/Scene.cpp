@@ -10,6 +10,8 @@
 */
 
 #include "Scene.hpp"
+#include <iostream>
+#include "base/primitives/Sphere.hpp"
 
 Scene::Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls, const Factory& f)
 : camera(c->fov, c->resolution, c->position, c->rotation), factory(f)
@@ -18,13 +20,32 @@ Scene::Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, 
     loadLights(ls);
 }
 
+
 void Scene::loadObjects(const TabDataPrimitives& ps)
 {
+    for (const auto& primitiveData : ps) {
+        std::shared_ptr<IPrimitive> obj;
 
-    (void)ps;
+        obj = factory.Primitive(primitiveData->name, *primitiveData);
+        objs.push_back(obj);
+    }
 }
 
 void Scene::loadLights(const TabDataLights& ls)
 {
     (void)ls;
+    // for (const auto& lightData : ls) {
+    //     std::shared_ptr<ILight> light;
+
+    //     if (lightData->name == "directional") {
+    //         light = std::make_shared<DirectionalLight>(*lightData);
+    //     } else if (lightData->name == "point") {
+    //         light = std::make_shared<PointLight>(*lightData);
+    //     } else {
+    //         std::cerr << "Unknown light type: " << lightData->name << std::endl;
+    //         continue;
+    //     }
+
+    //     lights.push_back(light);
+    // }
 }
