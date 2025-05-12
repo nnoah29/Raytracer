@@ -15,6 +15,9 @@
 
 
 class ILight {
+    public:
+    virtual ~ILight() = default;
+
 
 };
 

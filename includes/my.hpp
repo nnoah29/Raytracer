@@ -22,7 +22,6 @@
 #include <memory>
 #include <vector>
 
-
 typedef struct Resolution {
     int width;
     int height;

@@ -16,7 +16,7 @@
 
 Factory::Factory()
 {
-    registerPrimitive("sphere", [](dataPrimitive data, std::string name) -> std::shared_ptr<IPrimitive> {
+    registerPrimitive("sphere", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
         return std::make_shared<Sphere>(data, name);
     });
 }

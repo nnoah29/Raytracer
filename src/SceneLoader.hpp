@@ -33,7 +33,7 @@ private:
 public:
     SceneLoader(const std::string& path, int ac);
 
-    Scene createScene() const;
+    Scene createScene(Factory& f) const;
 };
 
 

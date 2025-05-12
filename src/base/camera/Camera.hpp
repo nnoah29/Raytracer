@@ -13,7 +13,9 @@
 #define CAMERA_HPP
 #include <ostream>
 
+#include "conf.hpp"
 #include "../../interfaces/ICamera.hpp"
+#include "my.hpp"
 
 typedef struct Viewport
 {
@@ -43,8 +45,8 @@ protected:
     float fov = 0;
 
 public:
-    float aspectRatio = 16.0f / 9.0f;
-    int max_depth = 10;
+    float aspectRatio = ASPECT_RATIO;
+    int max_depth = LIGHT_DEPTH;
     Viewport viewport;
 
     Point getPosition() const override;

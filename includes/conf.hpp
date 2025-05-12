@@ -12,4 +12,9 @@
 #ifndef CONF_HPP
 #define CONF_HPP
 
+#define WEIGHT_IMG 1280
+#define HEIGHT_IMG 720
+#define ASPECT_RATIO 16.0f / 9.0f;
+#define LIGHT_DEPTH 10
+
 #endif //CONF_HPP

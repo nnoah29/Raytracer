@@ -164,7 +164,6 @@ void SceneLoader::loadLights(const libconfig::Setting& light) {
     }
 }
 
-
-Scene SceneLoader::createScene() const {
-    return {c, ps, ls};
+Scene SceneLoader::createScene(Factory& f) const {
+    return {c, ps, ls, f};
 }

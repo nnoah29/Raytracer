@@ -11,8 +11,8 @@
 
 #include "Scene.hpp"
 
-Scene::Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls)
-: camera(c->fov, c->resolution, c->position, c->rotation)
+Scene::Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls, const Factory& f)
+: camera(c->fov, c->resolution, c->position, c->rotation), factory(f)
 {
     loadObjects(ps);
     loadLights(ls);
@@ -20,6 +20,7 @@ Scene::Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, 
 
 void Scene::loadObjects(const TabDataPrimitives& ps)
 {
+
     (void)ps;
 }
 

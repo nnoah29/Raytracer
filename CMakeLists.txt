@@ -72,7 +72,9 @@ add_executable(raytracer ${CORE_SOURCES}
         includes/Ray.hpp
         includes/Vecteur.hpp
         src/Raytracer.cpp
-        src/Raytracer.hpp)
+        src/Raytracer.hpp
+        includes/conf.hpp
+        includes/Material.hpp)
 
 add_custom_command(TARGET raytracer POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:raytracer> ${CMAKE_SOURCE_DIR}/raytracer
@@ -98,7 +100,10 @@ foreach(plugin_src ${EXTRA_SOURCES})
             includes/Ray.hpp
             includes/Vecteur.hpp
             src/Factory.cpp
-            src/Factory.hpp)
+            src/Factory.hpp
+            includes/conf.hpp
+            includes/Material.hpp
+    )
     set_target_properties(${plugin_name} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${PLUGINS_DIR}
     )

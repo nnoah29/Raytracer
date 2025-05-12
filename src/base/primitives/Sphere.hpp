@@ -17,7 +17,9 @@
 class Sphere : public APrimitive {
 
     public:
-    Sphere(dataPrimitive& data, const std::string& name) : APrimitive(data, name) {};
+    Sphere(dataPrimitive& data, const std::string& name) : APrimitive(data, name) {
+
+    };
 
     bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact p) const override
     {

@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "Camera.hpp"
+#include "Factory.hpp"
 #include "ILight.hpp"
 #include "IPrimitive.hpp"
 
@@ -25,12 +26,13 @@ class Scene {
     Objs objs;
     Light lights;
     Camera camera;
+    Factory factory;
 
     void loadObjects(const TabDataPrimitives& ps);
     void loadLights(const TabDataLights& ls);
 
 public:
-    Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls);
+    Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls, const Factory& f);
 };
 
 

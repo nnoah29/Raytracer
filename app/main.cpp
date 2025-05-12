@@ -36,15 +36,14 @@ int main(int argc, char *argv[])
         PluginsLoader     loader_p(argv, &factory);
         const SceneLoader loader_s(std::string(argv[1]), argc);
 
-        Scene scene = loader_s.createScene();
-        Render render(0, 0);
+        Scene scene = loader_s.createScene(factory);
+        Render render(WEIGHT_IMG, HEIGHT_IMG);
         Raytracer raytracer(scene, render);
         raytracer.render();
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return 84;
     }
-    (void)argc;
     std::cout << "Hello World!" << std::endl;
 }
 

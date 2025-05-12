@@ -24,7 +24,7 @@
 
 class Factory {
 private:
-    using Primitives_func = std::function< std::shared_ptr<IPrimitive>(dataPrimitive, std::string) > ;
+    using Primitives_func = std::function< std::shared_ptr<IPrimitive>(dataPrimitive data, const std::string& name) > ;
     using Lights_func = std::function< std::shared_ptr<ILight>() > ;
     std::map<std::string, Primitives_func> primitivesCreator;
     std::map<std::string, Lights_func> lightsCreator;
