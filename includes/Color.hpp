@@ -19,6 +19,7 @@ class Color {
     float r, g, b;
 
     Color(float r, float g, float b) : r(r), g(g), b(b) {}
+    Color() = default;
 
     Color operator*(float f)        const { return {r * f,   g * f,   b * f  }; }
     Color operator*(const Color& c) const { return {r * c.r, g * c.g, b * c.b}; }

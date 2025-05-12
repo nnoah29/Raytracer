@@ -19,11 +19,16 @@
 
 class APrimitive : public IPrimitive {
 protected:
+    dataPrimitive data;
     std::string name;
+    Color color;
+    Point position;
+    
+
 public:
-    APrimitive(const dataPrimitive& data, const std::string& name) {
-        (void)data;
-        (void)name;
+    APrimitive(const dataPrimitive& _data, const std::string& _name) {
+        this->data = _data;
+        this->name = _name;
     };
 
     ~APrimitive() override = default;

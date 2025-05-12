@@ -31,6 +31,7 @@ void Scene::loadObjects(const TabDataPrimitives& ps)
     }
 }
 
+//creer une instance de l'objet et rempli les infos de l'objet par rapport au constructeur
 void Scene::loadLights(const TabDataLights& ls)
 {
     (void)ls;
