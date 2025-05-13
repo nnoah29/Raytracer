@@ -19,14 +19,13 @@ class Render {
     sf::Image image;
     sf::Texture texture;
     sf::Sprite sprite;
-    std::string path;
 
     public:
+    std::string filepath;
     int width, height;
-    Render(int width, int height);
+    Render(int width, int height, const std::string& filename);
 
-    void draw_pixel(int i, int j, const Color& c);
-    void draw(const std::string& filename);
+    void draw_pixel(std::ostream& out, const Color& c);
     void display();
 };
 

@@ -11,12 +11,24 @@
 
 #include "Render.hpp"
 #include <iostream>
+#include <valarray>
+#include <filesystem>
 
-Render::Render(int width, int height) : width(width), height(height) {
-    image.create(width, height, sf::Color::Black); // Image vide noire au début
+#include "conf.hpp"
+
+
+Render::Render(int width, int height, const std::string& filename) : width(width), height(height) {
+    filepath = SCREENSHORT_DIR + filename + ".ppm";
 }
 
-void Render::draw_pixel(int i, int j, const Color& c) {
+float linearing(float x)
+{
+    if (x > 0)
+        return std::sqrt(x);
+    return 0;
+}
+
+void Render::draw_pixel(std::ostream& out, const Color& c) {
 
     auto clamp = [](float x) {
         if (x < 0.0f) return 0.0f;
@@ -24,28 +36,20 @@ void Render::draw_pixel(int i, int j, const Color& c) {
         return x;
     };
 
-    const sf::Color color(
-        static_cast<sf::Uint8>(255 * clamp(c.r)),
-        static_cast<sf::Uint8>(255 * clamp(c.g)),
-        static_cast<sf::Uint8>(255 * clamp(c.b))
-    );
+    const auto r = linearing(c.r);
+    const auto g = linearing(c.g);
+    const auto b = linearing(c.b);
 
-    if (i >= 0 && i < width && j >= 0 && j < height)
-        image.setPixel(i, height - j - 1, color);
+    const int r_byte = static_cast<int>(256 * clamp(r));
+    const int g_byte = static_cast<int>(256 * clamp(g));
+    const int b_byte = static_cast<int>(256 * clamp(b));
+
+    out << r_byte << " " << g_byte << " " << b_byte << "\n";
 }
 
-void Render::draw(const std::string& filename)
-{
-    path = "screenshots/" + filename + ".ppm";
-    if (image.saveToFile(path)) {
-        std::cout << "Image saved to " << filename << std::endl;
-    } else {
-        std::cerr << "Failed to save image!" << std::endl;
-    }
-}
 
 void Render::display() {
-    if (!texture.loadFromImage(image)) {
+    if (!texture.loadFromFile(filepath)) {
         std::cerr << "Failed to load texture from image!" << std::endl;
         return;
     }

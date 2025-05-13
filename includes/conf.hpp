@@ -16,5 +16,6 @@
 #define HEIGHT_IMG 720
 #define ASPECT_RATIO 16.0f / 9.0f;
 #define LIGHT_DEPTH 10
+#define SCREENSHORT_DIR ""
 
 #endif //CONF_HPP

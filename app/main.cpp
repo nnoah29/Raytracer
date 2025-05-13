@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
         const SceneLoader loader_s(std::string(argv[1]), argc);
 
         Scene scene = loader_s.createScene(factory);
-        Render render(WEIGHT_IMG, HEIGHT_IMG);
+        Render render(WEIGHT_IMG, HEIGHT_IMG, "exemple");
         Raytracer raytracer(scene, render);
         raytracer.render();
     } catch (const std::exception &e) {
