@@ -76,7 +76,8 @@ add_executable(raytracer ${CORE_SOURCES}
         includes/conf.hpp
         includes/Material.hpp
         src/base/camera/Camera.cpp
-        src/base/camera/Camera.hpp)
+        src/base/camera/Camera.hpp
+        src/base/primitives/Plane.hpp)
 
 add_custom_command(TARGET raytracer POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:raytracer> ${CMAKE_SOURCE_DIR}/raytracer
@@ -105,6 +106,7 @@ foreach(plugin_src ${EXTRA_SOURCES})
             src/Factory.hpp
             includes/conf.hpp
             includes/Material.hpp
+            src/base/primitives/Plane.hpp
     )
     set_target_properties(${plugin_name} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${PLUGINS_DIR}

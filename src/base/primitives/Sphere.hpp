@@ -33,7 +33,6 @@ class Sphere final : public APrimitive {
         if (discriminant < 0) {
             return false;
         }
-        //std::cout << "Testing sphere hit\n";
 
         const auto sqrt_discriminant = std::sqrt(discriminant);
 
