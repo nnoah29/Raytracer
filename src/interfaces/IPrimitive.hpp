@@ -31,7 +31,7 @@ class IPrimitive {
     public:
     virtual ~IPrimitive() = default;
 
-    virtual bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact p) const = 0;
+    virtual bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const = 0;
 
 };
 

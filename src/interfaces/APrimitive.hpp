@@ -32,7 +32,7 @@ public:
     };
 
     ~APrimitive() override = default;
-    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact p) const override = 0;
+    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const override = 0;
 };
 
 

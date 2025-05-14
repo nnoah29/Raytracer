@@ -11,6 +11,7 @@
 
 #ifndef SCENE_HPP
 #define SCENE_HPP
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -31,10 +32,12 @@ class Scene {
     void loadLights(const TabDataLights& ls);
 
 public:
+    float ambient_intensity;
+    float diffuse_intensity;
     Camera camera;
     Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls, const Factory& f);
 
-    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact p) const
+    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const
     {
         PointOfImpact p_temps;
         bool hit_anything = false;

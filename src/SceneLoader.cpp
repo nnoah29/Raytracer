@@ -178,5 +178,8 @@ void SceneLoader::loadLights(const libconfig::Setting& light)
 }
 
 Scene SceneLoader::createScene(Factory& f) const {
-    return {c, ps, ls, f};
+    Scene s(c, ps, ls, f);
+    s.ambient_intensity = ambient_intensity;
+    s.diffuse_intensity = diffuse_intensity;
+    return s;
 }

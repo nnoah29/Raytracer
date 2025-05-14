@@ -112,7 +112,6 @@ typedef struct dataPrimitive {
     std::string name;
     // Transformation
     Vecteur position = {0.0f, 0.0f, 0.0f};
-
     Transform transform;
 
     // Apparence
@@ -125,7 +124,7 @@ typedef struct dataPrimitive {
     float radius   = 1.0f;
     float height   = 1.0f;
     float width    = 1.0f;
-    float length    = 1.0f;
+    float length   = 1.0f;
 
     // Spécifique aux formes planes ou implicites
     Vecteur normal      = {0.0f, 1.0f, 0.0f};
@@ -162,6 +161,8 @@ using TabDataLights = std::vector<std::shared_ptr<dataLight>>;
 float dot(const Vecteur& v1, const Vecteur& v2);
 bool surrounds(float min, float x, float max);
 Vecteur operator/(const Vecteur& v1, float t);
+float degreesToRadians(float degrees);
+Vecteur cross(const Vecteur& v1, const Vecteur& v2);
 
 
 #endif //MY_HPP

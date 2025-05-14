@@ -16,7 +16,7 @@
 
 Factory::Factory()
 {
-    registerPrimitive("sphere", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
+    registerPrimitive("spheres", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
         return std::make_shared<Sphere>(data, name);
     });
 }
@@ -40,7 +40,7 @@ void Factory::registerLight(const std::string& name, const Lights_func& func) {
 
 std::shared_ptr<IPrimitive> Factory::Primitive(const std::string& name, dataPrimitive& data) {
     if (!primitivesCreator.contains(name)) {
-        return nullptr;
+        throw std::runtime_error("Primitive '" + name + "' does not exist");
     }
     return primitivesCreator[name](data, name);
 }

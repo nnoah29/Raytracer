@@ -18,7 +18,7 @@ class cone final : public APrimitive {
     public:
     cone(dataPrimitive& data, const std::string& name) : APrimitive(data, name) {};
 
-    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact p) const override
+    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const override
     {
         (void)ray;
         (void)t_min;

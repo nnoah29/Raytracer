@@ -1,12 +1,12 @@
 /*
-**  _                                              _      ___    ___  
+**  _                                              _      ___    ___
 ** | |                                            | |    |__ \  / _ \
 ** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
 ** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
-** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
-** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
-**          __/ |     on 24/04/25.                                          
-**         |___/ 
+** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / /
+** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/
+**          __/ |     on 24/04/25.
+**         |___/
 */
 
 #ifndef CAMERA_HPP
@@ -17,35 +17,64 @@
 #include "../../interfaces/ICamera.hpp"
 #include "my.hpp"
 
+typedef struct local3D
+{
+    Point origin;
+    Vecteur u, v, w;
+
+    local3D(Point origin, Vecteur u, Vecteur v, Vecteur w) : origin(origin), u(u), v(v), w(w) {};
+    local3D() = default;
+} local3D;
+
 typedef struct Viewport
 {
-    float height;
-    float width;
+    float height{};
+    float width{};
     Vecteur horizontal;
     Vecteur vertical;
-    Point lower_left_corner;
+    Vecteur D_u;
+    Vecteur D_v;
+    Point pixel_00;
 
-    Viewport(float fov, float aspect_ratio, Vecteur position)
+
+    Viewport(float fov, float aspect_ratio, const local3D& l, Resolution r)
     {
-        height = static_cast<float>(std::tan((fov * 0.5f) * M_PI / 180.0f)) * 2.0f;
+        const float theta = degreesToRadians(fov);
+        const float h = std::tan(theta / 2.0f);
+        height = 2.0f * h;
         width  = aspect_ratio * height;
-        horizontal = Vecteur(width,  0.0f, 0.0f);
-        vertical   = Vecteur(0.0f, -height, 0.0f);
 
-        lower_left_corner = position - horizontal*0.5f - vertical*0.5f - Vecteur(0,0,1);
+        horizontal =  l.u * width;
+        vertical   = -l.v * height;
+
+        D_u = horizontal / static_cast<float>(r.width);
+        D_v = vertical   / static_cast<float>(r.height);
+
+        const auto upper_left_corner = l.origin - (l.w) - (horizontal * 0.5f) - (vertical * 0.5f);
+        pixel_00 = upper_left_corner + (D_u + D_v) * 0.5f;
     }
+    Viewport() = default;
+
 
 } Viewport;
 
 class Camera final : public ICamera {
 protected:
-    Resolution resolution;
-    Point position;
+    Resolution resolution{};
+    Point position; //center
     Vecteur rotation;
     float fov = 0;
 
+    Point lookFrom;
+    Point lookAt;
+    Vecteur up = Vecteur(0, 1, 0);
+    int imageWidth, imageHeight;
+    Vecteur u, v, w;
+    local3D l;
+
+
 public:
-    float aspectRatio = ASPECT_RATIO;
+    float aspectRatio = 1920.0f / 1080.0f;
     int max_depth = LIGHT_DEPTH;
     Viewport viewport;
 
@@ -61,7 +90,6 @@ public:
     Ray generateRay(int i, int j) const;
 
     Camera(float fov, Resolution resolution, Point position, Vecteur rotation);
-    Camera(const Camera& camera) = delete;
 
 };
 

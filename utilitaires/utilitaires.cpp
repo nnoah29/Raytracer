@@ -37,6 +37,10 @@ bool surrounds(float min, float x, float max) {
     return min < x && x < max;
 }
 
+float degreesToRadians(float degrees) {
+    return degrees * (M_PI / 180);
+}
+
 extern "C" void RegisterPlugin(Factory* f) {
     f->registerPrimitive("nom de la primitives", [](dataPrimitive data, std::string name) -> std::shared_ptr<IPrimitive> {
         return std::make_shared<Sphere>(data, name); // Sphere est un exemple

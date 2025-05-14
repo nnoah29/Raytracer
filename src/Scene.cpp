@@ -27,6 +27,7 @@ void Scene::loadObjects(const TabDataPrimitives& ps)
 
         obj = factory.Primitive(primitiveData->name, *primitiveData);
         objs.push_back(obj);
+        std::cout << "Primitive " << primitiveData->name << " is added" << std::endl;
     }
 }
 
