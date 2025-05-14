@@ -49,7 +49,8 @@ void Render::draw_pixel(std::ostream& out, const Color& c) {
 
 
 void Render::display() {
-    if (!texture.loadFromFile(filepath)) {
+    std::cout << filepath<<std::endl;
+    if (!texture.loadFromFile("./"+ filepath)) {
         std::cerr << "Failed to load texture from image!" << std::endl;
         return;
     }

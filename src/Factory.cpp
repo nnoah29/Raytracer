@@ -12,12 +12,16 @@
 #include "Factory.hpp"
 
 #include <ranges>
-#include <Sphere.hpp>
+#include "Sphere.hpp"
+#include "Plane.hpp"
 
 Factory::Factory()
 {
     registerPrimitive("spheres", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
         return std::make_shared<Sphere>(data, name);
+    });
+    registerPrimitive("planes", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
+        return std::make_shared<Plane>(data, name);
     });
 }
 
