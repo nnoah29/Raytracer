@@ -27,7 +27,6 @@ typedef struct Resolution {
     int height;
 } Resolution;
 
-
 typedef struct Transform {
     Vecteur translation = {0.0f, 0.0f, 0.0f};
     Vecteur rotation    = {0.0f, 0.0f, 0.0f};
@@ -108,17 +107,23 @@ typedef struct Transform {
     }
 } Transform;
 
+typedef struct Material
+{
+    Color color = {1.0f, 1.0f, 1.0f};
+    float shininess = 0.0f;
+    float reflectivity = 0.0f;
+    float transparency = 0.0f;
+} Material;
+
 typedef struct dataPrimitive {
     std::string name;
+
     // Transformation
     Vecteur position = {0.0f, 0.0f, 0.0f};
     Transform transform;
 
     // Apparence
-    Color color = {1.0f, 1.0f, 1.0f};
-    float shininess = 0.0f;
-    float reflectivity = 0.0f;
-    float transparency = 0.0f;
+    Material material;
 
     // Propriétés géométriques de base
     float radius   = 1.0f;
@@ -133,6 +138,7 @@ typedef struct dataPrimitive {
     // Propriétés génériques supplémentaires
     std::map<std::string, float> float_params;
     std::map<std::string, std::string> string_params;
+
 } dataPrimitive;
 
 typedef struct dataCamera {
@@ -152,6 +158,7 @@ typedef struct dataLight
     std::string name;
     Vecteur position;
     Vecteur direction;
+    Color intensity{1.0f, 1.0f, 1.0f};
 
 } dataLight;
 

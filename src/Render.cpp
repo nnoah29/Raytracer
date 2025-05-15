@@ -40,9 +40,12 @@ void Render::draw_pixel(std::ostream& out, const Color& c) {
     const auto g = linearing(c.g);
     const auto b = linearing(c.b);
 
-    const int r_byte = static_cast<int>(256 * clamp(r));
-    const int g_byte = static_cast<int>(256 * clamp(g));
-    const int b_byte = static_cast<int>(256 * clamp(b));
+    const int r_byte = static_cast<int>(255.0f * clamp(r)); // +0.5f pour arrondir correctement
+    const int g_byte = static_cast<int>(255.0f * clamp(g));
+    const int b_byte = static_cast<int>(255.0f * clamp(b));
+
+    if (r_byte > 255 || g_byte > 255 || b_byte > 255)
+        std::cerr << "Warning: RGB out of bounds: " << r_byte << " " << g_byte << " " << b_byte << "\n";
 
     out << r_byte << " " << g_byte << " " << b_byte << "\n";
 }

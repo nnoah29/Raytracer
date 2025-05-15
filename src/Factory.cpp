@@ -14,6 +14,8 @@
 #include <ranges>
 #include "Sphere.hpp"
 #include "Plane.hpp"
+#include "base/lights/DirectionalLight.hpp"
+#include "base/lights/PointLight.hpp"
 
 Factory::Factory()
 {
@@ -22,6 +24,12 @@ Factory::Factory()
     });
     registerPrimitive("planes", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
         return std::make_shared<Plane>(data, name);
+    });
+    registerLight("point", [](dataLight data, const std::string& name) -> std::shared_ptr<ILight> {
+        return std::make_shared<PointLight>(data, name);
+    });
+    registerLight("directional", [](dataLight data, const std::string& name) -> std::shared_ptr<ILight>{
+        return std::make_shared<DirectionalLight>(data, name);
     });
 }
 
@@ -49,9 +57,9 @@ std::shared_ptr<IPrimitive> Factory::Primitive(const std::string& name, dataPrim
     return primitivesCreator[name](data, name);
 }
 
-std::shared_ptr<ILight> Factory::Light(const std::string& name) {
+std::shared_ptr<ILight> Factory::Light(const std::string& name, dataLight& data) {
     if (!lightsCreator.contains(name)) {
-        return nullptr;
+        throw std::runtime_error("Light '" + name + "' does not exist");
     }
-    return lightsCreator[name]();
+    return lightsCreator[name](data, name);
 }

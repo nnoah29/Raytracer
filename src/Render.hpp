@@ -25,7 +25,7 @@ class Render {
     int width, height;
     Render(int width, int height, const std::string& filename);
 
-    void draw_pixel(std::ostream& out, const Color& c);
+    static void draw_pixel(std::ostream& out, const Color& c);
     void display();
 };
 

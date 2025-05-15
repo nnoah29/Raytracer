@@ -26,8 +26,7 @@ public:
     const Point& origin() const { return _origin; }
     const Vecteur& direction() const { return _direction; }
 
-
-    Vecteur at(float t) const {
+    Point at(float t) const {
         return _origin + _direction * t;
     }
 };

@@ -13,6 +13,7 @@
 #define IPRIMITIVE_HPP
 #include "../../includes/Ray.hpp"
 #include "../../includes/Vecteur.hpp"
+#include "../../includes/Color.hpp"
 
 typedef struct PointOfImpact
 {
@@ -20,6 +21,7 @@ typedef struct PointOfImpact
     Vecteur normal;
     float t{};
     bool front{};
+    Color color{};
 
     void set_face_normal(const Ray& ray, const Vecteur& outward_normal) {
         front = (ray.direction().dot(outward_normal) < 0);

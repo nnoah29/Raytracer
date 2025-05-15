@@ -16,7 +16,7 @@ SceneLoader::SceneLoader(const std::string& path, int ac)
 {
     if (!std::filesystem::exists(path)) throw std::runtime_error("No Scene Found");
     try {
-        cfg.readFile(path);
+        cfg.readFile(path.c_str());
     } catch (const libconfig::FileIOException& fioex) {
         std::cerr << "I/O error while reading file." << std::endl;
     } catch (const libconfig::ParseException& pex) {
@@ -82,9 +82,10 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
             // Couleur
             if (item.exists("color")) {
                 const auto& c = item["color"];
-                if (c.exists("r")) data.color.r = c["r"];
-                if (c.exists("g")) data.color.g = c["g"];
-                if (c.exists("b")) data.color.b = c["b"];
+                if (c.exists("r")) data.material.color.r = c["r"];
+                if (c.exists("g")) data.material.color.g = c["g"];
+                if (c.exists("b")) data.material.color.b = c["b"];
+                data.material.color = data.material.color / 255.0;
             }
 
             // Propriétés géométriques
@@ -94,9 +95,9 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
             if (item.exists("w")) data.width  = item["w"]; //largeur
 
             // Apparence
-            if (item.exists("shininess"))    data.shininess = item["shininess"];
-            if (item.exists("reflectivity")) data.reflectivity = item["reflectivity"];
-            if (item.exists("transparency")) data.transparency = item["transparency"];
+            if (item.exists("shininess"))    data.material.shininess = item["shininess"];
+            if (item.exists("reflectivity")) data.material.reflectivity = item["reflectivity"];
+            if (item.exists("transparency")) data.material.transparency = item["transparency"];
 
             // transformation
             if (item.exists("translation")) {
@@ -158,10 +159,15 @@ void SceneLoader::loadLights(const libconfig::Setting& light)
             l.position = {
                 pt["x"], pt["y"], pt["z"]
             };
+            if (pt.exists("color")) {
+                const auto& c = pt["color"];
+                if (c.exists("r")) l.intensity.r = c["r"];
+                if (c.exists("g")) l.intensity.g = c["g"];
+                if (c.exists("b")) l.intensity.b = c["b"];
+            }
             ls.push_back(std::make_shared<dataLight>(l));
         }
     }
-
     if (light.exists("directional")) {
         const auto& dirs = light["directional"];
         for (int i = 0; i < dirs.getLength(); i++) {
@@ -171,6 +177,12 @@ void SceneLoader::loadLights(const libconfig::Setting& light)
             l.direction = {
                 dir["x"], dir["y"], dir["z"]
             };
+            if (dir.exists("color")) {
+                const auto& c = dir["color"];
+                if (c.exists("r")) l.intensity.r = c["r"];
+                if (c.exists("g")) l.intensity.g = c["g"];
+                if (c.exists("b")) l.intensity.b = c["b"];
+            }
             ls.push_back(std::make_shared<dataLight>(l));
         }
     }

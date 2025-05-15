@@ -25,7 +25,7 @@
 class Factory {
 private:
     using Primitives_func = std::function< std::shared_ptr<IPrimitive>(dataPrimitive data, const std::string& name) > ;
-    using Lights_func = std::function< std::shared_ptr<ILight>() > ;
+    using Lights_func = std::function< std::shared_ptr<ILight>(dataLight data, const std::string& name) > ;
     std::map<std::string, Primitives_func> primitivesCreator;
     std::map<std::string, Lights_func> lightsCreator;
 
@@ -37,7 +37,7 @@ public:
     void registerLight(const std::string& name, const Lights_func& func);
     void unregisterPrimitive();
     std::shared_ptr<IPrimitive> Primitive(const std::string& name, dataPrimitive& data);
-    std::shared_ptr<ILight> Light(const std::string& name);
+    std::shared_ptr<ILight> Light(const std::string& name, dataLight& data);
 };
 
 #endif //FACTORY_HPP

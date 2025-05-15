@@ -12,13 +12,15 @@
 #ifndef ILIGHT_HPP
 #define ILIGHT_HPP
 
+#include "my.hpp"
 
 
 class ILight {
     public:
     virtual ~ILight() = default;
 
-
+    virtual Vecteur getDirectionFrom(const Point& point) const = 0;
+    virtual Color getIntensityAt(const Point& point) const = 0;
 };
 
 

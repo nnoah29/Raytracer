@@ -5,20 +5,23 @@
 ** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
 ** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
 ** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
-**          __/ |     on 06/05/25.                                          
+**          __/ |     on 14/05/25.                                          
 **         |___/ 
 */
 
-#ifndef MATERIAL_HPP
-#define MATERIAL_HPP
+#ifndef DIRECTIONALLIGHT_HPP
+#define DIRECTIONALLIGHT_HPP
+#include "ALight.hpp"
 
 
+class DirectionalLight : public  ALight {
+    public:
+    DirectionalLight(dataLight& data, const std::string& name) : ALight(data, name) {}
 
-class Material {
-
-
+    Vecteur getDirectionFrom(const Point& point) const override;
+    Color getIntensityAt(const Point& point) const override;
 };
 
 
 
-#endif //MATERIAL_HPP
+#endif //DIRECTIONALLIGHT_HPP

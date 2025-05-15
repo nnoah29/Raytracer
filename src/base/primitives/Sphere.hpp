@@ -28,7 +28,6 @@ class Sphere final : public APrimitive {
         const auto b = dot(ray.direction(), oc);
         const auto c = oc.lengthSquared() - data.radius * data.radius;
 
-        //std::cout << a << " " << b << " " << c << std::endl;
         const auto discriminant = b * b - a * c;
         if (discriminant < 0) {
             return false;
@@ -47,6 +46,7 @@ class Sphere final : public APrimitive {
         p.p = ray.at(p.t);
         const Vecteur out_normal = (p.p - data.position) / data.radius;
         p.set_face_normal(ray, out_normal);
+        p.color = data.material.color;
         return true;
     }
 };

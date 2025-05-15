@@ -24,8 +24,8 @@ private:
     std::vector<std::shared_ptr<dataPrimitive>> ps;
     std::vector<std::shared_ptr<dataLight>> ls;
     libconfig::Config cfg;
-    float ambient_intensity;
-    float diffuse_intensity;
+    float ambient_intensity{};
+    float diffuse_intensity{};
 
     void loadCamera(const libconfig::Setting& camera) const;
     void loadPrimitives(const libconfig::Setting& primitives);

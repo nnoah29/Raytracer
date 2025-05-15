@@ -5,34 +5,35 @@
 ** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
 ** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
 ** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
-**          __/ |     on 29/04/25.                                          
+**          __/ |     on 14/05/25.                                          
 **         |___/ 
 */
 
-#ifndef APRIMITIVE_HPP
-#define APRIMITIVE_HPP
-#include <string>
-
-#include "IPrimitive.hpp"
+#ifndef ALIGHT_HPP
+#define ALIGHT_HPP
+#include "Color.hpp"
+#include "ILight.hpp"
 #include "my.hpp"
+#include "Vecteur.hpp"
 
 
-class APrimitive : public IPrimitive {
+class ALight : public ILight {
 protected:
-    dataPrimitive data;
+    dataLight data;
     std::string name;
-    
-
+    public:
 public:
-    APrimitive(const dataPrimitive& _data, const std::string& _name) {
+    ALight(const dataLight& _data, const std::string& _name) {
         this->data = _data;
         this->name = _name;
     };
 
-    ~APrimitive() override = default;
-    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const override = 0;
+    ~ALight() override = default;
+    Vecteur getDirectionFrom(const Point& point) const override = 0;
+    Color getIntensityAt(const Point& point) const override = 0;
+
 };
 
 
 
-#endif //APRIMITIVE_HPP
+#endif //ALIGHT_HPP

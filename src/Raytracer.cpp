@@ -22,17 +22,17 @@ void Raytracer::render()
     std::ofstream out(_render.filepath);
 
     if (!out.is_open()) throw std::runtime_error("Could not open file.");
-    out << "P3\n" << _render.width << ' ' << _render.height << "\n256\n";
+    out << "P3\n" << _render.width << ' ' << _render.height << "\n255\n";
 
     for (int j = 0; j < _render.height; j++) {
         std::clog << "\rLines remaining: " << (_render.height - j - 1) << ' ' << std::flush;
         for (int i = 0; i < _render.width; i++) {
 
             Color color(0, 0, 0);
-            for (int s = 0; s < sample_per_pixel; s++) {
+            //for (int s = 0; s < sample_per_pixel; s++) {
                 Ray r = _scene.camera.generateRay(i, j);
                 color += traceRay(r, LIGHT_DEPTH);
-            }
+            //}
             _render.draw_pixel(out, color);
         }
     }
@@ -52,8 +52,10 @@ Color Raytracer::traceRay(const Ray& ray, int depth)
     sample_per_pixel = 10;
     PointOfImpact point;
     if (_scene.hit(ray, 0.001f, std::numeric_limits<float>::infinity(), point)) {
-        return {0.5f, 0.5f, 0.0f};
+        return point.color;
+        return {0.25f, 1.0f, 0.25f};
     }
+    //return {1.0f, 1.0f, 1.0f};
 
     const Vecteur unit_direction = unit_vector(ray.direction());
     const auto a = 0.5*(unit_direction.y + 1.0);

@@ -33,19 +33,11 @@ void Scene::loadObjects(const TabDataPrimitives& ps)
 
 void Scene::loadLights(const TabDataLights& ls)
 {
-    (void)ls;
-    // for (const auto& lightData : ls) {
-    //     std::shared_ptr<ILight> light;
+    for (const auto& lightData : ls) {
+        std::shared_ptr<ILight> light;
 
-    //     if (lightData->name == "directional") {
-    //         light = std::make_shared<DirectionalLight>(*lightData);
-    //     } else if (lightData->name == "point") {
-    //         light = std::make_shared<PointLight>(*lightData);
-    //     } else {
-    //         std::cerr << "Unknown light type: " << lightData->name << std::endl;
-    //         continue;
-    //     }
-
-    //     lights.push_back(light);
-    // }
+        light = factory.Light(lightData->name, *lightData);
+        lights.push_back(light);
+        std::cout << "Light " << lightData->name << " is added" << std::endl;
+    }
 }
