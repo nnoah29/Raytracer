@@ -117,20 +117,6 @@ Ray Camera::generateRay(int i, int j) const
 
     const auto origin = position;
     auto direction = pixel - origin;
-
-
-    if (i == resolution.width / 2 && j == resolution.height / 2) {
-        std::cout << "Ray direction: " << direction.x << ", "
-                  << direction.y << ", " << direction.z << std::endl;
-    }
-    if ((i == 0 && j == 0) || (i == resolution.width - 1 && j == resolution.height - 1)) {
-        std::cout << "Corner ray dir: " << direction.x << ", " << direction.y << ", " << direction.z << std::endl;
-    }
-    // std::cout << "Camera pos: " << position << "\n";
-    // std::cout << "Ray dir center: " << direction.x << ", " << direction.y << ", " << direction.z << "\n";
     direction = applyRotation(direction, rotation);
     return {origin, direction};
-
-
-    return Ray{position, direction};
 }

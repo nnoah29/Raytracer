@@ -13,6 +13,7 @@
 #define ILIGHT_HPP
 
 #include "my.hpp"
+#include "IPrimitive.hpp"
 
 
 class ILight {
@@ -20,7 +21,7 @@ class ILight {
     virtual ~ILight() = default;
 
     virtual Vecteur getDirectionFrom(const Point& point) const = 0;
-    virtual Color getIntensityAt(const Point& point) const = 0;
+    virtual Color getIntensityAt(const PointOfImpact& point) const = 0;
 };
 
 

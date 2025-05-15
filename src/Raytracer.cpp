@@ -16,9 +16,8 @@
 
 Raytracer::Raytracer(const Scene& scene, Render& render) : _scene(scene), _render(render) {}
 
-void Raytracer::render()
+void Raytracer::render() const
 {
-    std::cout << _render.filepath << std::endl;
     std::ofstream out(_render.filepath);
 
     if (!out.is_open()) throw std::runtime_error("Could not open file.");
@@ -36,8 +35,8 @@ void Raytracer::render()
             _render.draw_pixel(out, color);
         }
     }
+    std::clog << "\rDone.\n" << std::flush;
     out.close();
-
     //_render.display();
 }
 
@@ -46,20 +45,31 @@ Vecteur unit_vector(const Vecteur& v) {
 }
 
 
-Color Raytracer::traceRay(const Ray& ray, int depth)
-{
-    (void)depth;
-    sample_per_pixel = 10;
-    PointOfImpact point;
-    if (_scene.hit(ray, 0.001f, std::numeric_limits<float>::infinity(), point)) {
-        return point.color;
-        return {0.25f, 1.0f, 0.25f};
+    Color Raytracer::traceRay(const Ray& ray, int depth) const
+    {
+        (void)depth;
+        PointOfImpact point;
+        if (_scene.hit(ray, 0.001f, std::numeric_limits<float>::infinity(), point)) {
+        const Color local_color = point.material.color;
+
+        // if (depth > 0 && point.material.reflectivity > 0.0f) {
+        //     const Vecteur view_dir = -ray.direction().normalized();
+        //     const Vecteur reflect_dir = Scene::reflect(view_dir, point.normal);
+        //     const Ray reflected_ray(point.p + point.normal * 0.001f, reflect_dir);
+        //     const Color reflected_color = traceRay(reflected_ray, depth - 1);
+        //
+        //     return local_color * (1.0f - point.material.reflectivity) + reflected_color * point.material.reflectivity;
+        // }
+
+        return local_color;
     }
-    //return {1.0f, 1.0f, 1.0f};
+    if (_scene.hit(ray, 0.001f, std::numeric_limits<float>::infinity(), point)) {
+        return point.material.color;
+    }
 
     const Vecteur unit_direction = unit_vector(ray.direction());
     const auto a = 0.5*(unit_direction.y + 1.0);
-    return (Color(1.0, 1.0, 1.0)* (1.0-a)) + (Color(0.5, 0.7, 1.0) * a);
+    return (Color(1.0, 1.0, 1.0)* (1.0-a)) + (Color(0.5, 0.7, 1.0) * a) * _scene.ambient_intensity;
 }
 
 

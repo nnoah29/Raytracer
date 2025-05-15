@@ -13,8 +13,8 @@ bool Cylinder::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) c
     Vecteur o = ray.origin();
     Vecteur d = ray.direction();
 
-    float dx = d.x, dy = d.y, dz = d.z;
-    float ox = o.x, oy = o.y, oz = o.z;
+    float dx = d.x, dy = d.y;
+    float ox = o.x, oy = o.y;
 
     float A = dx*dx + dy*dy;
     float B = 2 * (dx*ox + dy*oy);

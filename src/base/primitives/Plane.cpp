@@ -27,6 +27,6 @@ bool Plane::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) cons
     p.t = t;
     p.p = ray.at(t);
     p.set_face_normal(ray, normal);
-
+    p.material = data.material;
     return true;
 }

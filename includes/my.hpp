@@ -113,6 +113,10 @@ typedef struct Material
     float shininess = 0.0f;
     float reflectivity = 0.0f;
     float transparency = 0.0f;
+
+    bool shininess_is_define = false;
+    bool reflectivity_is_define = false;
+    bool transparency_is_define = false;
 } Material;
 
 typedef struct dataPrimitive {

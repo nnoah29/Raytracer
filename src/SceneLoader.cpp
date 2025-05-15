@@ -22,17 +22,17 @@ SceneLoader::SceneLoader(const std::string& path, int ac)
     } catch (const libconfig::ParseException& pex) {
         std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
     }
-    std::cout << "Scene Loading..." << std::endl;
+    //std::cout << "Scene Loading..." << std::endl;
     loadCamera(cfg.lookup("camera"));
     loadPrimitives(cfg.lookup("primitives"));
     loadLights(cfg.lookup("lights"));
-    std::cout << "Scene Loaded" << std::endl;
+    //std::cout << "Scene Loaded" << std::endl;
     (void)ac;
 }
 
 void SceneLoader::loadCamera(const libconfig::Setting& camera) const
 {
-    std::cout << "Camera Loading..." << std::endl;
+    //std::cout << "Camera Loading..." << std::endl;
     if (camera.exists("resolution")) {
         const auto& res = camera["resolution"];
         if (res.exists("width")) c->resolution.width = res["width"];
@@ -54,12 +54,12 @@ void SceneLoader::loadCamera(const libconfig::Setting& camera) const
     }
 
     if (camera.exists("fieldOfView")) c->fov = camera["fieldOfView"];
-    std::cout << "Camera Loaded" << std::endl;
+    //std::cout << "Camera Loaded" << std::endl;
 }
 
 void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
 {
-    std::cout << "Primitives Loading..." << std::endl;
+    //std::cout << "Primitives Loading..." << std::endl;
     for (int i = 0; i < primitives.getLength(); i++) {
         const libconfig::Setting& p = primitives[i];
         std::string name = p.getName();
@@ -95,9 +95,9 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
             if (item.exists("w")) data.width  = item["w"]; //largeur
 
             // Apparence
-            if (item.exists("shininess"))    data.material.shininess = item["shininess"];
-            if (item.exists("reflectivity")) data.material.reflectivity = item["reflectivity"];
-            if (item.exists("transparency")) data.material.transparency = item["transparency"];
+            if (item.exists("shininess")){    data.material.shininess = item["shininess"]; data.material.shininess_is_define = true; }
+            if (item.exists("reflectivity")){ data.material.reflectivity = item["reflectivity"]; data.material.reflectivity_is_define = true; }
+            if (item.exists("transparency")){ data.material.transparency = item["transparency"]; data.material.transparency_is_define = true; }
 
             // transformation
             if (item.exists("translation")) {
@@ -139,12 +139,12 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
             ps.push_back(std::make_shared<dataPrimitive>(data));
         }
     }
-    std::cout << "Primitives Loaded" << std::endl;
+    //std::cout << "Primitives Loaded" << std::endl;
 }
 
 void SceneLoader::loadLights(const libconfig::Setting& light)
 {
-    std::cout << "Lights Loading..." << std::endl;
+    //std::cout << "Lights Loading..." << std::endl;
     if (light.exists("ambient"))
         ambient_intensity = light["ambient"];
     if (light.exists("diffuse"))
@@ -186,7 +186,7 @@ void SceneLoader::loadLights(const libconfig::Setting& light)
             ls.push_back(std::make_shared<dataLight>(l));
         }
     }
-    std::cout << "Lights Loaded" << std::endl;
+    //std::cout << "Lights Loaded" << std::endl;
 }
 
 Scene SceneLoader::createScene(Factory& f) const {

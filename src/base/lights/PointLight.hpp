@@ -19,7 +19,7 @@ public:
     PointLight(dataLight& data, const std::string& name) : ALight(data, name) {}
 
     Vecteur getDirectionFrom(const Point& point) const override;
-    Color getIntensityAt(const Point& point) const override;
+    Color getIntensityAt(const PointOfImpact& point) const override;
 };
 
 

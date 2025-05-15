@@ -17,7 +17,7 @@ Vecteur DirectionalLight::getDirectionFrom(const Point& point) const {
     return  -data.position;
 }
 
-Color DirectionalLight::getIntensityAt(const Point& point) const {
+Color DirectionalLight::getIntensityAt(const PointOfImpact& point) const {
     (void)point;
     return data.intensity;
 }

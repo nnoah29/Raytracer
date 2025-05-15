@@ -44,6 +44,5 @@ int main(int argc, char *argv[])
         std::cerr << e.what() << std::endl;
         return 84;
     }
-    std::cout << "Hello World!" << std::endl;
 }
 

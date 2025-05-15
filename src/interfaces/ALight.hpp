@@ -13,6 +13,7 @@
 #define ALIGHT_HPP
 #include "Color.hpp"
 #include "ILight.hpp"
+#include "IPrimitive.hpp"
 #include "my.hpp"
 #include "Vecteur.hpp"
 
@@ -30,7 +31,7 @@ public:
 
     ~ALight() override = default;
     Vecteur getDirectionFrom(const Point& point) const override = 0;
-    Color getIntensityAt(const Point& point) const override = 0;
+    Color getIntensityAt(const PointOfImpact& point) const override = 0;
 
 };
 

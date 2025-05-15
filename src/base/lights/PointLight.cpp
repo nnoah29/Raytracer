@@ -11,11 +11,15 @@
 
 #include "PointLight.hpp"
 
+#include "IPrimitive.hpp"
+
 Vecteur PointLight::getDirectionFrom(const Point& point) const {
     return (data.position - point).normalized();
 }
 
-Color PointLight::getIntensityAt(const Point& point) const {
-    const float distance = (data.position - point).lengthSquared();
-    return data.intensity / static_cast<float>(4.0f * M_PI * distance);
+Color PointLight::getIntensityAt(const PointOfImpact& point) const {
+    const Vecteur direction = getDirectionFrom(point.p).normalized();
+    const float diff = std::max(dot(point.normal, direction), 0.0f);
+
+    return point.material.color * diff;
 }

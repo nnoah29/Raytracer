@@ -27,7 +27,10 @@ void Scene::loadObjects(const TabDataPrimitives& ps)
 
         obj = factory.Primitive(primitiveData->name, *primitiveData);
         objs.push_back(obj);
-        std::cout << "Primitive " << primitiveData->name << " is added" << std::endl;
+        // std::cout << "Primitive " << primitiveData->name << " is added"
+        // << " x : " << primitiveData->position.x
+        // << " y : " << primitiveData->position.y
+        // << " z : " << primitiveData->position.z << std::endl;
     }
 }
 
@@ -38,6 +41,9 @@ void Scene::loadLights(const TabDataLights& ls)
 
         light = factory.Light(lightData->name, *lightData);
         lights.push_back(light);
-        std::cout << "Light " << lightData->name << " is added" << std::endl;
+        // std::cout << "Light " << lightData->name << " is added"
+        // << " x : " << lightData->position.x
+        // << " y : " << lightData->position.y
+        // << " z : " << lightData->position.z << std::endl;
     }
 }
