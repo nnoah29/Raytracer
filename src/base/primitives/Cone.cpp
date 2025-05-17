@@ -9,82 +9,45 @@
 
 Cone::Cone(dataPrimitive& data, const std::string& name): APrimitive(data, name) {}
 
-bool Cone::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const {
+bool Cone::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const
+{
+    const Vecteur axis = data.normal.normalized();
+    const Vecteur x = ray.origin() - data.position;
 
-    // float k = data.radius / data.height;
-    // float k2 = k * k;
+    const float k = std::tan(data.corner);
+    const float k2 = k * k;
 
-    // Point normal = data.normal.normalized();
-    // Vecteur o = ray.origin() - normal;    // origine relative au cône
-    // Vecteur d = ray.direction();
+    const Vecteur d = ray.direction();
+    const float dv = dot(d, axis);
+    const float xv = dot(x, axis);
 
-    // float dx = d.x, dy = d.y, dz = d.z;
-    // float ox = o.x, oy = o.y, oz = o.z;
+    const float a = dot(d, d) - k2 * dv * dv;
+    const float b = 2.0f * (dot(d, x) - k2 * dv * xv);
+    const float c = dot(x, x) - k2 * xv * xv;
 
-    // float A = dx*dx + dy*dy - k2 * dz*dz;
-    // float B = 2 * (dx*ox + dy*oy - k2 * dz*oz);
-    // float C = ox*ox + oy*oy - k2 * oz*oz;
+    const float discriminant = b * b - 4 * a * c;
+    if (discriminant < 0) return false;
 
-    // float discriminant = B*B - 4*A*C;
-    // if (discriminant < 0)
-    //     return false;
-
-    // float sqrtD = std::sqrt(discriminant);
-    // float root = (-B - sqrtD) / (2*A);
-    // if (!surrounds(t_min, root, t_max)) {
-    //     root = (-B + sqrtD) / (2*A);
-    //     if (!surrounds(t_min, root, t_max))
-    //         return false;
-    // }
-
-    // float z = ray.at(root).z - normal.z;
-    // if (z < 0 || z > data.height)
-    //     return false;
-
-    // p.t = root;
-    // p.p = ray.at(p.t);
-
-    // Vecteur v = p.p - normal;
-    // v.z = -k * std::sqrt(v.x*v.x + v.y*v.y);
-    // p.set_face_normal(ray, v.normalized());
-
-    // return true;
-
-
-    float k = data.radius / data.height;
-    float k2 = k * k;
-
-    Vecteur o = ray.origin();
-    Vecteur d = ray.direction();
-
-    float dx = d.x, dy = d.y, dz = d.z;
-    float ox = o.x, oy = o.y, oz = o.z;
-
-    float A = dx*dx + dy*dy - k2 * dz*dz;
-    float B = 2 * (dx*ox + dy*oy - k2 * dz*oz);
-    float C = ox*ox + oy*oy - k2 * oz*oz;
-
-    float discriminant = B*B - 4*A*C;
-    if (discriminant < 0)
-        return false;
-
-    float squareroot = std::sqrt(discriminant);
-    float root = (-B - squareroot) / (2*A);
-    if (!surrounds(t_min, root, t_max)) {
-        root = (-B + squareroot) / (2*A);
-        if (!surrounds(t_min, root, t_max))
+    float sqrt_disc = std::sqrt(discriminant);
+    float t = (-b - sqrt_disc) / (2 * a);
+    if (t < t_min || t > t_max) {
+        t = (-b + sqrt_disc) / (2 * a);
+        if (t < t_min || t > t_max)
             return false;
     }
 
-    float z = ray.at(root).z;
-    if (z < 0 || z > data.height)
-        return false;
+    const Vecteur hit_point = ray.at(t);
 
-    p.t = root;
-    p.p = ray.at(p.t);
+    const Vecteur apex_to_hit = hit_point - data.position;
+    const float h = dot(apex_to_hit, axis);
+    if (data.height != 0)
+        if (h < 0 || h > data.height) return false;
 
-    Vecteur v = p.p;
-    p.set_face_normal(ray, v.normalized());
+    const Vecteur normal = (apex_to_hit - axis * h).normalized();
 
+    p.t = t;
+    p.p = hit_point;
+    p.set_face_normal(ray, normal);
+    p.material = data.material;
     return true;
 }

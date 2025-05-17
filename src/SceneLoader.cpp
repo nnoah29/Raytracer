@@ -57,6 +57,31 @@ void SceneLoader::loadCamera(const libconfig::Setting& camera) const
     //std::cout << "Camera Loaded" << std::endl;
 }
 
+void applyTranslation(dataPrimitive& data)
+{
+    data = data;
+}
+
+void applyRotation(dataPrimitive& data)
+{
+    data = data;
+}
+
+void appyShear(dataPrimitive& data) {
+    data = data;
+
+}
+
+void applyScale(dataPrimitive& data)
+{
+    data = data;
+}
+
+void applyMatrix(dataPrimitive& data)
+{
+    data = data;
+}
+
 void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
 {
     //std::cout << "Primitives Loading..." << std::endl;
@@ -71,6 +96,10 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
         for (int j = 0; j < p.getLength(); j++) {
             const libconfig::Setting& item = p[j];
             dataPrimitive data;
+            bool translation_is_define = false;
+            bool rotation_is_define = false;
+            bool scale_is_define = false;
+            bool shear_is_define = false;
             // Nom
             data.name = name;
 
@@ -93,6 +122,7 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
             if (item.exists("h")) data.height = item["h"]; //hauteur
             if (item.exists("l")) data.length = item["l"]; //longueur
             if (item.exists("w")) data.width  = item["w"]; //largeur
+            if (item.exists("corner")) data.corner = item["corner"]; //angle
 
             // Apparence
             if (item.exists("shininess")){    data.material.shininess = item["shininess"]; data.material.shininess_is_define = true; }
@@ -101,41 +131,79 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
 
             // transformation
             if (item.exists("translation")) {
-                data.transform.translation.x = item["translation"]["x"];
-                data.transform.translation.y = item["translation"]["y"];
-                data.transform.translation.z = item["translation"]["z"];
+                const auto& t = item["translation"];
+                translation_is_define = true;
+                data.transform.translation.x = t["x"];
+                data.transform.translation.y = t["y"];
+                data.transform.translation.z = t["z"];
+                if (t.exists("at")) {
+                    const std::string at = t["at"];
+                    data.transform.at_t = at;
+                }
             }
             if (item.exists("rotation")) {
-                data.transform.rotation.x = item["rotation"]["x"];
-                data.transform.rotation.y = item["rotation"]["y"];
-                data.transform.rotation.z = item["rotation"]["z"];
+                const auto& r = item["rotation"];
+                rotation_is_define = true;
+                data.transform.rotation.x = r["x"];
+                data.transform.rotation.y = r["y"];
+                data.transform.rotation.z = r["z"];
+                if (r.exists("at")) {
+                    const std::string at = r["at"];
+                    data.transform.at_r = at;
+                }
             }
             if (item.exists("scale")) {
-                data.transform.scale.x = item["scale"]["x"];
-                data.transform.scale.y = item["scale"]["y"];
-                data.transform.scale.z = item["scale"]["z"];
+                const auto& s = item["scale"];
+                scale_is_define = true;
+                data.transform.scale.x = s["x"];
+                data.transform.scale.y = s["y"];
+                data.transform.scale.z = s["z"];
+                if (s.exists("at")) {
+                    const std::string at = s["at"];
+                    data.transform.at_sc = at;
+                }
             }
             if (item.exists("shear")) {
-                data.transform.shear.x = item["shear"]["x"];
-                data.transform.shear.y = item["shear"]["y"];
-                data.transform.shear.z = item["shear"]["z"];
+                const auto& s = item["shear"];
+                shear_is_define = true;
+                data.transform.shear.x = s["x"];
+                data.transform.shear.y = s["y"];
+                data.transform.shear.z = s["z"];
+                if (s.exists("at")) {
+                    const std::string at = s["at"];
+                    data.transform.at_sh = at;
+                }
             }
+
             // formes planes
+            if (item.exists("axis")) {
+                std::string axis = item["axis"];
+                if (axis == "X" || axis == "x") {
+                    data.normal = {1, 0, 0};
+                } else if (axis == "Y" || axis == "y") {
+                    data.normal = {0, 1, 0};
+                } else if (axis == "Z" || axis == "z") {
+                    data.normal = {0, 0, 1};
+                }
+            }
             if (item.exists("axis") && item.exists("position")) {
                 std::string axis = item["axis"];
                 float pos = item["position"];
-
                 if (axis == "X" || axis == "x") {
-                    data.normal = {1, 0, 0};
                     data.reference = {pos, 0, 0};
                 } else if (axis == "Y" || axis == "y") {
-                    data.normal = {0, 1, 0};
                     data.reference = {0, pos, 0};
                 } else if (axis == "Z" || axis == "z") {
-                    data.normal = {0, 0, 1};
                     data.reference = {0, 0, pos};
                 }
             }
+
+            if (translation_is_define) applyTranslation(data);
+            if (rotation_is_define) applyRotation(data);
+            if (scale_is_define) applyScale(data);
+            if (shear_is_define) appyShear(data);
+
+
             ps.push_back(std::make_shared<dataPrimitive>(data));
         }
     }

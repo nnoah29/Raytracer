@@ -32,30 +32,22 @@ typedef struct Transform {
     Vecteur rotation    = {0.0f, 0.0f, 0.0f};
     Vecteur scale       = {1.0f, 1.0f, 1.0f};
     Vecteur shear       = {0.0f, 0.0f, 0.0f};
+    std::string at_t;
+    std::string at_r;
+    std::string at_sc;
+    std::string at_sh;
+    std::array<std::array<float, 3>, 3> matrix {};
 
-    // Matrice 4x4 de transformation
-    std::array<std::array<float, 4>, 4> custom_matrix {};
+    Vecteur applyTranslation(const Vecteur& pt) const {
+        return pt + translation;
+    }
 
-    bool use_custom_matrix = false;
-
-    Vecteur apply(const Vecteur& p) const
-    {
-        Vecteur pt = p;
-        // 1. Shear
-        pt.x += shear.x * pt.y + shear.y * pt.z;
-        pt.y += shear.z * pt.z;
-
-        // 2. Scale
-        pt.x *= scale.x;
-        pt.y *= scale.y;
-        pt.z *= scale.z;
-
-        // 3. Rotation (XYZ)
+    Vecteur applyRotation(Vecteur& pt) const {
         // Rotation autour de X
         const float cosx = std::cos(rotation.x);
         const float sinx = std::sin(rotation.x);
         pt = {
-            pt.x,
+            pt.x * 1,
             pt.y * cosx - pt.z * sinx,
             pt.y * sinx + pt.z * cosx
         };
@@ -64,7 +56,7 @@ typedef struct Transform {
         const float siny = std::sin(rotation.y);
         pt = {
             pt.x * cosy + pt.z * siny,
-            pt.y,
+            pt.y * 1,
             -pt.x * siny + pt.z * cosy
         };
         // Rotation autour de Z
@@ -73,38 +65,49 @@ typedef struct Transform {
         pt = {
             pt.x * cosz - pt.y * sinz,
             pt.x * sinz + pt.y * cosz,
-            pt.z
+            pt.z * 1
         };
-
-        // 4. Translation
-        pt = pt + translation;
         return pt;
     }
 
-    // Appliquer la matrice
-    Vecteur applyMatrix(const Vecteur& p) const {
-        if (!use_custom_matrix) return apply(p);
+    Vecteur appyShear(const Vecteur& pt) const {
+        return {
+            pt.x + shear.x * pt.y + shear.y * pt.z,
+            pt.y + shear.z * pt.z,
+            pt.z
+        };
+    }
 
-        float x = p.x, y = p.y, z = p.z;
+    Vecteur applyScale(const Vecteur& pt) const
+    {
+        return {
+        pt.x * scale.x,
+        pt.y * scale.y,
+        pt.z * scale.z
+        };
+    }
+
+    Vecteur applyMatrix(const Vecteur& p) const {
+        const float x = p.x;
+        const float y = p.y;
+        const float z = p.z;
 
         float xp =
-            custom_matrix[0][0] * x +
-            custom_matrix[0][1] * y +
-            custom_matrix[0][2] * z +
-            custom_matrix[0][3];
+            matrix[0][0] * x +
+            matrix[0][1] * y +
+            matrix[0][2] * z;
         float yp =
-            custom_matrix[1][0] * x +
-            custom_matrix[1][1] * y +
-            custom_matrix[1][2] * z +
-            custom_matrix[1][3];
+            matrix[1][0] * x +
+            matrix[1][1] * y +
+            matrix[1][2] * z;
         float zp =
-            custom_matrix[2][0] * x +
-            custom_matrix[2][1] * y +
-            custom_matrix[2][2] * z +
-            custom_matrix[2][3];
+            matrix[2][0] * x +
+            matrix[2][1] * y +
+            matrix[2][2] * z;
 
         return {xp, yp, zp};
     }
+
 } Transform;
 
 typedef struct Material
@@ -131,9 +134,10 @@ typedef struct dataPrimitive {
 
     // Propriétés géométriques de base
     float radius   = 1.0f;
-    float height   = 1.0f;
+    float height   = 0.0f;
     float width    = 1.0f;
     float length   = 1.0f;
+    float corner   = 1.0f;
 
     // Spécifique aux formes planes ou implicites
     Vecteur normal      = {0.0f, 1.0f, 0.0f};

@@ -13,8 +13,6 @@
 class Cone final: public APrimitive {
 public:
     Cone(dataPrimitive& data, const std::string& name);
-    Point apex;
-    Point axis;
 
     bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const override;
 };
