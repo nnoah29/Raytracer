@@ -1,0 +1,69 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/interfaces/IPrimitive.hpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Factory.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Factory.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 25/04/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#ifndef IPRIMITIVE_HPP
+        -:   13:#define IPRIMITIVE_HPP
+        -:   14:#include "../../includes/Ray.hpp"
+        -:   15:#include "../../includes/Vecteur.hpp"
+        -:   16:#include "../../includes/Color.hpp"
+        -:   17:#include "../../includes/my.hpp"
+        -:   18:
+        -:   19:typedef struct PointOfImpact
+        -:   20:{
+        -:   21:    Point p;
+        -:   22:    Vecteur normal;
+        -:   23:    float t{};
+        -:   24:    bool front{};
+        -:   25:    Material material{};
+        -:   26:
+        -:   27:
+function _ZN13PointOfImpact15set_face_normalERK3RayRK7Vecteur called 2539289 returned 100% blocks executed 100%
+  2539289:   28:    void set_face_normal(const Ray& ray, const Vecteur& outward_normal) {
+  2539289:   29:        front = (ray.direction().dot(outward_normal) < 0);
+  2539289:   29-block 2
+appel   0 a retourné 2539289
+appel   1 a retourné 2539289
+  2539289:   30:        normal = front ? outward_normal : -outward_normal;
+branchement  0 pris 2534920 (fallthrough)
+branchement  1 pris 4369
+  2534920:   30-block 5
+     4369:   30-block 6
+appel   2 a retourné 4369
+  2539289:   31:    }
+        -:   32:} PointOfImpact;
+        -:   33:
+        -:   34:class IPrimitive {
+        -:   35:    public:
+    #####:   36:    virtual ~IPrimitive() = default;
+------------------
+_ZN10IPrimitiveD0Ev:
+function _ZN10IPrimitiveD0Ev called 0 returned 0% blocks executed 0%
+    #####:   36:    virtual ~IPrimitive() = default;
+    %%%%%:   36-block 2
+appel   0 jamais exécuté
+appel   1 jamais exécuté
+------------------
+_ZN10IPrimitiveD2Ev:
+function _ZN10IPrimitiveD2Ev called 0 returned 0% blocks executed 0%
+    #####:   36:    virtual ~IPrimitive() = default;
+------------------
+        -:   37:
+        -:   38:    virtual bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const = 0;
+        -:   39:
+        -:   40:};
+        -:   41:
+        -:   42:
+        -:   43:
+        -:   44:#endif //IPRIMITIVE_HPP

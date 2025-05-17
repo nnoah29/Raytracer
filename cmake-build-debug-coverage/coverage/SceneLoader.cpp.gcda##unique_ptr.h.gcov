@@ -1,0 +1,1214 @@
+        -:    0:Source:/usr/include/c++/15.1.1/bits/unique_ptr.h
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/SceneLoader.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/SceneLoader.cpp.gcda
+        -:    0:Runs:1
+        -:    1:
+        -:    2:// unique_ptr implementation -*- C++ -*-
+        -:    3:
+        -:    4:// Copyright (C) 2008-2025 Free Software Foundation, Inc.
+        -:    5://
+        -:    6:// This file is part of the GNU ISO C++ Library.  This library is free
+        -:    7:// software; you can redistribute it and/or modify it under the
+        -:    8:// terms of the GNU General Public License as published by the
+        -:    9:// Free Software Foundation; either version 3, or (at your option)
+        -:   10:// any later version.
+        -:   11:
+        -:   12:// This library is distributed in the hope that it will be useful,
+        -:   13:// but WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   14:// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        -:   15:// GNU General Public License for more details.
+        -:   16:
+        -:   17:// Under Section 7 of GPL version 3, you are granted additional
+        -:   18:// permissions described in the GCC Runtime Library Exception, version
+        -:   19:// 3.1, as published by the Free Software Foundation.
+        -:   20:
+        -:   21:// You should have received a copy of the GNU General Public License and
+        -:   22:// a copy of the GCC Runtime Library Exception along with this program;
+        -:   23:// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+        -:   24:// <http://www.gnu.org/licenses/>.
+        -:   25:
+        -:   26:/** @file bits/unique_ptr.h
+        -:   27: *  This is an internal header file, included by other library headers.
+        -:   28: *  Do not attempt to use it directly. @headername{memory}
+        -:   29: */
+        -:   30:
+        -:   31:#ifndef _UNIQUE_PTR_H
+        -:   32:#define _UNIQUE_PTR_H 1
+        -:   33:
+        -:   34:#include <bits/c++config.h>
+        -:   35:#include <debug/assertions.h>
+        -:   36:#include <type_traits>
+        -:   37:#include <tuple>
+        -:   38:#include <bits/stl_function.h>
+        -:   39:#include <bits/functional_hash.h>
+        -:   40:#if __cplusplus >= 202002L
+        -:   41:# include <compare>
+        -:   42:# if _GLIBCXX_HOSTED
+        -:   43:#  include <bits/ostream.h>
+        -:   44:# endif
+        -:   45:#endif
+        -:   46:
+        -:   47:namespace std _GLIBCXX_VISIBILITY(default)
+        -:   48:{
+        -:   49:_GLIBCXX_BEGIN_NAMESPACE_VERSION
+        -:   50:
+        -:   51:  /**
+        -:   52:   * @addtogroup pointer_abstractions
+        -:   53:   * @{
+        -:   54:   */
+        -:   55:
+        -:   56:#if _GLIBCXX_USE_DEPRECATED
+        -:   57:#pragma GCC diagnostic push
+        -:   58:#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        -:   59:  template<typename> class auto_ptr;
+        -:   60:#pragma GCC diagnostic pop
+        -:   61:#endif
+        -:   62:
+        -:   63:  /** Primary template of default_delete, used by unique_ptr for single objects
+        -:   64:   *
+        -:   65:   * @headerfile memory
+        -:   66:   * @since C++11
+        -:   67:   */
+        -:   68:  template<typename _Tp>
+        -:   69:    struct default_delete
+        -:   70:    {
+        -:   71:      /// Default constructor
+        -:   72:      constexpr default_delete() noexcept = default;
+        -:   73:
+        -:   74:      /** @brief Converting constructor.
+        -:   75:       *
+        -:   76:       * Allows conversion from a deleter for objects of another type, `_Up`,
+        -:   77:       * only if `_Up*` is convertible to `_Tp*`.
+        -:   78:       */
+        -:   79:      template<typename _Up,
+        -:   80:	       typename = _Require<is_convertible<_Up*, _Tp*>>>
+        -:   81:	_GLIBCXX23_CONSTEXPR
+        -:   82:        default_delete(const default_delete<_Up>&) noexcept { }
+        -:   83:
+        -:   84:      /// Calls `delete __ptr`
+        -:   85:      _GLIBCXX23_CONSTEXPR
+        -:   86:      void
+        -:   87:      operator()(_Tp* __ptr) const
+        -:   88:      {
+        -:   89:	static_assert(!is_void<_Tp>::value,
+        -:   90:		      "can't delete pointer to incomplete type");
+        -:   91:	static_assert(sizeof(_Tp)>0,
+        -:   92:		      "can't delete pointer to incomplete type");
+        -:   93:	delete __ptr;
+        -:   94:      }
+        -:   95:    };
+        -:   96:
+        -:   97:  // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:   98:  // DR 740 - omit specialization for array objects with a compile time length
+        -:   99:
+        -:  100:  /** Specialization of default_delete for arrays, used by `unique_ptr<T[]>`
+        -:  101:   *
+        -:  102:   * @headerfile memory
+        -:  103:   * @since C++11
+        -:  104:   */
+        -:  105:  template<typename _Tp>
+        -:  106:    struct default_delete<_Tp[]>
+        -:  107:    {
+        -:  108:    public:
+        -:  109:      /// Default constructor
+        -:  110:      constexpr default_delete() noexcept = default;
+        -:  111:
+        -:  112:      /** @brief Converting constructor.
+        -:  113:       *
+        -:  114:       * Allows conversion from a deleter for arrays of another type, such as
+        -:  115:       * a const-qualified version of `_Tp`.
+        -:  116:       *
+        -:  117:       * Conversions from types derived from `_Tp` are not allowed because
+        -:  118:       * it is undefined to `delete[]` an array of derived types through a
+        -:  119:       * pointer to the base type.
+        -:  120:       */
+        -:  121:      template<typename _Up,
+        -:  122:	       typename = _Require<is_convertible<_Up(*)[], _Tp(*)[]>>>
+        -:  123:	_GLIBCXX23_CONSTEXPR
+        -:  124:        default_delete(const default_delete<_Up[]>&) noexcept { }
+        -:  125:
+        -:  126:      /// Calls `delete[] __ptr`
+        -:  127:      template<typename _Up>
+        -:  128:	_GLIBCXX23_CONSTEXPR
+        -:  129:	typename enable_if<is_convertible<_Up(*)[], _Tp(*)[]>::value>::type
+        -:  130:	operator()(_Up* __ptr) const
+        -:  131:	{
+        -:  132:	  static_assert(sizeof(_Tp)>0,
+        -:  133:			"can't delete pointer to incomplete type");
+        -:  134:	  delete [] __ptr;
+        -:  135:	}
+        -:  136:    };
+        -:  137:
+        -:  138:  /// @cond undocumented
+        -:  139:
+        -:  140:  // Manages the pointer and deleter of a unique_ptr
+        -:  141:  template <typename _Tp, typename _Dp>
+        -:  142:    class __uniq_ptr_impl
+        -:  143:    {
+        -:  144:      template <typename _Up, typename _Ep, typename = void>
+        -:  145:	struct _Ptr
+        -:  146:	{
+        -:  147:	  using type = _Up*;
+        -:  148:	};
+        -:  149:
+        -:  150:      template <typename _Up, typename _Ep>
+        -:  151:	struct
+        -:  152:	_Ptr<_Up, _Ep, __void_t<typename remove_reference<_Ep>::type::pointer>>
+        -:  153:	{
+        -:  154:	  using type = typename remove_reference<_Ep>::type::pointer;
+        -:  155:	};
+        -:  156:
+        -:  157:    public:
+        -:  158:      using _DeleterConstraint = enable_if<
+        -:  159:        __and_<__not_<is_pointer<_Dp>>,
+        -:  160:	       is_default_constructible<_Dp>>::value>;
+        -:  161:
+        -:  162:      using pointer = typename _Ptr<_Tp, _Dp>::type;
+        -:  163:
+        -:  164:      static_assert( !is_rvalue_reference<_Dp>::value,
+        -:  165:		     "unique_ptr's deleter type must be a function object type"
+        -:  166:		     " or an lvalue reference type" );
+        -:  167:
+        -:  168:      __uniq_ptr_impl() = default;
+        -:  169:      _GLIBCXX23_CONSTEXPR
+        -:  170:      __uniq_ptr_impl(pointer __p) : _M_t() { _M_ptr() = __p; }
+        -:  171:
+        -:  172:      template<typename _Del>
+        -:  173:	_GLIBCXX23_CONSTEXPR
+        -:  174:	__uniq_ptr_impl(pointer __p, _Del&& __d)
+        -:  175:	: _M_t(__p, std::forward<_Del>(__d)) { }
+        -:  176:
+        -:  177:      _GLIBCXX23_CONSTEXPR
+        -:  178:      __uniq_ptr_impl(__uniq_ptr_impl&& __u) noexcept
+        -:  179:      : _M_t(std::move(__u._M_t))
+        -:  180:      { __u._M_ptr() = nullptr; }
+        -:  181:
+        -:  182:      _GLIBCXX23_CONSTEXPR
+        -:  183:      __uniq_ptr_impl& operator=(__uniq_ptr_impl&& __u) noexcept
+        -:  184:      {
+        -:  185:	reset(__u.release());
+        -:  186:	_M_deleter() = std::forward<_Dp>(__u._M_deleter());
+        -:  187:	return *this;
+        -:  188:      }
+        -:  189:
+        -:  190:      _GLIBCXX23_CONSTEXPR
+function _ZNSt15__uniq_ptr_implINSt10filesystem7__cxx114path5_List5_ImplENS3_13_Impl_deleterEE6_M_ptrEv called 0 returned 0% blocks executed 0%
+    #####:  191:      pointer&   _M_ptr() noexcept { return std::get<0>(_M_t); }
+    %%%%%:  191-block 2
+appel   0 jamais exécuté
+        -:  192:      _GLIBCXX23_CONSTEXPR
+        -:  193:      pointer    _M_ptr() const noexcept { return std::get<0>(_M_t); }
+        -:  194:      _GLIBCXX23_CONSTEXPR
+function _ZNSt15__uniq_ptr_implINSt10filesystem7__cxx114path5_List5_ImplENS3_13_Impl_deleterEE10_M_deleterEv called 0 returned 0% blocks executed 0%
+    #####:  195:      _Dp&       _M_deleter() noexcept { return std::get<1>(_M_t); }
+    %%%%%:  195-block 2
+appel   0 jamais exécuté
+        -:  196:      _GLIBCXX23_CONSTEXPR
+        -:  197:      const _Dp& _M_deleter() const noexcept { return std::get<1>(_M_t); }
+        -:  198:
+        -:  199:      _GLIBCXX23_CONSTEXPR
+        -:  200:      void reset(pointer __p) noexcept
+        -:  201:      {
+        -:  202:	const pointer __old_p = _M_ptr();
+        -:  203:	_M_ptr() = __p;
+        -:  204:	if (__old_p)
+        -:  205:	  _M_deleter()(__old_p);
+        -:  206:      }
+        -:  207:
+        -:  208:      _GLIBCXX23_CONSTEXPR
+        -:  209:      pointer release() noexcept
+        -:  210:      {
+        -:  211:	pointer __p = _M_ptr();
+        -:  212:	_M_ptr() = nullptr;
+        -:  213:	return __p;
+        -:  214:      }
+        -:  215:
+        -:  216:      _GLIBCXX23_CONSTEXPR
+        -:  217:      void
+        -:  218:      swap(__uniq_ptr_impl& __rhs) noexcept
+        -:  219:      {
+        -:  220:	using std::swap;
+        -:  221:	swap(this->_M_ptr(), __rhs._M_ptr());
+        -:  222:	swap(this->_M_deleter(), __rhs._M_deleter());
+        -:  223:      }
+        -:  224:
+        -:  225:    private:
+        -:  226:      tuple<pointer, _Dp> _M_t;
+        -:  227:    };
+        -:  228:
+        -:  229:  // Defines move construction + assignment as either defaulted or deleted.
+        -:  230:  template <typename _Tp, typename _Dp,
+        -:  231:	    bool = is_move_constructible<_Dp>::value,
+        -:  232:	    bool = is_move_assignable<_Dp>::value>
+        -:  233:    struct __uniq_ptr_data : __uniq_ptr_impl<_Tp, _Dp>
+        -:  234:    {
+        -:  235:      using __uniq_ptr_impl<_Tp, _Dp>::__uniq_ptr_impl;
+        -:  236:      __uniq_ptr_data(__uniq_ptr_data&&) = default;
+        -:  237:      __uniq_ptr_data& operator=(__uniq_ptr_data&&) = default;
+        -:  238:    };
+        -:  239:
+        -:  240:  template <typename _Tp, typename _Dp>
+        -:  241:    struct __uniq_ptr_data<_Tp, _Dp, true, false> : __uniq_ptr_impl<_Tp, _Dp>
+        -:  242:    {
+        -:  243:      using __uniq_ptr_impl<_Tp, _Dp>::__uniq_ptr_impl;
+        -:  244:      __uniq_ptr_data(__uniq_ptr_data&&) = default;
+        -:  245:      __uniq_ptr_data& operator=(__uniq_ptr_data&&) = delete;
+        -:  246:    };
+        -:  247:
+        -:  248:  template <typename _Tp, typename _Dp>
+        -:  249:    struct __uniq_ptr_data<_Tp, _Dp, false, true> : __uniq_ptr_impl<_Tp, _Dp>
+        -:  250:    {
+        -:  251:      using __uniq_ptr_impl<_Tp, _Dp>::__uniq_ptr_impl;
+        -:  252:      __uniq_ptr_data(__uniq_ptr_data&&) = delete;
+        -:  253:      __uniq_ptr_data& operator=(__uniq_ptr_data&&) = default;
+        -:  254:    };
+        -:  255:
+        -:  256:  template <typename _Tp, typename _Dp>
+        -:  257:    struct __uniq_ptr_data<_Tp, _Dp, false, false> : __uniq_ptr_impl<_Tp, _Dp>
+        -:  258:    {
+        -:  259:      using __uniq_ptr_impl<_Tp, _Dp>::__uniq_ptr_impl;
+        -:  260:      __uniq_ptr_data(__uniq_ptr_data&&) = delete;
+        -:  261:      __uniq_ptr_data& operator=(__uniq_ptr_data&&) = delete;
+        -:  262:    };
+        -:  263:  /// @endcond
+        -:  264:
+        -:  265:  // 20.7.1.2 unique_ptr for single objects.
+        -:  266:
+        -:  267:  /// A move-only smart pointer that manages unique ownership of a resource.
+        -:  268:  /// @headerfile memory
+        -:  269:  /// @since C++11
+        -:  270:  template <typename _Tp, typename _Dp = default_delete<_Tp>>
+        -:  271:    class unique_ptr
+        -:  272:    {
+        -:  273:      template <typename _Up>
+        -:  274:	using _DeleterConstraint =
+        -:  275:	  typename __uniq_ptr_impl<_Tp, _Up>::_DeleterConstraint::type;
+        -:  276:
+        -:  277:      __uniq_ptr_data<_Tp, _Dp> _M_t;
+        -:  278:
+        -:  279:    public:
+        -:  280:      using pointer	  = typename __uniq_ptr_impl<_Tp, _Dp>::pointer;
+        -:  281:      using element_type  = _Tp;
+        -:  282:      using deleter_type  = _Dp;
+        -:  283:
+        -:  284:    private:
+        -:  285:      // helper template for detecting a safe conversion from another
+        -:  286:      // unique_ptr
+        -:  287:      template<typename _Up, typename _Ep>
+        -:  288:	using __safe_conversion_up = __and_<
+        -:  289:	  is_convertible<typename unique_ptr<_Up, _Ep>::pointer, pointer>,
+        -:  290:	  __not_<is_array<_Up>>
+        -:  291:        >;
+        -:  292:
+        -:  293:    public:
+        -:  294:      // Constructors.
+        -:  295:
+        -:  296:      /// Default constructor, creates a unique_ptr that owns nothing.
+        -:  297:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  298:	constexpr unique_ptr() noexcept
+        -:  299:	: _M_t()
+        -:  300:	{ }
+        -:  301:
+        -:  302:      /** Takes ownership of a pointer.
+        -:  303:       *
+        -:  304:       * @param __p  A pointer to an object of @c element_type
+        -:  305:       *
+        -:  306:       * The deleter will be value-initialized.
+        -:  307:       */
+        -:  308:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  309:	_GLIBCXX23_CONSTEXPR
+        -:  310:	explicit
+        -:  311:	unique_ptr(pointer __p) noexcept
+        -:  312:	: _M_t(__p)
+        -:  313:        { }
+        -:  314:
+        -:  315:      /** Takes ownership of a pointer.
+        -:  316:       *
+        -:  317:       * @param __p  A pointer to an object of @c element_type
+        -:  318:       * @param __d  A reference to a deleter.
+        -:  319:       *
+        -:  320:       * The deleter will be initialized with @p __d
+        -:  321:       */
+        -:  322:      template<typename _Del = deleter_type,
+        -:  323:	       typename = _Require<is_copy_constructible<_Del>>>
+        -:  324:	_GLIBCXX23_CONSTEXPR
+        -:  325:	unique_ptr(pointer __p, const deleter_type& __d) noexcept
+        -:  326:	: _M_t(__p, __d) { }
+        -:  327:
+        -:  328:      /** Takes ownership of a pointer.
+        -:  329:       *
+        -:  330:       * @param __p  A pointer to an object of @c element_type
+        -:  331:       * @param __d  An rvalue reference to a (non-reference) deleter.
+        -:  332:       *
+        -:  333:       * The deleter will be initialized with @p std::move(__d)
+        -:  334:       */
+        -:  335:      template<typename _Del = deleter_type,
+        -:  336:	       typename = _Require<is_move_constructible<_Del>>>
+        -:  337:	_GLIBCXX23_CONSTEXPR
+        -:  338:	unique_ptr(pointer __p,
+        -:  339:		   __enable_if_t<!is_lvalue_reference<_Del>::value,
+        -:  340:				 _Del&&> __d) noexcept
+        -:  341:	: _M_t(__p, std::move(__d))
+        -:  342:	{ }
+        -:  343:
+        -:  344:      template<typename _Del = deleter_type,
+        -:  345:	       typename _DelUnref = typename remove_reference<_Del>::type>
+        -:  346:	_GLIBCXX23_CONSTEXPR
+        -:  347:	unique_ptr(pointer,
+        -:  348:		   __enable_if_t<is_lvalue_reference<_Del>::value,
+        -:  349:				 _DelUnref&&>) = delete;
+        -:  350:
+        -:  351:      /// Creates a unique_ptr that owns nothing.
+        -:  352:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  353:	constexpr unique_ptr(nullptr_t) noexcept
+        -:  354:	: _M_t()
+        -:  355:	{ }
+        -:  356:
+        -:  357:      // Move constructors.
+        -:  358:
+        -:  359:      /// Move constructor.
+        -:  360:      unique_ptr(unique_ptr&&) = default;
+        -:  361:
+        -:  362:      /** @brief Converting constructor from another type
+        -:  363:       *
+        -:  364:       * Requires that the pointer owned by @p __u is convertible to the
+        -:  365:       * type of pointer owned by this object, @p __u does not own an array,
+        -:  366:       * and @p __u has a compatible deleter type.
+        -:  367:       */
+        -:  368:      template<typename _Up, typename _Ep, typename = _Require<
+        -:  369:               __safe_conversion_up<_Up, _Ep>,
+        -:  370:	       __conditional_t<is_reference<_Dp>::value,
+        -:  371:			       is_same<_Ep, _Dp>,
+        -:  372:			       is_convertible<_Ep, _Dp>>>>
+        -:  373:	_GLIBCXX23_CONSTEXPR
+        -:  374:	unique_ptr(unique_ptr<_Up, _Ep>&& __u) noexcept
+        -:  375:	: _M_t(__u.release(), std::forward<_Ep>(__u.get_deleter()))
+        -:  376:	{ }
+        -:  377:
+        -:  378:#if _GLIBCXX_USE_DEPRECATED
+        -:  379:#pragma GCC diagnostic push
+        -:  380:#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        -:  381:      /// Converting constructor from @c auto_ptr
+        -:  382:      template<typename _Up,
+        -:  383:	       typename = _Require<is_convertible<_Up*, pointer>,
+        -:  384:				   is_same<_Dp, default_delete<_Tp>>>>
+        -:  385:	unique_ptr(auto_ptr<_Up>&& __u) noexcept;
+        -:  386:#pragma GCC diagnostic pop
+        -:  387:#endif
+        -:  388:
+        -:  389:      /// Destructor, invokes the deleter if the stored pointer is not null.
+        -:  390:#if __cplusplus > 202002L && __cpp_constexpr_dynamic_alloc
+        -:  391:      constexpr
+        -:  392:#endif
+function _ZNSt10unique_ptrINSt10filesystem7__cxx114path5_List5_ImplENS3_13_Impl_deleterEED2Ev called 0 returned 0% blocks executed 0%
+    #####:  393:      ~unique_ptr() noexcept
+        -:  394:      {
+        -:  395:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  396:		      "unique_ptr's deleter must be invocable with a pointer");
+    #####:  397:	auto& __ptr = _M_t._M_ptr();
+    %%%%%:  397-block 2
+appel   0 jamais exécuté
+    #####:  398:	if (__ptr != nullptr)
+branchement  0 jamais exécuté (fallthrough)
+branchement  1 jamais exécuté
+    #####:  399:	  get_deleter()(std::move(__ptr));
+    %%%%%:  399-block 4
+appel   0 jamais exécuté
+    %%%%%:  399-block 7
+appel   1 jamais exécuté
+    #####:  400:	__ptr = pointer();
+    #####:  401:      }
+        -:  402:
+        -:  403:      // Assignment.
+        -:  404:
+        -:  405:      /** @brief Move assignment operator.
+        -:  406:       *
+        -:  407:       * Invokes the deleter if this object owns a pointer.
+        -:  408:       */
+        -:  409:      unique_ptr& operator=(unique_ptr&&) = default;
+        -:  410:
+        -:  411:      /** @brief Assignment from another type.
+        -:  412:       *
+        -:  413:       * @param __u  The object to transfer ownership from, which owns a
+        -:  414:       *             convertible pointer to a non-array object.
+        -:  415:       *
+        -:  416:       * Invokes the deleter if this object owns a pointer.
+        -:  417:       */
+        -:  418:      template<typename _Up, typename _Ep>
+        -:  419:	_GLIBCXX23_CONSTEXPR
+        -:  420:        typename enable_if< __and_<
+        -:  421:          __safe_conversion_up<_Up, _Ep>,
+        -:  422:          is_assignable<deleter_type&, _Ep&&>
+        -:  423:          >::value,
+        -:  424:          unique_ptr&>::type
+        -:  425:	operator=(unique_ptr<_Up, _Ep>&& __u) noexcept
+        -:  426:	{
+        -:  427:	  reset(__u.release());
+        -:  428:	  get_deleter() = std::forward<_Ep>(__u.get_deleter());
+        -:  429:	  return *this;
+        -:  430:	}
+        -:  431:
+        -:  432:      /// Reset the %unique_ptr to empty, invoking the deleter if necessary.
+        -:  433:      _GLIBCXX23_CONSTEXPR
+        -:  434:      unique_ptr&
+        -:  435:      operator=(nullptr_t) noexcept
+        -:  436:      {
+        -:  437:	reset();
+        -:  438:	return *this;
+        -:  439:      }
+        -:  440:
+        -:  441:      // Observers.
+        -:  442:
+        -:  443:      /// Dereference the stored pointer.
+        -:  444:      _GLIBCXX23_CONSTEXPR
+        -:  445:      typename add_lvalue_reference<element_type>::type
+        -:  446:      operator*() const noexcept(noexcept(*std::declval<pointer>()))
+        -:  447:      {
+        -:  448:#if _GLIBCXX_USE_BUILTIN_TRAIT(__reference_converts_from_temporary)
+        -:  449:	// _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  450:	// 4148. unique_ptr::operator* should not allow dangling references
+        -:  451:	using _ResT = typename add_lvalue_reference<element_type>::type;
+        -:  452:	using _DerefT = decltype(*get());
+        -:  453:	static_assert(!__reference_converts_from_temporary(_ResT, _DerefT),
+        -:  454:		      "operator* must not return a dangling reference");
+        -:  455:#endif
+        -:  456:	__glibcxx_assert(get() != pointer());
+        -:  457:	return *get();
+        -:  458:      }
+        -:  459:
+        -:  460:      /// Return the stored pointer.
+        -:  461:      _GLIBCXX23_CONSTEXPR
+        -:  462:      pointer
+        -:  463:      operator->() const noexcept
+        -:  464:      {
+        -:  465:	_GLIBCXX_DEBUG_PEDASSERT(get() != pointer());
+        -:  466:	return get();
+        -:  467:      }
+        -:  468:
+        -:  469:      /// Return the stored pointer.
+        -:  470:      _GLIBCXX23_CONSTEXPR
+        -:  471:      pointer
+        -:  472:      get() const noexcept
+        -:  473:      { return _M_t._M_ptr(); }
+        -:  474:
+        -:  475:      /// Return a reference to the stored deleter.
+        -:  476:      _GLIBCXX23_CONSTEXPR
+        -:  477:      deleter_type&
+function _ZNSt10unique_ptrINSt10filesystem7__cxx114path5_List5_ImplENS3_13_Impl_deleterEE11get_deleterEv called 0 returned 0% blocks executed 0%
+    #####:  478:      get_deleter() noexcept
+    #####:  479:      { return _M_t._M_deleter(); }
+    %%%%%:  479-block 2
+appel   0 jamais exécuté
+        -:  480:
+        -:  481:      /// Return a reference to the stored deleter.
+        -:  482:      _GLIBCXX23_CONSTEXPR
+        -:  483:      const deleter_type&
+        -:  484:      get_deleter() const noexcept
+        -:  485:      { return _M_t._M_deleter(); }
+        -:  486:
+        -:  487:      /// Return @c true if the stored pointer is not null.
+        -:  488:      _GLIBCXX23_CONSTEXPR
+        -:  489:      explicit operator bool() const noexcept
+        -:  490:      { return get() == pointer() ? false : true; }
+        -:  491:
+        -:  492:      // Modifiers.
+        -:  493:
+        -:  494:      /// Release ownership of any stored pointer.
+        -:  495:      _GLIBCXX23_CONSTEXPR
+        -:  496:      pointer
+        -:  497:      release() noexcept
+        -:  498:      { return _M_t.release(); }
+        -:  499:
+        -:  500:      /** @brief Replace the stored pointer.
+        -:  501:       *
+        -:  502:       * @param __p  The new pointer to store.
+        -:  503:       *
+        -:  504:       * The deleter will be invoked if a pointer is already owned.
+        -:  505:       */
+        -:  506:      _GLIBCXX23_CONSTEXPR
+        -:  507:      void
+        -:  508:      reset(pointer __p = pointer()) noexcept
+        -:  509:      {
+        -:  510:	static_assert(__is_invocable<deleter_type&, pointer>::value,
+        -:  511:		      "unique_ptr's deleter must be invocable with a pointer");
+        -:  512:	_M_t.reset(std::move(__p));
+        -:  513:      }
+        -:  514:
+        -:  515:      /// Exchange the pointer and deleter with another object.
+        -:  516:      _GLIBCXX23_CONSTEXPR
+        -:  517:      void
+        -:  518:      swap(unique_ptr& __u) noexcept
+        -:  519:      {
+        -:  520:	static_assert(__is_swappable<_Dp>::value, "deleter must be swappable");
+        -:  521:	_M_t.swap(__u._M_t);
+        -:  522:      }
+        -:  523:
+        -:  524:      // Disable copy from lvalue.
+        -:  525:      unique_ptr(const unique_ptr&) = delete;
+        -:  526:      unique_ptr& operator=(const unique_ptr&) = delete;
+        -:  527:
+        -:  528:    private:
+        -:  529:#ifdef __glibcxx_out_ptr
+        -:  530:      template<typename, typename, typename...>
+        -:  531:	friend class out_ptr_t;
+        -:  532:      template<typename, typename, typename...>
+        -:  533:	friend class inout_ptr_t;
+        -:  534:#endif
+        -:  535:  };
+        -:  536:
+        -:  537:  // 20.7.1.3 unique_ptr for array objects with a runtime length
+        -:  538:  // [unique.ptr.runtime]
+        -:  539:  // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -:  540:  // DR 740 - omit specialization for array objects with a compile time length
+        -:  541:
+        -:  542:  /// A move-only smart pointer that manages unique ownership of an array.
+        -:  543:  /// @headerfile memory
+        -:  544:  /// @since C++11
+        -:  545:  template<typename _Tp, typename _Dp>
+        -:  546:    class unique_ptr<_Tp[], _Dp>
+        -:  547:    {
+        -:  548:      template <typename _Up>
+        -:  549:      using _DeleterConstraint =
+        -:  550:	typename __uniq_ptr_impl<_Tp, _Up>::_DeleterConstraint::type;
+        -:  551:
+        -:  552:      __uniq_ptr_data<_Tp, _Dp> _M_t;
+        -:  553:
+        -:  554:      // like is_base_of<_Tp, _Up> but false if unqualified types are the same
+        -:  555:      template<typename _Up>
+        -:  556:	using __is_derived_Tp
+        -:  557:	  = __and_< is_base_of<_Tp, _Up>,
+        -:  558:		    __not_<is_same<__remove_cv_t<_Tp>, __remove_cv_t<_Up>>> >;
+        -:  559:
+        -:  560:    public:
+        -:  561:      using pointer	  = typename __uniq_ptr_impl<_Tp, _Dp>::pointer;
+        -:  562:      using element_type  = _Tp;
+        -:  563:      using deleter_type  = _Dp;
+        -:  564:
+        -:  565:      // helper template for detecting a safe conversion from another
+        -:  566:      // unique_ptr
+        -:  567:      template<typename _Up, typename _Ep,
+        -:  568:               typename _UPtr = unique_ptr<_Up, _Ep>,
+        -:  569:	       typename _UP_pointer = typename _UPtr::pointer,
+        -:  570:	       typename _UP_element_type = typename _UPtr::element_type>
+        -:  571:	using __safe_conversion_up = __and_<
+        -:  572:          is_array<_Up>,
+        -:  573:          is_same<pointer, element_type*>,
+        -:  574:          is_same<_UP_pointer, _UP_element_type*>,
+        -:  575:          is_convertible<_UP_element_type(*)[], element_type(*)[]>
+        -:  576:        >;
+        -:  577:
+        -:  578:      // helper template for detecting a safe conversion from a raw pointer
+        -:  579:      template<typename _Up>
+        -:  580:        using __safe_conversion_raw = __and_<
+        -:  581:          __or_<__or_<is_same<_Up, pointer>,
+        -:  582:                      is_same<_Up, nullptr_t>>,
+        -:  583:                __and_<is_pointer<_Up>,
+        -:  584:                       is_same<pointer, element_type*>,
+        -:  585:                       is_convertible<
+        -:  586:                         typename remove_pointer<_Up>::type(*)[],
+        -:  587:                         element_type(*)[]>
+        -:  588:                >
+        -:  589:          >
+        -:  590:        >;
+        -:  591:
+        -:  592:      // Constructors.
+        -:  593:
+        -:  594:      /// Default constructor, creates a unique_ptr that owns nothing.
+        -:  595:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  596:	constexpr unique_ptr() noexcept
+        -:  597:	: _M_t()
+        -:  598:	{ }
+        -:  599:
+        -:  600:      /** Takes ownership of a pointer.
+        -:  601:       *
+        -:  602:       * @param __p  A pointer to an array of a type safely convertible
+        -:  603:       * to an array of @c element_type
+        -:  604:       *
+        -:  605:       * The deleter will be value-initialized.
+        -:  606:       */
+        -:  607:      template<typename _Up,
+        -:  608:	       typename _Vp = _Dp,
+        -:  609:	       typename = _DeleterConstraint<_Vp>,
+        -:  610:	       typename = typename enable_if<
+        -:  611:                 __safe_conversion_raw<_Up>::value, bool>::type>
+        -:  612:	_GLIBCXX23_CONSTEXPR
+        -:  613:	explicit
+        -:  614:	unique_ptr(_Up __p) noexcept
+        -:  615:	: _M_t(__p)
+        -:  616:        { }
+        -:  617:
+        -:  618:      /** Takes ownership of a pointer.
+        -:  619:       *
+        -:  620:       * @param __p  A pointer to an array of a type safely convertible
+        -:  621:       * to an array of @c element_type
+        -:  622:       * @param __d  A reference to a deleter.
+        -:  623:       *
+        -:  624:       * The deleter will be initialized with @p __d
+        -:  625:       */
+        -:  626:      template<typename _Up, typename _Del = deleter_type,
+        -:  627:	       typename = _Require<__safe_conversion_raw<_Up>,
+        -:  628:				   is_copy_constructible<_Del>>>
+        -:  629:	_GLIBCXX23_CONSTEXPR
+        -:  630:	unique_ptr(_Up __p, const deleter_type& __d) noexcept
+        -:  631:	: _M_t(__p, __d) { }
+        -:  632:
+        -:  633:      /** Takes ownership of a pointer.
+        -:  634:       *
+        -:  635:       * @param __p  A pointer to an array of a type safely convertible
+        -:  636:       * to an array of @c element_type
+        -:  637:       * @param __d  A reference to a deleter.
+        -:  638:       *
+        -:  639:       * The deleter will be initialized with @p std::move(__d)
+        -:  640:       */
+        -:  641:      template<typename _Up, typename _Del = deleter_type,
+        -:  642:	       typename = _Require<__safe_conversion_raw<_Up>,
+        -:  643:				   is_move_constructible<_Del>>>
+        -:  644:	_GLIBCXX23_CONSTEXPR
+        -:  645:	unique_ptr(_Up __p,
+        -:  646:		   __enable_if_t<!is_lvalue_reference<_Del>::value,
+        -:  647:				 _Del&&> __d) noexcept
+        -:  648:	: _M_t(std::move(__p), std::move(__d))
+        -:  649:	{ }
+        -:  650:
+        -:  651:      template<typename _Up, typename _Del = deleter_type,
+        -:  652:	       typename _DelUnref = typename remove_reference<_Del>::type,
+        -:  653:	       typename = _Require<__safe_conversion_raw<_Up>>>
+        -:  654:	unique_ptr(_Up,
+        -:  655:		   __enable_if_t<is_lvalue_reference<_Del>::value,
+        -:  656:				 _DelUnref&&>) = delete;
+        -:  657:
+        -:  658:      /// Move constructor.
+        -:  659:      unique_ptr(unique_ptr&&) = default;
+        -:  660:
+        -:  661:      /// Creates a unique_ptr that owns nothing.
+        -:  662:      template<typename _Del = _Dp, typename = _DeleterConstraint<_Del>>
+        -:  663:	constexpr unique_ptr(nullptr_t) noexcept
+        -:  664:	: _M_t()
+        -:  665:        { }
+        -:  666:
+        -:  667:      template<typename _Up, typename _Ep, typename = _Require<
+        -:  668:	       __safe_conversion_up<_Up, _Ep>,
+        -:  669:	       __conditional_t<is_reference<_Dp>::value,
+        -:  670:			       is_same<_Ep, _Dp>,
+        -:  671:			       is_convertible<_Ep, _Dp>>>>
+        -:  672:	_GLIBCXX23_CONSTEXPR
+        -:  673:	unique_ptr(unique_ptr<_Up, _Ep>&& __u) noexcept
+        -:  674:	: _M_t(__u.release(), std::forward<_Ep>(__u.get_deleter()))
+        -:  675:	{ }
+        -:  676:
+        -:  677:      /// Destructor, invokes the deleter if the stored pointer is not null.
+        -:  678:#if __cplusplus > 202002L && __cpp_constexpr_dynamic_alloc
+        -:  679:      constexpr
+        -:  680:#endif
+        -:  681:      ~unique_ptr()
+        -:  682:      {
+        -:  683:	auto& __ptr = _M_t._M_ptr();
+        -:  684:	if (__ptr != nullptr)
+        -:  685:	  get_deleter()(__ptr);
+        -:  686:	__ptr = pointer();
+        -:  687:      }
+        -:  688:
+        -:  689:      // Assignment.
+        -:  690:
+        -:  691:      /** @brief Move assignment operator.
+        -:  692:       *
+        -:  693:       * Invokes the deleter if this object owns a pointer.
+        -:  694:       */
+        -:  695:      unique_ptr&
+        -:  696:      operator=(unique_ptr&&) = default;
+        -:  697:
+        -:  698:      /** @brief Assignment from another type.
+        -:  699:       *
+        -:  700:       * @param __u  The object to transfer ownership from, which owns a
+        -:  701:       *             convertible pointer to an array object.
+        -:  702:       *
+        -:  703:       * Invokes the deleter if this object owns a pointer.
+        -:  704:       */
+        -:  705:      template<typename _Up, typename _Ep>
+        -:  706:	_GLIBCXX23_CONSTEXPR
+        -:  707:	typename
+        -:  708:	enable_if<__and_<__safe_conversion_up<_Up, _Ep>,
+        -:  709:                         is_assignable<deleter_type&, _Ep&&>
+        -:  710:                  >::value,
+        -:  711:                  unique_ptr&>::type
+        -:  712:	operator=(unique_ptr<_Up, _Ep>&& __u) noexcept
+        -:  713:	{
+        -:  714:	  reset(__u.release());
+        -:  715:	  get_deleter() = std::forward<_Ep>(__u.get_deleter());
+        -:  716:	  return *this;
+        -:  717:	}
+        -:  718:
+        -:  719:      /// Reset the %unique_ptr to empty, invoking the deleter if necessary.
+        -:  720:      _GLIBCXX23_CONSTEXPR
+        -:  721:      unique_ptr&
+        -:  722:      operator=(nullptr_t) noexcept
+        -:  723:      {
+        -:  724:	reset();
+        -:  725:	return *this;
+        -:  726:      }
+        -:  727:
+        -:  728:      // Observers.
+        -:  729:
+        -:  730:      /// Access an element of owned array.
+        -:  731:      _GLIBCXX23_CONSTEXPR
+        -:  732:      typename std::add_lvalue_reference<element_type>::type
+        -:  733:      operator[](size_t __i) const
+        -:  734:      {
+        -:  735:	__glibcxx_assert(get() != pointer());
+        -:  736:	return get()[__i];
+        -:  737:      }
+        -:  738:
+        -:  739:      /// Return the stored pointer.
+        -:  740:      _GLIBCXX23_CONSTEXPR
+        -:  741:      pointer
+        -:  742:      get() const noexcept
+        -:  743:      { return _M_t._M_ptr(); }
+        -:  744:
+        -:  745:      /// Return a reference to the stored deleter.
+        -:  746:      _GLIBCXX23_CONSTEXPR
+        -:  747:      deleter_type&
+        -:  748:      get_deleter() noexcept
+        -:  749:      { return _M_t._M_deleter(); }
+        -:  750:
+        -:  751:      /// Return a reference to the stored deleter.
+        -:  752:      _GLIBCXX23_CONSTEXPR
+        -:  753:      const deleter_type&
+        -:  754:      get_deleter() const noexcept
+        -:  755:      { return _M_t._M_deleter(); }
+        -:  756:
+        -:  757:      /// Return @c true if the stored pointer is not null.
+        -:  758:      _GLIBCXX23_CONSTEXPR
+        -:  759:      explicit operator bool() const noexcept
+        -:  760:      { return get() == pointer() ? false : true; }
+        -:  761:
+        -:  762:      // Modifiers.
+        -:  763:
+        -:  764:      /// Release ownership of any stored pointer.
+        -:  765:      _GLIBCXX23_CONSTEXPR
+        -:  766:      pointer
+        -:  767:      release() noexcept
+        -:  768:      { return _M_t.release(); }
+        -:  769:
+        -:  770:      /** @brief Replace the stored pointer.
+        -:  771:       *
+        -:  772:       * @param __p  The new pointer to store.
+        -:  773:       *
+        -:  774:       * The deleter will be invoked if a pointer is already owned.
+        -:  775:       */
+        -:  776:      template <typename _Up,
+        -:  777:                typename = _Require<
+        -:  778:                  __or_<is_same<_Up, pointer>,
+        -:  779:                        __and_<is_same<pointer, element_type*>,
+        -:  780:                               is_pointer<_Up>,
+        -:  781:                               is_convertible<
+        -:  782:                                 typename remove_pointer<_Up>::type(*)[],
+        -:  783:                                 element_type(*)[]
+        -:  784:                               >
+        -:  785:                        >
+        -:  786:                  >
+        -:  787:               >>
+        -:  788:      _GLIBCXX23_CONSTEXPR
+        -:  789:      void
+        -:  790:      reset(_Up __p) noexcept
+        -:  791:      { _M_t.reset(std::move(__p)); }
+        -:  792:
+        -:  793:      _GLIBCXX23_CONSTEXPR
+        -:  794:      void reset(nullptr_t = nullptr) noexcept
+        -:  795:      { reset(pointer()); }
+        -:  796:
+        -:  797:      /// Exchange the pointer and deleter with another object.
+        -:  798:      _GLIBCXX23_CONSTEXPR
+        -:  799:      void
+        -:  800:      swap(unique_ptr& __u) noexcept
+        -:  801:      {
+        -:  802:	static_assert(__is_swappable<_Dp>::value, "deleter must be swappable");
+        -:  803:	_M_t.swap(__u._M_t);
+        -:  804:      }
+        -:  805:
+        -:  806:      // Disable copy from lvalue.
+        -:  807:      unique_ptr(const unique_ptr&) = delete;
+        -:  808:      unique_ptr& operator=(const unique_ptr&) = delete;
+        -:  809:
+        -:  810:    private:
+        -:  811:#ifdef __glibcxx_out_ptr
+        -:  812:      template<typename, typename, typename...> friend class out_ptr_t;
+        -:  813:      template<typename, typename, typename...> friend class inout_ptr_t;
+        -:  814:#endif
+        -:  815:    };
+        -:  816:
+        -:  817:  /// @{
+        -:  818:  /// @relates unique_ptr
+        -:  819:
+        -:  820:  /// Swap overload for unique_ptr
+        -:  821:  template<typename _Tp, typename _Dp>
+        -:  822:    inline
+        -:  823:#if __cplusplus > 201402L || !defined(__STRICT_ANSI__) // c++1z or gnu++11
+        -:  824:    // Constrained free swap overload, see p0185r1
+        -:  825:    _GLIBCXX23_CONSTEXPR
+        -:  826:    typename enable_if<__is_swappable<_Dp>::value>::type
+        -:  827:#else
+        -:  828:    void
+        -:  829:#endif
+        -:  830:    swap(unique_ptr<_Tp, _Dp>& __x,
+        -:  831:	 unique_ptr<_Tp, _Dp>& __y) noexcept
+        -:  832:    { __x.swap(__y); }
+        -:  833:
+        -:  834:#if __cplusplus > 201402L || !defined(__STRICT_ANSI__) // c++1z or gnu++11
+        -:  835:  template<typename _Tp, typename _Dp>
+        -:  836:    typename enable_if<!__is_swappable<_Dp>::value>::type
+        -:  837:    swap(unique_ptr<_Tp, _Dp>&,
+        -:  838:	 unique_ptr<_Tp, _Dp>&) = delete;
+        -:  839:#endif
+        -:  840:
+        -:  841:  /// Equality operator for unique_ptr objects, compares the owned pointers
+        -:  842:  template<typename _Tp, typename _Dp,
+        -:  843:	   typename _Up, typename _Ep>
+        -:  844:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  845:    inline bool
+        -:  846:    operator==(const unique_ptr<_Tp, _Dp>& __x,
+        -:  847:	       const unique_ptr<_Up, _Ep>& __y)
+        -:  848:    { return __x.get() == __y.get(); }
+        -:  849:
+        -:  850:  /// unique_ptr comparison with nullptr
+        -:  851:  template<typename _Tp, typename _Dp>
+        -:  852:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  853:    inline bool
+        -:  854:    operator==(const unique_ptr<_Tp, _Dp>& __x, nullptr_t) noexcept
+        -:  855:    { return !__x; }
+        -:  856:
+        -:  857:#ifndef __cpp_lib_three_way_comparison
+        -:  858:  /// unique_ptr comparison with nullptr
+        -:  859:  template<typename _Tp, typename _Dp>
+        -:  860:    _GLIBCXX_NODISCARD
+        -:  861:    inline bool
+        -:  862:    operator==(nullptr_t, const unique_ptr<_Tp, _Dp>& __x) noexcept
+        -:  863:    { return !__x; }
+        -:  864:
+        -:  865:  /// Inequality operator for unique_ptr objects, compares the owned pointers
+        -:  866:  template<typename _Tp, typename _Dp,
+        -:  867:	   typename _Up, typename _Ep>
+        -:  868:    _GLIBCXX_NODISCARD
+        -:  869:    inline bool
+        -:  870:    operator!=(const unique_ptr<_Tp, _Dp>& __x,
+        -:  871:	       const unique_ptr<_Up, _Ep>& __y)
+        -:  872:    { return __x.get() != __y.get(); }
+        -:  873:
+        -:  874:  /// unique_ptr comparison with nullptr
+        -:  875:  template<typename _Tp, typename _Dp>
+        -:  876:    _GLIBCXX_NODISCARD
+        -:  877:    inline bool
+        -:  878:    operator!=(const unique_ptr<_Tp, _Dp>& __x, nullptr_t) noexcept
+        -:  879:    { return (bool)__x; }
+        -:  880:
+        -:  881:  /// unique_ptr comparison with nullptr
+        -:  882:  template<typename _Tp, typename _Dp>
+        -:  883:    _GLIBCXX_NODISCARD
+        -:  884:    inline bool
+        -:  885:    operator!=(nullptr_t, const unique_ptr<_Tp, _Dp>& __x) noexcept
+        -:  886:    { return (bool)__x; }
+        -:  887:#endif // three way comparison
+        -:  888:
+        -:  889:  /// Relational operator for unique_ptr objects, compares the owned pointers
+        -:  890:  template<typename _Tp, typename _Dp,
+        -:  891:	   typename _Up, typename _Ep>
+        -:  892:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  893:    inline bool
+        -:  894:    operator<(const unique_ptr<_Tp, _Dp>& __x,
+        -:  895:	      const unique_ptr<_Up, _Ep>& __y)
+        -:  896:    {
+        -:  897:      typedef typename
+        -:  898:	std::common_type<typename unique_ptr<_Tp, _Dp>::pointer,
+        -:  899:	                 typename unique_ptr<_Up, _Ep>::pointer>::type _CT;
+        -:  900:      return std::less<_CT>()(__x.get(), __y.get());
+        -:  901:    }
+        -:  902:
+        -:  903:  /// unique_ptr comparison with nullptr
+        -:  904:  template<typename _Tp, typename _Dp>
+        -:  905:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  906:    inline bool
+        -:  907:    operator<(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -:  908:    {
+        -:  909:      return std::less<typename unique_ptr<_Tp, _Dp>::pointer>()(__x.get(),
+        -:  910:								 nullptr);
+        -:  911:    }
+        -:  912:
+        -:  913:  /// unique_ptr comparison with nullptr
+        -:  914:  template<typename _Tp, typename _Dp>
+        -:  915:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  916:    inline bool
+        -:  917:    operator<(nullptr_t, const unique_ptr<_Tp, _Dp>& __x)
+        -:  918:    {
+        -:  919:      return std::less<typename unique_ptr<_Tp, _Dp>::pointer>()(nullptr,
+        -:  920:								 __x.get());
+        -:  921:    }
+        -:  922:
+        -:  923:  /// Relational operator for unique_ptr objects, compares the owned pointers
+        -:  924:  template<typename _Tp, typename _Dp,
+        -:  925:	   typename _Up, typename _Ep>
+        -:  926:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  927:    inline bool
+        -:  928:    operator<=(const unique_ptr<_Tp, _Dp>& __x,
+        -:  929:	       const unique_ptr<_Up, _Ep>& __y)
+        -:  930:    { return !(__y < __x); }
+        -:  931:
+        -:  932:  /// unique_ptr comparison with nullptr
+        -:  933:  template<typename _Tp, typename _Dp>
+        -:  934:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  935:    inline bool
+        -:  936:    operator<=(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -:  937:    { return !(nullptr < __x); }
+        -:  938:
+        -:  939:  /// unique_ptr comparison with nullptr
+        -:  940:  template<typename _Tp, typename _Dp>
+        -:  941:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  942:    inline bool
+        -:  943:    operator<=(nullptr_t, const unique_ptr<_Tp, _Dp>& __x)
+        -:  944:    { return !(__x < nullptr); }
+        -:  945:
+        -:  946:  /// Relational operator for unique_ptr objects, compares the owned pointers
+        -:  947:  template<typename _Tp, typename _Dp,
+        -:  948:	   typename _Up, typename _Ep>
+        -:  949:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  950:    inline bool
+        -:  951:    operator>(const unique_ptr<_Tp, _Dp>& __x,
+        -:  952:	      const unique_ptr<_Up, _Ep>& __y)
+        -:  953:    { return (__y < __x); }
+        -:  954:
+        -:  955:  /// unique_ptr comparison with nullptr
+        -:  956:  template<typename _Tp, typename _Dp>
+        -:  957:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  958:    inline bool
+        -:  959:    operator>(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -:  960:    {
+        -:  961:      return std::less<typename unique_ptr<_Tp, _Dp>::pointer>()(nullptr,
+        -:  962:								 __x.get());
+        -:  963:    }
+        -:  964:
+        -:  965:  /// unique_ptr comparison with nullptr
+        -:  966:  template<typename _Tp, typename _Dp>
+        -:  967:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  968:    inline bool
+        -:  969:    operator>(nullptr_t, const unique_ptr<_Tp, _Dp>& __x)
+        -:  970:    {
+        -:  971:      return std::less<typename unique_ptr<_Tp, _Dp>::pointer>()(__x.get(),
+        -:  972:								 nullptr);
+        -:  973:    }
+        -:  974:
+        -:  975:  /// Relational operator for unique_ptr objects, compares the owned pointers
+        -:  976:  template<typename _Tp, typename _Dp,
+        -:  977:	   typename _Up, typename _Ep>
+        -:  978:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  979:    inline bool
+        -:  980:    operator>=(const unique_ptr<_Tp, _Dp>& __x,
+        -:  981:	       const unique_ptr<_Up, _Ep>& __y)
+        -:  982:    { return !(__x < __y); }
+        -:  983:
+        -:  984:  /// unique_ptr comparison with nullptr
+        -:  985:  template<typename _Tp, typename _Dp>
+        -:  986:    _GLIBCXX_NODISCARD _GLIBCXX23_CONSTEXPR
+        -:  987:    inline bool
+        -:  988:    operator>=(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -:  989:    { return !(__x < nullptr); }
+        -:  990:
+        -:  991:  /// unique_ptr comparison with nullptr
+        -:  992:  template<typename _Tp, typename _Dp>
+        -:  993:    _GLIBCXX_NODISCARD inline bool
+        -:  994:    operator>=(nullptr_t, const unique_ptr<_Tp, _Dp>& __x)
+        -:  995:    { return !(nullptr < __x); }
+        -:  996:
+        -:  997:#ifdef __cpp_lib_three_way_comparison
+        -:  998:  template<typename _Tp, typename _Dp, typename _Up, typename _Ep>
+        -:  999:    requires three_way_comparable_with<typename unique_ptr<_Tp, _Dp>::pointer,
+        -: 1000:				       typename unique_ptr<_Up, _Ep>::pointer>
+        -: 1001:    _GLIBCXX23_CONSTEXPR
+        -: 1002:    inline
+        -: 1003:    compare_three_way_result_t<typename unique_ptr<_Tp, _Dp>::pointer,
+        -: 1004:			       typename unique_ptr<_Up, _Ep>::pointer>
+        -: 1005:    operator<=>(const unique_ptr<_Tp, _Dp>& __x,
+        -: 1006:		const unique_ptr<_Up, _Ep>& __y)
+        -: 1007:    { return compare_three_way()(__x.get(), __y.get()); }
+        -: 1008:
+        -: 1009:  template<typename _Tp, typename _Dp>
+        -: 1010:    requires three_way_comparable<typename unique_ptr<_Tp, _Dp>::pointer>
+        -: 1011:    _GLIBCXX23_CONSTEXPR
+        -: 1012:    inline
+        -: 1013:    compare_three_way_result_t<typename unique_ptr<_Tp, _Dp>::pointer>
+        -: 1014:    operator<=>(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+        -: 1015:    {
+        -: 1016:      using pointer = typename unique_ptr<_Tp, _Dp>::pointer;
+        -: 1017:      return compare_three_way()(__x.get(), static_cast<pointer>(nullptr));
+        -: 1018:    }
+        -: 1019:#endif
+        -: 1020:  /// @} relates unique_ptr
+        -: 1021:
+        -: 1022:  /// @cond undocumented
+        -: 1023:  template<typename _Up, typename _Ptr = typename _Up::pointer>
+        -: 1024:    struct __uniq_ptr_hash
+        -: 1025:    : public __hash_base<size_t, _Up>
+        -: 1026:#if ! _GLIBCXX_INLINE_VERSION
+        -: 1027:    , private __hash_empty_base<_Ptr>
+        -: 1028:#endif
+        -: 1029:    {
+        -: 1030:      size_t
+        -: 1031:      operator()(const _Up& __u) const
+        -: 1032:      noexcept(noexcept(std::declval<hash<_Ptr>>()(std::declval<_Ptr>())))
+        -: 1033:      { return hash<_Ptr>()(__u.get()); }
+        -: 1034:    };
+        -: 1035:
+        -: 1036:  template<typename _Up>
+        -: 1037:    using __uniq_ptr_hash_base
+        -: 1038:      = __conditional_t<__is_hash_enabled_for<typename _Up::pointer>,
+        -: 1039:			     __uniq_ptr_hash<_Up>,
+        -: 1040:			     __hash_not_enabled<typename _Up::pointer>>;
+        -: 1041:  /// @endcond
+        -: 1042:
+        -: 1043:  /// std::hash specialization for unique_ptr.
+        -: 1044:  template<typename _Tp, typename _Dp>
+        -: 1045:    struct hash<unique_ptr<_Tp, _Dp>>
+        -: 1046:    : public __uniq_ptr_hash_base<unique_ptr<_Tp, _Dp>>
+        -: 1047:    { };
+        -: 1048:
+        -: 1049:#ifdef __glibcxx_make_unique // C++ >= 14 && HOSTED
+        -: 1050:  /// @cond undocumented
+        -: 1051:namespace __detail
+        -: 1052:{
+        -: 1053:  template<typename _Tp>
+        -: 1054:    struct _MakeUniq
+        -: 1055:    { typedef unique_ptr<_Tp> __single_object; };
+        -: 1056:
+        -: 1057:  template<typename _Tp>
+        -: 1058:    struct _MakeUniq<_Tp[]>
+        -: 1059:    { typedef unique_ptr<_Tp[]> __array; };
+        -: 1060:
+        -: 1061:  template<typename _Tp, size_t _Bound>
+        -: 1062:    struct _MakeUniq<_Tp[_Bound]>
+        -: 1063:    { struct __invalid_type { }; };
+        -: 1064:
+        -: 1065:  template<typename _Tp>
+        -: 1066:    using __unique_ptr_t = typename _MakeUniq<_Tp>::__single_object;
+        -: 1067:  template<typename _Tp>
+        -: 1068:    using __unique_ptr_array_t = typename _MakeUniq<_Tp>::__array;
+        -: 1069:  template<typename _Tp>
+        -: 1070:    using __invalid_make_unique_t = typename _MakeUniq<_Tp>::__invalid_type;
+        -: 1071:}
+        -: 1072:  /// @endcond
+        -: 1073:
+        -: 1074:  /** Create an object owned by a `unique_ptr`.
+        -: 1075:   *  @tparam _Tp A non-array object type.
+        -: 1076:   *  @param __args Constructor arguments for the new object.
+        -: 1077:   *  @returns A `unique_ptr<_Tp>` that owns the new object.
+        -: 1078:   *  @since C++14
+        -: 1079:   *  @relates unique_ptr
+        -: 1080:   */
+        -: 1081:  template<typename _Tp, typename... _Args>
+        -: 1082:    _GLIBCXX23_CONSTEXPR
+        -: 1083:    inline __detail::__unique_ptr_t<_Tp>
+        -: 1084:    make_unique(_Args&&... __args)
+        -: 1085:    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+        -: 1086:
+        -: 1087:  /** Create an array owned by a `unique_ptr`.
+        -: 1088:   *  @tparam _Tp An array type of unknown bound, such as `U[]`.
+        -: 1089:   *  @param __num The number of elements of type `U` in the new array.
+        -: 1090:   *  @returns A `unique_ptr<U[]>` that owns the new array.
+        -: 1091:   *  @since C++14
+        -: 1092:   *  @relates unique_ptr
+        -: 1093:   *
+        -: 1094:   *  The array elements are value-initialized.
+        -: 1095:   */
+        -: 1096:  template<typename _Tp>
+        -: 1097:    _GLIBCXX23_CONSTEXPR
+        -: 1098:    inline __detail::__unique_ptr_array_t<_Tp>
+        -: 1099:    make_unique(size_t __num)
+        -: 1100:    { return unique_ptr<_Tp>(new remove_extent_t<_Tp>[__num]()); }
+        -: 1101:
+        -: 1102:  /** Disable std::make_unique for arrays of known bound.
+        -: 1103:   *  @tparam _Tp An array type of known bound, such as `U[N]`.
+        -: 1104:   *  @since C++14
+        -: 1105:   *  @relates unique_ptr
+        -: 1106:   */
+        -: 1107:  template<typename _Tp, typename... _Args>
+        -: 1108:    __detail::__invalid_make_unique_t<_Tp>
+        -: 1109:    make_unique(_Args&&...) = delete;
+        -: 1110:
+        -: 1111:#if __cplusplus > 201703L
+        -: 1112:  /** Create a default-initialied object owned by a `unique_ptr`.
+        -: 1113:   *  @tparam _Tp A non-array object type.
+        -: 1114:   *  @returns A `unique_ptr<_Tp>` that owns the new object.
+        -: 1115:   *  @since C++20
+        -: 1116:   *  @relates unique_ptr
+        -: 1117:   */
+        -: 1118:  template<typename _Tp>
+        -: 1119:    _GLIBCXX23_CONSTEXPR
+        -: 1120:    inline __detail::__unique_ptr_t<_Tp>
+        -: 1121:    make_unique_for_overwrite()
+        -: 1122:    { return unique_ptr<_Tp>(new _Tp); }
+        -: 1123:
+        -: 1124:  /** Create a default-initialized array owned by a `unique_ptr`.
+        -: 1125:   *  @tparam _Tp An array type of unknown bound, such as `U[]`.
+        -: 1126:   *  @param __num The number of elements of type `U` in the new array.
+        -: 1127:   *  @returns A `unique_ptr<U[]>` that owns the new array.
+        -: 1128:   *  @since C++20
+        -: 1129:   *  @relates unique_ptr
+        -: 1130:   */
+        -: 1131:  template<typename _Tp>
+        -: 1132:    _GLIBCXX23_CONSTEXPR
+        -: 1133:    inline __detail::__unique_ptr_array_t<_Tp>
+        -: 1134:    make_unique_for_overwrite(size_t __num)
+        -: 1135:    { return unique_ptr<_Tp>(new remove_extent_t<_Tp>[__num]); }
+        -: 1136:
+        -: 1137:  /** Disable std::make_unique_for_overwrite for arrays of known bound.
+        -: 1138:   *  @tparam _Tp An array type of known bound, such as `U[N]`.
+        -: 1139:   *  @since C++20
+        -: 1140:   *  @relates unique_ptr
+        -: 1141:   */
+        -: 1142:  template<typename _Tp, typename... _Args>
+        -: 1143:    __detail::__invalid_make_unique_t<_Tp>
+        -: 1144:    make_unique_for_overwrite(_Args&&...) = delete;
+        -: 1145:#endif // C++20
+        -: 1146:
+        -: 1147:#endif // C++14 && HOSTED
+        -: 1148:
+        -: 1149:#if __cplusplus > 201703L && __cpp_concepts && _GLIBCXX_HOSTED
+        -: 1150:  // _GLIBCXX_RESOLVE_LIB_DEFECTS
+        -: 1151:  // 2948. unique_ptr does not define operator<< for stream output
+        -: 1152:  /// Stream output operator for unique_ptr
+        -: 1153:  /// @relates unique_ptr
+        -: 1154:  /// @since C++20
+        -: 1155:  template<typename _CharT, typename _Traits, typename _Tp, typename _Dp>
+        -: 1156:    inline basic_ostream<_CharT, _Traits>&
+        -: 1157:    operator<<(basic_ostream<_CharT, _Traits>& __os,
+        -: 1158:	       const unique_ptr<_Tp, _Dp>& __p)
+        -: 1159:    requires requires { __os << __p.get(); }
+        -: 1160:    {
+        -: 1161:      __os << __p.get();
+        -: 1162:      return __os;
+        -: 1163:    }
+        -: 1164:#endif // C++20 && HOSTED
+        -: 1165:
+        -: 1166:#if __cpp_variable_templates
+        -: 1167:  template<typename _Tp>
+        -: 1168:    constexpr bool __is_unique_ptr = false;
+        -: 1169:  template<typename _Tp, typename _Del>
+        -: 1170:    constexpr bool __is_unique_ptr<unique_ptr<_Tp, _Del>> = true;
+        -: 1171:#endif
+        -: 1172:
+        -: 1173:  /// @} group pointer_abstractions
+        -: 1174:
+        -: 1175:#if __cplusplus >= 201703L
+        -: 1176:  namespace __detail::__variant
+        -: 1177:  {
+        -: 1178:    template<typename> struct _Never_valueless_alt; // see <variant>
+        -: 1179:
+        -: 1180:    // Provide the strong exception-safety guarantee when emplacing a
+        -: 1181:    // unique_ptr into a variant.
+        -: 1182:    template<typename _Tp, typename _Del>
+        -: 1183:      struct _Never_valueless_alt<std::unique_ptr<_Tp, _Del>>
+        -: 1184:      : std::true_type
+        -: 1185:      { };
+        -: 1186:  }  // namespace __detail::__variant
+        -: 1187:#endif // C++17
+        -: 1188:
+        -: 1189:_GLIBCXX_END_NAMESPACE_VERSION
+        -: 1190:} // namespace
+        -: 1191:
+        -: 1192:#endif /* _UNIQUE_PTR_H */

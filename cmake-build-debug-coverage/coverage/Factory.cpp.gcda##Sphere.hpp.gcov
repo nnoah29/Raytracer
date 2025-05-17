@@ -1,0 +1,103 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/base/primitives/Sphere.hpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Factory.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Factory.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 27/04/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#ifndef SPHERE_HPP
+        -:   13:#define SPHERE_HPP
+        -:   14:#include <iostream>
+        -:   15:
+        -:   16:#include "APrimitive.hpp"
+        -:   17:
+        -:   18:
+        -:   19:class Sphere final : public APrimitive {
+        -:   20:
+        -:   21:    public:
+function _ZN6SphereC2ER13dataPrimitiveRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 5 returned 100% blocks executed 100%
+        5:   22:    Sphere(dataPrimitive& data, const std::string& name): APrimitive(data, name){}
+        5:   22-block 2
+appel   0 a retourné 5
+        -:   23:
+function _ZNK6Sphere3hitERK3RayffR13PointOfImpact called 27453018 returned 100% blocks executed 96%
+ 27453018:   24:    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const override
+        -:   25:    {
+ 27453018:   26:        const Point oc = data.position - ray.origin();
+ 27453018:   26-block 2
+appel   0 a retourné 27453018
+appel   1 a retourné 27453018
+ 27453018:   27:        const auto a = ray.direction().lengthSquared();
+appel   0 a retourné 27453018
+appel   1 a retourné 27453018
+ 27453018:   28:        const auto b = dot(ray.direction(), oc);
+appel   0 a retourné 27453018
+appel   1 a retourné 27453018
+branchement  2 pris 27453018 (fallthrough)
+branchement  3 pris 0 (throw)
+ 27453018:   29:        const auto c = oc.lengthSquared() - data.radius * data.radius;
+ 27453018:   29-block 8
+appel   0 a retourné 27453018
+        -:   30:
+ 27453018:   31:        const auto discriminant = b * b - a * c;
+ 27453018:   32:        if (discriminant < 0) {
+branchement  0 pris 22935278 (fallthrough)
+branchement  1 pris 4517740
+ 22935278:   33:            return false;
+ 22935278:   33-block 10
+        -:   34:        }
+        -:   35:
+  4517740:   36:        const auto sqrt_discriminant = std::sqrt(discriminant);
+  4517740:   36-block 11
+appel   0 a retourné 4517740
+        -:   37:
+  4517740:   38:        auto root = (b - sqrt_discriminant) / a;
+  4517740:   39:        if (!surrounds(t_min, root, t_max)) {
+appel   0 a retourné 4517740
+branchement  1 pris 4517740 (fallthrough)
+branchement  2 pris 0 (throw)
+  4517740:   39-block 13
+branchement  3 pris 2978332 (fallthrough)
+branchement  4 pris 1539408
+  2978332:   40:            root = (b + sqrt_discriminant) / a;
+  2978332:   41:            if (!surrounds(t_min, root, t_max))
+  2978332:   41-block 14
+appel   0 a retourné 2978332
+branchement  1 pris 2978332 (fallthrough)
+branchement  2 pris 0 (throw)
+  2978332:   41-block 15
+branchement  3 pris 2978332 (fallthrough)
+branchement  4 pris 0
+  2978332:   42:                return false;
+  2978332:   42-block 16
+        -:   43:        }
+        -:   44:
+  1539408:   45:        p.t = root;
+  1539408:   46:        p.p = ray.at(p.t);
+  1539408:   46-block 17
+appel   0 a retourné 1539408
+  1539408:   47:        const Vecteur out_normal = (p.p - data.position) / data.radius;
+appel   0 a retourné 1539408
+appel   1 a retourné 1539408
+branchement  2 pris 1539408 (fallthrough)
+branchement  3 pris 0 (throw)
+    $$$$$:   47-block 24
+  1539408:   48:        p.set_face_normal(ray, out_normal);
+  1539408:   48-block 20
+appel   0 a retourné 1539408
+  1539408:   49:        p.material = data.material;
+  1539408:   50:        return true;
+        -:   51:    }
+        -:   52:};
+        -:   53:
+        -:   54:
+        -:   55:
+        -:   56:#endif //SPHERE_HPP

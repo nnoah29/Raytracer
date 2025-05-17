@@ -1,0 +1,598 @@
+        -:    0:Source:/usr/include/libconfig.h++
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/SceneLoader.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/SceneLoader.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/* ----------------------------------------------------------------------------
+        -:    2:   libconfig - A library for processing structured configuration files
+        -:    3:   Copyright (C) 2005-2025  Mark A Lindner
+        -:    4:
+        -:    5:   This file is part of libconfig.
+        -:    6:
+        -:    7:   This library is free software; you can redistribute it and/or
+        -:    8:   modify it under the terms of the GNU Lesser General Public License
+        -:    9:   as published by the Free Software Foundation; either version 2.1 of
+        -:   10:   the License, or (at your option) any later version.
+        -:   11:
+        -:   12:   This library is distributed in the hope that it will be useful, but
+        -:   13:   WITHOUT ANY WARRANTY; without even the implied warranty of
+        -:   14:   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+        -:   15:   Lesser General Public License for more details.
+        -:   16:
+        -:   17:   You should have received a copy of the GNU Library General Public
+        -:   18:   License along with this library; if not, see
+        -:   19:   <http://www.gnu.org/licenses/>.
+        -:   20:   ----------------------------------------------------------------------------
+        -:   21:*/
+        -:   22:
+        -:   23:#ifndef __libconfig_hpp
+        -:   24:#define __libconfig_hpp
+        -:   25:
+        -:   26:#include <stdio.h>
+        -:   27:#include <exception>
+        -:   28:#include <string>
+        -:   29:
+        -:   30:#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+        -:   31:#if defined(LIBCONFIGXX_STATIC)
+        -:   32:#define LIBCONFIGXX_API
+        -:   33:#elif defined(LIBCONFIGXX_EXPORTS)
+        -:   34:#define LIBCONFIGXX_API __declspec(dllexport)
+        -:   35:#else /* ! LIBCONFIGXX_EXPORTS */
+        -:   36:#define LIBCONFIGXX_API __declspec(dllimport)
+        -:   37:#endif /* LIBCONFIGXX_STATIC */
+        -:   38:#else /* ! WIN32 */
+        -:   39:#define LIBCONFIGXX_API
+        -:   40:#endif /* WIN32 */
+        -:   41:
+        -:   42:#define LIBCONFIGXX_VER_MAJOR    1
+        -:   43:#define LIBCONFIGXX_VER_MINOR    8
+        -:   44:#define LIBCONFIGXX_VER_REVISION 0
+        -:   45:
+        -:   46:#if __cplusplus < 201103L
+        -:   47:#define LIBCONFIGXX_NOEXCEPT throw()
+        -:   48:#else
+        -:   49:#define LIBCONFIGXX_NOEXCEPT noexcept
+        -:   50:#endif
+        -:   51:
+        -:   52:struct config_t; // fwd decl
+        -:   53:struct config_setting_t; // fwd decl
+        -:   54:
+        -:   55:namespace libconfig {
+        -:   56:
+        -:   57:class LIBCONFIGXX_API ConfigException : public std::exception { };
+        -:   58:
+        -:   59:class Setting; // fwd decl
+        -:   60:class SettingIterator;
+        -:   61:class SettingConstIterator;
+        -:   62:
+        -:   63:class LIBCONFIGXX_API SettingException : public ConfigException
+        -:   64:{
+        -:   65:  public:
+        -:   66:
+        -:   67:  SettingException(const Setting &setting);
+        -:   68:  SettingException(const Setting &setting, int idx);
+        -:   69:  SettingException(const Setting &setting, const char *name);
+        -:   70:  SettingException(const char *path);
+        -:   71:
+        -:   72:  SettingException(const SettingException &other);
+        -:   73:  SettingException& operator=(const SettingException &other);
+        -:   74:
+        -:   75:  virtual ~SettingException() LIBCONFIGXX_NOEXCEPT;
+        -:   76:
+        -:   77:  const char *getPath() const;
+        -:   78:
+        -:   79:  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+        -:   80:
+        -:   81:  private:
+        -:   82:
+        -:   83:  char *_path;
+        -:   84:};
+        -:   85:
+        -:   86:class LIBCONFIGXX_API SettingTypeException : public SettingException
+        -:   87:{
+        -:   88:  public:
+        -:   89:
+        -:   90:  SettingTypeException(const Setting &setting);
+        -:   91:  SettingTypeException(const Setting &setting, int idx);
+        -:   92:  SettingTypeException(const Setting &setting, const char *name);
+        -:   93:
+        -:   94:  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+        -:   95:};
+        -:   96:
+        -:   97:class LIBCONFIGXX_API SettingRangeException : public SettingException
+        -:   98:{
+        -:   99:  public:
+        -:  100:
+        -:  101:  SettingRangeException(const Setting &setting);
+        -:  102:  SettingRangeException(const Setting &setting, int idx);
+        -:  103:  SettingRangeException(const Setting &setting, const char *name);
+        -:  104:
+        -:  105:  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+        -:  106:};
+        -:  107:
+        -:  108:class LIBCONFIGXX_API SettingNotFoundException : public SettingException
+        -:  109:{
+        -:  110:  public:
+        -:  111:
+        -:  112:  SettingNotFoundException(const char *path);
+        -:  113:  SettingNotFoundException(const Setting &setting, int idx);
+        -:  114:  SettingNotFoundException(const Setting &setting, const char *name);
+        -:  115:
+        -:  116:  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+        -:  117:};
+        -:  118:
+        -:  119:class LIBCONFIGXX_API SettingNameException : public SettingException
+        -:  120:{
+        -:  121:  public:
+        -:  122:
+        -:  123:  SettingNameException(const Setting &setting, const char *name);
+        -:  124:
+        -:  125:  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+        -:  126:};
+        -:  127:
+        -:  128:class LIBCONFIGXX_API FileIOException : public ConfigException
+        -:  129:{
+        -:  130:  public:
+        -:  131:
+        -:  132:  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+        -:  133:};
+        -:  134:
+        -:  135:class LIBCONFIGXX_API ParseException : public ConfigException
+        -:  136:{
+        -:  137:  public:
+        -:  138:
+        -:  139:  ParseException(const char *file, int line, const char *error);
+        -:  140:
+        -:  141:  ParseException(const ParseException &other);
+        -:  142:
+        -:  143:  virtual ~ParseException() LIBCONFIGXX_NOEXCEPT;
+        -:  144:
+function _ZNK9libconfig14ParseException7getFileEv called 0 returned 0% blocks executed 0%
+    #####:  145:  inline const char *getFile() const
+    #####:  146:  { return(_file); }
+    %%%%%:  146-block 2
+        -:  147:
+function _ZNK9libconfig14ParseException7getLineEv called 0 returned 0% blocks executed 0%
+    #####:  148:  inline int getLine() const
+    #####:  149:  { return(_line); }
+    %%%%%:  149-block 2
+        -:  150:
+function _ZNK9libconfig14ParseException8getErrorEv called 0 returned 0% blocks executed 0%
+    #####:  151:  inline const char *getError() const
+    #####:  152:  { return(_error); }
+    %%%%%:  152-block 2
+        -:  153:
+        -:  154:  virtual const char *what() const LIBCONFIGXX_NOEXCEPT;
+        -:  155:
+        -:  156:  private:
+        -:  157:
+        -:  158:  const char *_file;
+        -:  159:  int _line;
+        -:  160:  const char *_error;
+        -:  161:};
+        -:  162:
+        -:  163:class LIBCONFIGXX_API Setting
+        -:  164:{
+        -:  165:  friend class Config;
+        -:  166:
+        -:  167:  public:
+        -:  168:
+        -:  169:  enum Type
+        -:  170:  {
+        -:  171:    TypeNone = 0,
+        -:  172:    // scalar types
+        -:  173:    TypeInt,
+        -:  174:    TypeInt64,
+        -:  175:    TypeFloat,
+        -:  176:    TypeString,
+        -:  177:    TypeBoolean,
+        -:  178:    // aggregate types
+        -:  179:    TypeGroup,
+        -:  180:    TypeArray,
+        -:  181:    TypeList
+        -:  182:  };
+        -:  183:
+        -:  184:  enum Format
+        -:  185:  {
+        -:  186:    FormatDefault = 0,
+        -:  187:    FormatHex = 1,
+        -:  188:    FormatBin = 2
+        -:  189:  };
+        -:  190:
+        -:  191:  typedef SettingIterator iterator;
+        -:  192:  typedef SettingConstIterator const_iterator;
+        -:  193:
+        -:  194:  public:
+        -:  195:
+        -:  196:  virtual ~Setting();
+        -:  197:
+        -:  198:  inline Type getType() const { return(_type); }
+        -:  199:
+        -:  200:  inline Format getFormat() const { return(_format); }
+        -:  201:  void setFormat(Format format);
+        -:  202:
+        -:  203:  operator bool() const;
+        -:  204:  operator int() const;
+        -:  205:  operator unsigned int() const;
+        -:  206:  operator long() const;
+        -:  207:  operator unsigned long() const;
+        -:  208:  operator long long() const;
+        -:  209:  operator unsigned long long() const;
+        -:  210:  operator double() const;
+        -:  211:  operator float() const;
+        -:  212:  operator const char *() const;
+        -:  213:  operator std::string() const;
+        -:  214:
+        -:  215:  inline const char *c_str() const
+        -:  216:  { return operator const char *(); }
+        -:  217:
+        -:  218:  Setting & operator=(bool value);
+        -:  219:  Setting & operator=(int value);
+        -:  220:  Setting & operator=(long value);
+        -:  221:  Setting & operator=(const long long &value);
+        -:  222:  Setting & operator=(const double &value);
+        -:  223:  Setting & operator=(float value);
+        -:  224:  Setting & operator=(const char *value);
+        -:  225:  Setting & operator=(const std::string &value);
+        -:  226:
+        -:  227:  Setting & lookup(const char *path) const;
+        -:  228:  inline Setting & lookup(const std::string &path) const
+        -:  229:  { return(lookup(path.c_str())); }
+        -:  230:
+        -:  231:  Setting & operator[](const char *name) const;
+        -:  232:
+        -:  233:  inline Setting & operator[](const std::string &name) const
+        -:  234:  { return(operator[](name.c_str())); }
+        -:  235:
+        -:  236:  Setting & operator[](int index) const;
+        -:  237:
+        -:  238:  bool lookupValue(const char *name, bool &value) const;
+        -:  239:  bool lookupValue(const char *name, int &value) const;
+        -:  240:  bool lookupValue(const char *name, unsigned int &value) const;
+        -:  241:  bool lookupValue(const char *name, long long &value) const;
+        -:  242:  bool lookupValue(const char *name, unsigned long long &value) const;
+        -:  243:  bool lookupValue(const char *name, double &value) const;
+        -:  244:  bool lookupValue(const char *name, float &value) const;
+        -:  245:  bool lookupValue(const char *name, const char *&value) const;
+        -:  246:  bool lookupValue(const char *name, std::string &value) const;
+        -:  247:
+        -:  248:  inline bool lookupValue(const std::string &name, bool &value) const
+        -:  249:  { return(lookupValue(name.c_str(), value)); }
+        -:  250:
+        -:  251:  inline bool lookupValue(const std::string &name, int &value) const
+        -:  252:  { return(lookupValue(name.c_str(), value)); }
+        -:  253:
+        -:  254:  inline bool lookupValue(const std::string &name, unsigned int &value) const
+        -:  255:  { return(lookupValue(name.c_str(), value)); }
+        -:  256:
+        -:  257:  inline bool lookupValue(const std::string &name, long long &value) const
+        -:  258:  { return(lookupValue(name.c_str(), value)); }
+        -:  259:
+        -:  260:  inline bool lookupValue(const std::string &name,
+        -:  261:                          unsigned long long &value) const
+        -:  262:  { return(lookupValue(name.c_str(), value)); }
+        -:  263:
+        -:  264:  inline bool lookupValue(const std::string &name, double &value) const
+        -:  265:  { return(lookupValue(name.c_str(), value)); }
+        -:  266:
+        -:  267:  inline bool lookupValue(const std::string &name, float &value) const
+        -:  268:  { return(lookupValue(name.c_str(), value)); }
+        -:  269:
+        -:  270:  inline bool lookupValue(const std::string &name, const char *&value) const
+        -:  271:  { return(lookupValue(name.c_str(), value)); }
+        -:  272:
+        -:  273:  inline bool lookupValue(const std::string &name, std::string &value) const
+        -:  274:  { return(lookupValue(name.c_str(), value)); }
+        -:  275:
+        -:  276:  void remove(const char *name);
+        -:  277:
+        -:  278:  inline void remove(const std::string &name)
+        -:  279:  { remove(name.c_str()); }
+        -:  280:
+        -:  281:  void remove(unsigned int idx);
+        -:  282:
+        -:  283:  Setting & add(const char *name, Type type);
+        -:  284:
+        -:  285:  inline Setting & add(const std::string &name, Type type)
+        -:  286:  { return(add(name.c_str(), type)); }
+        -:  287:
+        -:  288:  Setting & add(Type type);
+        -:  289:
+        -:  290:  bool exists(const char *name) const;
+        -:  291:
+        -:  292:  inline bool exists(const std::string &name) const
+        -:  293:  { return(exists(name.c_str())); }
+        -:  294:
+        -:  295:  int getLength() const;
+        -:  296:  const char *getName() const;
+        -:  297:  std::string getPath() const;
+        -:  298:  int getIndex() const;
+        -:  299:
+        -:  300:  const Setting & getParent() const;
+        -:  301:  Setting & getParent();
+        -:  302:
+        -:  303:  bool isRoot() const;
+        -:  304:
+        -:  305:  inline bool isGroup() const
+        -:  306:  { return(_type == TypeGroup); }
+        -:  307:
+        -:  308:  inline bool isArray() const
+        -:  309:  { return(_type == TypeArray); }
+        -:  310:
+function _ZNK9libconfig7Setting6isListEv called 3 returned 100% blocks executed 100%
+        3:  311:  inline bool isList() const
+        3:  312:  { return(_type == TypeList); }
+        3:  312-block 2
+        -:  313:
+        -:  314:  inline bool isAggregate() const
+        -:  315:  { return(_type >= TypeGroup); }
+        -:  316:
+        -:  317:  inline bool isScalar() const
+        -:  318:  { return((_type > TypeNone) && (_type < TypeGroup)); }
+        -:  319:
+        -:  320:  inline bool isNumber() const
+        -:  321:  {
+        -:  322:    return((_type == TypeInt) || (_type == TypeInt64) || (_type == TypeFloat));
+        -:  323:  }
+        -:  324:  
+        -:  325:  inline bool isString() const
+        -:  326:  { return(_type == TypeString); }
+        -:  327:
+        -:  328:  unsigned int getSourceLine() const;
+        -:  329:  const char *getSourceFile() const;
+        -:  330:
+        -:  331:  iterator begin();
+        -:  332:  iterator end();
+        -:  333:
+        -:  334:  const_iterator begin() const;
+        -:  335:  const_iterator end() const;
+        -:  336:
+        -:  337:  private:
+        -:  338:
+        -:  339:  config_setting_t *_setting;
+        -:  340:  Type _type;
+        -:  341:  Format _format;
+        -:  342:
+        -:  343:  Setting(config_setting_t *setting);
+        -:  344:
+        -:  345:  void assertType(Type type) const;
+        -:  346:  static Setting & wrapSetting(config_setting_t *setting);
+        -:  347:
+        -:  348:  Setting(const Setting& other); // not supported
+        -:  349:  Setting& operator=(const Setting& other); // not supported
+        -:  350:};
+        -:  351:
+        -:  352:
+        -:  353:class LIBCONFIGXX_API SettingIterator
+        -:  354:{
+        -:  355:  public:
+        -:  356:
+        -:  357:  SettingIterator(Setting &setting, bool endIterator = false);
+        -:  358:  SettingIterator(const SettingIterator &other);
+        -:  359:  SettingIterator& operator=(const SettingIterator &other);
+        -:  360:
+        -:  361:  // Equality comparison.
+        -:  362:  inline bool operator==(SettingIterator const &other) const
+        -:  363:  { return((_setting == other._setting) && (_idx == other._idx)); }
+        -:  364:
+        -:  365:  inline bool operator!=(SettingIterator const &other) const
+        -:  366:  { return(!operator==(other)); }
+        -:  367:
+        -:  368:  bool operator<(SettingIterator const &other) const;
+        -:  369:
+        -:  370:  // Dereference operators.
+        -:  371:  inline Setting & operator*()
+        -:  372:  { return((*_setting)[_idx]); }
+        -:  373:
+        -:  374:  inline Setting * operator->()
+        -:  375:  { return(&(*_setting)[_idx]); }
+        -:  376:
+        -:  377:  inline const Setting & operator*() const
+        -:  378:  { return(*_setting)[_idx]; }
+        -:  379:  inline const Setting * operator->() const
+        -:  380:  { return(&(*_setting)[_idx]); }
+        -:  381:
+        -:  382:  // Increment and decrement operators.
+        -:  383:  SettingIterator & operator++();
+        -:  384:  SettingIterator operator++(int);
+        -:  385:
+        -:  386:  SettingIterator & operator--();
+        -:  387:  SettingIterator operator--(int);
+        -:  388:
+        -:  389:  // Arithmetic operators.
+        -:  390:  SettingIterator operator+(int offset) const;
+        -:  391:  SettingIterator & operator+=(int offset);
+        -:  392:
+        -:  393:  SettingIterator operator-(int offset) const;
+        -:  394:  SettingIterator & operator-=(int offset);
+        -:  395:
+        -:  396:  int operator-(const SettingIterator &other) const;
+        -:  397:
+        -:  398:  private:
+        -:  399:
+        -:  400:  Setting *_setting;
+        -:  401:
+        -:  402:  int _count;
+        -:  403:  int _idx;
+        -:  404:};
+        -:  405:
+        -:  406:SettingIterator operator+(int offset, const SettingIterator &si);
+        -:  407:
+        -:  408:class LIBCONFIGXX_API SettingConstIterator
+        -:  409:{
+        -:  410:  public:
+        -:  411:
+        -:  412:  SettingConstIterator(const Setting &setting, bool endIterator = false);
+        -:  413:  SettingConstIterator(const SettingConstIterator &rhs);
+        -:  414:  SettingConstIterator& operator=(const SettingConstIterator &rhs);
+        -:  415:
+        -:  416:  // Equality comparison.
+        -:  417:  bool operator==(SettingConstIterator const &other) const
+        -:  418:  { return((_setting == other._setting) && (_idx == other._idx)); }
+        -:  419:
+        -:  420:  inline bool operator!=(SettingConstIterator const &other) const
+        -:  421:  { return(!operator==(other)); }
+        -:  422:
+        -:  423:  // Dereference operators.
+        -:  424:  inline Setting const & operator*()
+        -:  425:  { return((*_setting)[_idx]); }
+        -:  426:  inline Setting const * operator->()
+        -:  427:  { return(&(*_setting)[_idx]); }
+        -:  428:
+        -:  429:  inline const Setting& operator*() const
+        -:  430:  { return((*_setting)[_idx]); }
+        -:  431:  inline const Setting * operator->() const
+        -:  432:  { return(&(*_setting)[_idx]); }
+        -:  433:
+        -:  434:  // Increment and decrement operators.
+        -:  435:  SettingConstIterator & operator++();
+        -:  436:  SettingConstIterator operator++(int);
+        -:  437:
+        -:  438:  SettingConstIterator & operator--();
+        -:  439:  SettingConstIterator operator--(int);
+        -:  440:
+        -:  441:  // Arithmetic operators.
+        -:  442:  SettingConstIterator operator+(int offset) const;
+        -:  443:  SettingConstIterator & operator+=(int offset);
+        -:  444:
+        -:  445:  SettingConstIterator operator-(int offset) const;
+        -:  446:  SettingConstIterator & operator-=(int offset);
+        -:  447:
+        -:  448:  int operator-(const SettingConstIterator &other) const;
+        -:  449:
+        -:  450:  private:
+        -:  451:
+        -:  452:  const Setting *_setting;
+        -:  453:
+        -:  454:  int _count;
+        -:  455:  int _idx;
+        -:  456:};
+        -:  457:
+        -:  458:SettingConstIterator operator+(int offset, const SettingConstIterator &si);
+        -:  459:
+        -:  460:class LIBCONFIGXX_API Config
+        -:  461:{
+        -:  462:  public:
+        -:  463:
+        -:  464:  enum Option
+        -:  465:  {
+        -:  466:    OptionNone = 0,
+        -:  467:    OptionAutoConvert = 0x01,
+        -:  468:    OptionSemicolonSeparators = 0x02,
+        -:  469:    OptionColonAssignmentForGroups = 0x04,
+        -:  470:    OptionColonAssignmentForNonGroups = 0x08,
+        -:  471:    OptionOpenBraceOnSeparateLine = 0x10,
+        -:  472:    OptionAllowScientificNotation = 0x20,
+        -:  473:    OptionFsync = 0x40,
+        -:  474:    OptionAllowOverrides = 0x80
+        -:  475:  };
+        -:  476:
+        -:  477:  Config();
+        -:  478:  virtual ~Config();
+        -:  479:
+        -:  480:  void clear();
+        -:  481:
+        -:  482:  void setOptions(int options);
+        -:  483:  int getOptions() const;
+        -:  484:
+        -:  485:  void setOption(Config::Option option, bool flag);
+        -:  486:  bool getOption(Config::Option option) const;
+        -:  487:
+        -:  488:  inline void setAutoConvert(bool flag)
+        -:  489:  { setOption(Config::OptionAutoConvert, flag); }
+        -:  490:  inline bool getAutoConvert() const
+        -:  491:  { return(getOption(Config::OptionAutoConvert)); }
+        -:  492:
+        -:  493:  void setDefaultFormat(Setting::Format format);
+        -:  494:  inline Setting::Format getDefaultFormat() const
+        -:  495:  { return(_defaultFormat); }
+        -:  496:
+        -:  497:  void setTabWidth(unsigned short width);
+        -:  498:  unsigned short getTabWidth() const;
+        -:  499:
+        -:  500:  void setFloatPrecision(unsigned short digits);
+        -:  501:  unsigned short getFloatPrecision() const;
+        -:  502:
+        -:  503:  void setIncludeDir(const char *includeDir);
+        -:  504:  const char *getIncludeDir() const;
+        -:  505:
+        -:  506:  virtual const char **evaluateIncludePath(const char *path,
+        -:  507:                                           const char **error);
+        -:  508:
+        -:  509:  void read(FILE *stream);
+        -:  510:  void write(FILE *stream) const;
+        -:  511:
+        -:  512:  void readString(const char *str);
+        -:  513:  inline void readString(const std::string &str)
+        -:  514:  { return(readString(str.c_str())); }
+        -:  515:
+        -:  516:  void readFile(const char *filename);
+        -:  517:  inline void readFile(const std::string &filename)
+        -:  518:  { readFile(filename.c_str()); }
+        -:  519:
+        -:  520:  void writeFile(const char *filename) const;
+        -:  521:  inline void writeFile(const std::string &filename) const
+        -:  522:  { writeFile(filename.c_str()); }
+        -:  523:
+        -:  524:  Setting & lookup(const char *path) const;
+        -:  525:  inline Setting & lookup(const std::string &path) const
+        -:  526:  { return(lookup(path.c_str())); }
+        -:  527:
+        -:  528:  bool exists(const char *path) const;
+        -:  529:  inline bool exists(const std::string &path) const
+        -:  530:  { return(exists(path.c_str())); }
+        -:  531:
+        -:  532:  bool lookupValue(const char *path, bool &value) const;
+        -:  533:  bool lookupValue(const char *path, int &value) const;
+        -:  534:  bool lookupValue(const char *path, unsigned int &value) const;
+        -:  535:  bool lookupValue(const char *path, long long &value) const;
+        -:  536:  bool lookupValue(const char *path, unsigned long long &value) const;
+        -:  537:  bool lookupValue(const char *path, double &value) const;
+        -:  538:  bool lookupValue(const char *path, float &value) const;
+        -:  539:  bool lookupValue(const char *path, const char *&value) const;
+        -:  540:  bool lookupValue(const char *path, std::string &value) const;
+        -:  541:
+        -:  542:  inline bool lookupValue(const std::string &path, bool &value) const
+        -:  543:  { return(lookupValue(path.c_str(), value)); }
+        -:  544:
+        -:  545:  inline bool lookupValue(const std::string &path, int &value) const
+        -:  546:  { return(lookupValue(path.c_str(), value)); }
+        -:  547:
+        -:  548:  inline bool lookupValue(const std::string &path, unsigned int &value) const
+        -:  549:  { return(lookupValue(path.c_str(), value)); }
+        -:  550:
+        -:  551:  inline bool lookupValue(const std::string &path, long long &value) const
+        -:  552:  { return(lookupValue(path.c_str(), value)); }
+        -:  553:
+        -:  554:  inline bool lookupValue(const std::string &path,
+        -:  555:                          unsigned long long &value) const
+        -:  556:  { return(lookupValue(path.c_str(), value)); }
+        -:  557:
+        -:  558:  inline bool lookupValue(const std::string &path, double &value) const
+        -:  559:  { return(lookupValue(path.c_str(), value)); }
+        -:  560:
+        -:  561:  inline bool lookupValue(const std::string &path, float &value) const
+        -:  562:  { return(lookupValue(path.c_str(), value)); }
+        -:  563:
+        -:  564:  inline bool lookupValue(const std::string &path, const char *&value) const
+        -:  565:  { return(lookupValue(path.c_str(), value)); }
+        -:  566:
+        -:  567:  inline bool lookupValue(const std::string &path, std::string &value) const
+        -:  568:  { return(lookupValue(path.c_str(), value)); }
+        -:  569:
+        -:  570:  Setting & getRoot() const;
+        -:  571:
+        -:  572:  private:
+        -:  573:
+        -:  574:  static void ConfigDestructor(void *arg);
+        -:  575:  void handleError() const;
+        -:  576:
+        -:  577:  config_t *_config;
+        -:  578:  Setting::Format _defaultFormat;
+        -:  579:
+        -:  580:  Config(const Config& other); // not supported
+        -:  581:  Config& operator=(const Config& other); // not supported
+        -:  582:};
+        -:  583:
+        -:  584:} // namespace libconfig
+        -:  585:
+        -:  586:#endif // __libconfig_hpp

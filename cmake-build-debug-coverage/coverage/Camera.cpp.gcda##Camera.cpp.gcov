@@ -1,0 +1,222 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/base/camera/Camera.cpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/camera/Camera.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/camera/Camera.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 24/04/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#include "Camera.hpp"
+        -:   13:
+        -:   14:#include <iostream>
+        -:   15:
+function _ZNK6Camera11getPositionEv called 3066396 returned 100% blocks executed 100%
+  3066396:   16:Vecteur Camera::getPosition() const{
+  3066396:   17:    return position;
+  3066396:   17-block 2
+        -:   18:}
+        -:   19:
+function _ZNK6Camera11getRotationEv called 0 returned 0% blocks executed 0%
+    #####:   20:Vecteur Camera::getRotation() const{
+    #####:   21:    return rotation;
+    %%%%%:   21-block 2
+        -:   22:}
+        -:   23:
+function _ZNK6Camera13getResolutionEv called 0 returned 0% blocks executed 0%
+    #####:   24:Resolution Camera::getResolution() const{
+    #####:   25:    return resolution;
+    %%%%%:   25-block 2
+        -:   26:}
+function _ZNK6Camera6getFOVEv called 0 returned 0% blocks executed 0%
+    #####:   27:float Camera::getFOV() const{
+    #####:   28:    return fov;
+    %%%%%:   28-block 2
+        -:   29:}
+        -:   30:
+function _ZN6Camera13setResolutionEii called 0 returned 0% blocks executed 0%
+    #####:   31:void Camera::setResolution(int width, int height){
+    #####:   32:    resolution.width = width;
+    #####:   33:    resolution.height = height;
+    #####:   34:}
+        -:   35:
+function _ZN6Camera11setPositionERK7Vecteur called 0 returned 0% blocks executed 0%
+    #####:   36:void Camera::setPosition(const Vecteur& position){
+    #####:   37:    this->position = position;
+    #####:   38:}
+        -:   39:
+function _ZN6Camera11setRotationERK7Vecteur called 0 returned 0% blocks executed 0%
+    #####:   40:void Camera::setRotation(const Vecteur& rotation){
+    #####:   41:    this->rotation = rotation;
+    #####:   42:}
+        -:   43:
+function _ZN6Camera6setFOVEf called 0 returned 0% blocks executed 0%
+    #####:   44:void Camera::setFOV(float fov){
+    #####:   45:    this->fov = fov;
+    #####:   46:}
+        -:   47:
+function _ZN6CameraC2Ef10Resolution7VecteurS1_ called 1 returned 100% blocks executed 84%
+        1:   48:Camera::Camera(float fov, Resolution resolution, Point position, Vecteur rotation) {
+        1:   48-block 2
+appel   0 a retourné 1
+appel   1 a retourné 1
+appel   2 a retourné 1
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+appel   6 a retourné 1
+appel   7 a retourné 1
+appel   8 a retourné 1
+appel   9 a retourné 1
+branchement 10 pris 1 (fallthrough)
+branchement 11 pris 0 (throw)
+        1:   48-block 12
+appel  12 a retourné 1
+branchement 13 pris 1 (fallthrough)
+branchement 14 pris 0 (throw)
+        1:   49:    this->fov = fov;
+        1:   50:    this->resolution = resolution;
+        1:   51:    this->position = position;
+        1:   52:    this->rotation = rotation;
+        -:   53:
+        1:   54:    lookFrom = position;
+        1:   55:    lookAt = lookFrom;
+        1:   56:    lookAt.z = -1.0f;
+        1:   57:    imageWidth = resolution.width;
+        1:   58:    imageHeight = resolution.height;
+        -:   59:
+        1:   60:    w = (lookFrom - lookAt).normalized();
+        1:   60-block 13
+appel   0 a retourné 1
+appel   1 a retourné 1
+        1:   61:    u = (cross(up, w)).normalized();
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   61-block 16
+appel   3 a retourné 1
+    $$$$$:   61-block 22
+        1:   62:    v = (cross(w, u)).normalized();
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   62-block 18
+appel   3 a retourné 1
+    $$$$$:   62-block 23
+        -:   63:
+        1:   64:    l = local3D(position, u, v, w);
+appel   0 a retourné 1
+        1:   65:    viewport = Viewport(fov, aspectRatio, l, resolution);
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+    $$$$$:   65-block 24
+        1:   66:};
+        1:   66-block 21
+    $$$$$:   66-block 25
+appel   0 jamais exécuté
+        -:   67:
+function _Z13applyRotationRK7VecteurS1_ called 2073600 returned 100% blocks executed 100%
+  2073600:   68:Vecteur applyRotation(const Vecteur &dir, const Vecteur &rotation) {
+        -:   69:    // Conversion en radians
+  2073600:   70:    const float pitch = rotation.x * M_PI / 180.0f; // rotation autour de X
+  2073600:   71:    const float yaw   = rotation.y * M_PI / 180.0f; // rotation autour de Y
+  2073600:   72:    const float roll  = rotation.z * M_PI / 180.0f; // rotation autour de Z
+        -:   73:
+        -:   74:    // Pré-calcul des cosinus/sinus
+  2073600:   75:    const float cosPitch = std::cos(pitch);
+  2073600:   75-block 2
+appel   0 a retourné 2073600
+  2073600:   76:    const float sinPitch = std::sin(pitch);
+appel   0 a retourné 2073600
+  2073600:   77:    const float cosYaw   = std::cos(yaw);
+appel   0 a retourné 2073600
+  2073600:   78:    const float sinYaw   = std::sin(yaw);
+appel   0 a retourné 2073600
+  2073600:   79:    const float cosRoll  = std::cos(roll);
+appel   0 a retourné 2073600
+  2073600:   80:    const float sinRoll  = std::sin(roll);
+appel   0 a retourné 2073600
+        -:   81:
+        -:   82:    // Matrice de rotation complète (Z * X * Y) appliquée au vecteur dir
+  2073600:   83:    Vecteur rotated;
+appel   0 a retourné 2073600
+  2073600:   84:    rotated.x =
+  2073600:   85:        dir.x * (cosYaw * cosRoll + sinYaw * sinPitch * sinRoll) +
+  2073600:   86:        dir.y * (cosPitch * sinRoll) +
+  2073600:   87:        dir.z * (sinYaw * cosRoll - cosYaw * sinPitch * sinRoll);
+        -:   88:
+  2073600:   89:    rotated.y =
+  2073600:   90:        dir.x * (-cosYaw * sinRoll + sinYaw * sinPitch * cosRoll) +
+  2073600:   91:        dir.y * (cosPitch * cosRoll) +
+  2073600:   92:        dir.z * (-sinYaw * sinRoll - cosYaw * sinPitch * cosRoll);
+        -:   93:
+  2073600:   94:    rotated.z =
+  2073600:   95:        dir.x * (sinYaw * cosPitch) +
+  2073600:   96:        dir.y * (-sinPitch) +
+  2073600:   97:        dir.z * (cosYaw * cosPitch);
+        -:   98:
+  2073600:   99:    return rotated.normalized();
+appel   0 a retourné 2073600
+        -:  100:}
+        -:  101:
+function _Z13random_doublev called 4147200 returned 100% blocks executed 100%
+  4147200:  102:double random_double() {
+        -:  103:    // Returns a random real in [0,1).
+  4147200:  104:    return std::rand() / (RAND_MAX + 1.0);
+  4147200:  104-block 2
+appel   0 a retourné 4147200
+        -:  105:}
+function _Z13sample_squarev called 2073600 returned 100% blocks executed 100%
+  2073600:  106:Vecteur sample_square() {
+        -:  107:    // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
+  2073600:  108:    return Vecteur(random_double() - 0.5, random_double() - 0.5, 0);
+  2073600:  108-block 2
+appel   0 a retourné 2073600
+branchement  1 pris 2073600 (fallthrough)
+branchement  2 pris 0 (throw)
+  2073600:  108-block 3
+appel   3 a retourné 2073600
+branchement  4 pris 2073600 (fallthrough)
+branchement  5 pris 0 (throw)
+  2073600:  108-block 4
+appel   6 a retourné 2073600
+  2073600:  108-block 6
+  2073600:  108-block 7
+        -:  109:}
+        -:  110:
+function _ZNK6Camera11generateRayEii called 2073600 returned 100% blocks executed 100%
+  2073600:  111:Ray Camera::generateRay(int i, int j) const
+        -:  112:{
+  2073600:  113:    const auto offset = sample_square();
+  2073600:  113-block 2
+appel   0 a retourné 2073600
+branchement  1 pris 2073600 (fallthrough)
+branchement  2 pris 0 (throw)
+        -:  114:    const auto pixel = viewport.pixel_00
+  2073600:  115:               + (viewport.D_u * (i + offset.x))
+appel   0 a retourné 2073600
+appel   1 a retourné 2073600
+  4147200:  116:               + (viewport.D_v * (j + offset.y));
+  2073600:  116-block 3
+appel   0 a retourné 2073600
+appel   1 a retourné 2073600
+        -:  117:
+  2073600:  118:    const auto origin = position;
+  2073600:  119:    auto direction = pixel - origin;
+appel   0 a retourné 2073600
+  2073600:  120:    direction = applyRotation(direction, rotation);
+appel   0 a retourné 2073600
+branchement  1 pris 2073600 (fallthrough)
+branchement  2 pris 0 (throw)
+  4147200:  121:    return {origin, direction};
+  2073600:  121-block 9
+appel   0 a retourné 2073600
+  2073600:  121-block 11
+        -:  122:}

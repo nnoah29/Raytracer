@@ -1,0 +1,147 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/base/camera/Camera.hpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/camera/Camera.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/camera/Camera.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / /
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/
+        -:    8:**          __/ |     on 24/04/25.
+        -:    9:**         |___/
+        -:   10:*/
+        -:   11:
+        -:   12:#ifndef CAMERA_HPP
+        -:   13:#define CAMERA_HPP
+        -:   14:#include <ostream>
+        -:   15:
+        -:   16:#include "conf.hpp"
+        -:   17:#include "../../interfaces/ICamera.hpp"
+        -:   18:#include "my.hpp"
+        -:   19:
+        -:   20:typedef struct local3D
+        -:   21:{
+        -:   22:    Point origin;
+        -:   23:    Vecteur u, v, w;
+        -:   24:
+function _ZN7local3DC2E7VecteurS0_S0_S0_ called 1 returned 100% blocks executed 100%
+        1:   25:    local3D(Point origin, Vecteur u, Vecteur v, Vecteur w) : origin(origin), u(u), v(v), w(w) {};
+function _ZN7local3DC2Ev called 1 returned 100% blocks executed 100%
+        1:   26:    local3D() = default;
+        1:   26-block 2
+appel   0 a retourné 1
+appel   1 a retourné 1
+appel   2 a retourné 1
+appel   3 a retourné 1
+        -:   27:} local3D;
+        -:   28:
+        -:   29:typedef struct Viewport
+        -:   30:{
+        -:   31:    float height{};
+        -:   32:    float width{};
+        -:   33:    Vecteur horizontal;
+        -:   34:    Vecteur vertical;
+        -:   35:    Vecteur D_u;
+        -:   36:    Vecteur D_v;
+        -:   37:    Point pixel_00;
+        -:   38:
+        -:   39:
+function _ZN8ViewportC2EffRK7local3D10Resolution called 1 returned 100% blocks executed 100%
+        1:   40:    Viewport(float fov, float aspect_ratio, const local3D& l, Resolution r)
+        1:   41:    {
+        1:   41-block 2
+appel   0 a retourné 1
+appel   1 a retourné 1
+appel   2 a retourné 1
+appel   3 a retourné 1
+appel   4 a retourné 1
+        1:   42:        const float theta = degreesToRadians(fov);
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   43:        const float h = std::tan(theta / 2.0f);
+        1:   43-block 8
+appel   0 a retourné 1
+        1:   44:        height = 2.0f * h;
+        1:   45:        width  = aspect_ratio * height;
+        -:   46:
+        1:   47:        horizontal =  l.u * width;
+appel   0 a retourné 1
+        1:   48:        vertical   = -l.v * height;
+appel   0 a retourné 1
+appel   1 a retourné 1
+        -:   49:
+        1:   50:        D_u = horizontal / static_cast<float>(r.width);
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   51:        D_v = vertical   / static_cast<float>(r.height);
+        1:   51-block 13
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        -:   52:
+        1:   53:        const auto upper_left_corner = l.origin - (l.w) - (horizontal * 0.5f) - (vertical * 0.5f);
+        1:   53-block 14
+appel   0 a retourné 1
+appel   1 a retourné 1
+appel   2 a retourné 1
+appel   3 a retourné 1
+appel   4 a retourné 1
+        1:   54:        pixel_00 = upper_left_corner + (D_u + D_v) * 0.5f;
+appel   0 a retourné 1
+appel   1 a retourné 1
+appel   2 a retourné 1
+        1:   55:    }
+function _ZN8ViewportC2Ev called 1 returned 100% blocks executed 100%
+        1:   56:    Viewport() = default;
+        1:   56-block 2
+appel   0 a retourné 1
+appel   1 a retourné 1
+appel   2 a retourné 1
+appel   3 a retourné 1
+appel   4 a retourné 1
+        -:   57:
+        -:   58:
+        -:   59:} Viewport;
+        -:   60:
+        -:   61:class Camera final : public ICamera {
+        -:   62:protected:
+        -:   63:    Resolution resolution{};
+        -:   64:    Point position; //center
+        -:   65:    Vecteur rotation;
+        -:   66:    float fov = 0;
+        -:   67:
+        -:   68:    Point lookFrom;
+        -:   69:    Point lookAt;
+        -:   70:    Vecteur up = Vecteur(0, 1, 0);
+        -:   71:    int imageWidth, imageHeight;
+        -:   72:    Vecteur u, v, w;
+        -:   73:    local3D l;
+        -:   74:
+        -:   75:
+        -:   76:public:
+        -:   77:    float aspectRatio = 1920.0f / 1080.0f;
+        -:   78:    int max_depth = LIGHT_DEPTH;
+        -:   79:    Viewport viewport;
+        -:   80:
+        -:   81:    Point getPosition() const override;
+        -:   82:    Vecteur getRotation() const override;
+        -:   83:    Resolution getResolution() const override;
+        -:   84:    float getFOV() const override;
+        -:   85:
+        -:   86:    void setResolution(int width, int height) override;
+        -:   87:    void setPosition(const Vecteur& position) override;
+        -:   88:    void setRotation(const Vecteur& rotation) override;
+        -:   89:    void setFOV(float fov) override;
+        -:   90:    Ray generateRay(int i, int j) const;
+        -:   91:
+        -:   92:    Camera(float fov, Resolution resolution, Point position, Vecteur rotation);
+        -:   93:
+        -:   94:};
+        -:   95:
+        -:   96:
+        -:   97:
+        -:   98:#endif //CAMERA_HPP

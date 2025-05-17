@@ -40,40 +40,41 @@ public:
     static Vecteur reflect(const Vecteur& v, const Vecteur& n) {
         return v - (n * 2 * dot(v, n));
     }
-    void determine_color(PointOfImpact& p) const
-    {
+
+    void determine_color(PointOfImpact& p) const {
         const Color ambient = p.material.color * ambient_intensity;
         Color diffuse{0.0f, 0.0f, 0.0f};
         Color specular{0.0f, 0.0f, 0.0f};
-        bool blocked = false;
 
         for (const auto& l : lights) {
+            bool blocked = false;
             Color intensity = l->getIntensityAt(p);
-            diffuse +=  intensity * diffuse_intensity;
             Vecteur light_dir = l->getDirectionFrom(p.p);
             const float light_distance = light_dir.length();
+            light_dir = light_dir.normalized();
 
-            Ray shadow_ray(p.p + (p.normal * 0.001f), light_dir);
+            Ray shadow_ray(p.p + (p.normal * 0.01f), light_dir);
             PointOfImpact shadow_poi;
             for (const auto& obj : objs) {
-                if (obj->hit(shadow_ray, 0.001f, light_distance, shadow_poi)) {
+                if (obj->hit(shadow_ray, 0.01f, light_distance, shadow_poi)) {
                     blocked = true;
                     break;
                 }
             }
-            if (p.material.shininess_is_define) {
-                Vecteur view_dir = (camera.getPosition() - p.p).normalized();
-                Vecteur reflect_dir = reflect(-light_dir, p.normal);
-                const float spec = std::pow(std::max(dot(view_dir, reflect_dir), 0.0f), p.material.shininess);
-                specular += Color(1.0f, 1.0f, 1.0f) * 0.5f * spec;
+            if (!blocked) {
+                diffuse += intensity * diffuse_intensity;
+
+                if (p.material.shininess_is_define) {
+                    Vecteur view_dir = (camera.getPosition() - p.p).normalized();
+                    Vecteur reflect_dir = reflect(-light_dir, p.normal);
+                    const float spec = std::pow(std::max(dot(view_dir, reflect_dir), 0.0f), p.material.shininess);
+                    specular += Color(1.0f, 1.0f, 1.0f) * 0.5f * spec;
+                }
             }
         }
-        if (blocked) {
-            diffuse = {0.0f, 0.0f, 0.0f};
-        }
-
         p.material.color = diffuse + ambient + specular;
-    };
+    }
+
 
     bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const
     {

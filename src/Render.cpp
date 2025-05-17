@@ -13,9 +13,58 @@
 #include <iostream>
 #include <valarray>
 #include <filesystem>
+#include <SFML/Graphics.hpp>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
 
 #include "conf.hpp"
 
+#include <SFML/Graphics.hpp>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+
+
+bool Render::loadPPM_P3(const std::string& filename, std::vector<sf::Uint8>& pixels, unsigned& width, unsigned& height)
+{
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Erreur lors de l'ouverture du fichier PPM.\n";
+        return false;
+    }
+
+    std::string line, magic;
+    std::getline(file, magic);
+
+    while (std::getline(file, line)) {
+        if (line[0] != '#') break;
+    }
+    std::istringstream iss(line);
+    iss >> width >> height;
+
+    int maxVal = 0;
+    file >> maxVal;
+
+    int r, g, b;
+    pixels.reserve(width * height * 4);
+    while (file >> r >> g >> b) {
+        pixels.push_back(static_cast<sf::Uint8>(r));
+        pixels.push_back(static_cast<sf::Uint8>(g));
+        pixels.push_back(static_cast<sf::Uint8>(b));
+        pixels.push_back(255);
+    }
+
+    if (pixels.size() != width * height * 4) {
+        std::cerr << "Erreur : nombre de pixels incorrect.\n";
+        return false;
+    }
+    return true;
+}
 
 Render::Render(int width, int height, const std::string& filename) : width(width), height(height) {
     filepath = SCREENSHORT_DIR + filename + ".ppm";
@@ -50,24 +99,31 @@ void Render::draw_pixel(std::ostream& out, const Color& c) {
     out << r_byte << " " << g_byte << " " << b_byte << "\n";
 }
 
+void Render::display() const
+{
+    std::vector<sf::Uint8> pixels;
+    unsigned width = 0, height = 0;
 
-void Render::display() {
-    std::cout << filepath<<std::endl;
-    if (!texture.loadFromFile("./"+ filepath)) {
-        std::cerr << "Failed to load texture from image!" << std::endl;
+    if (!loadPPM_P3(filepath, pixels, width, height))
         return;
-    }
-    sprite.setTexture(texture);
 
-    sf::RenderWindow window(sf::VideoMode(width, height), "Ray Traced Image");
+    sf::RenderWindow window(sf::VideoMode(width/2, height/2), "Affichage PPM P3", sf::Style::Default);
+    window.setFramerateLimit(60);
+
+    sf::Texture texture;
+    texture.create(width, height);
+    texture.update(pixels.data());
+
+    sf::Sprite sprite(texture);
 
     while (window.isOpen()) {
         sf::Event event{};
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)){
                 window.close();
+            }
         }
-        window.clear(sf::Color::Black);
+        window.clear();
         window.draw(sprite);
         window.display();
     }

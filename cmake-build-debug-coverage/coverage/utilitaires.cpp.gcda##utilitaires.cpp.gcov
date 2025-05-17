@@ -1,0 +1,106 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/utilitaires/utilitaires.cpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/utilitaires/utilitaires.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/utilitaires/utilitaires.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 26/04/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:
+        -:   13:#include "../includes/Ray.hpp"
+        -:   14:#include "../includes/Vecteur.hpp"
+        -:   15:
+        -:   16:/// fonction pour déterminer si un rayon touche une sphère
+function _Z10hit_sphereRK7VecteurdRK3Ray called 0 returned 0% blocks executed 0%
+    #####:   17:bool hit_sphere(const Point& center, double radius, const Ray& r) {
+    #####:   18:    const Vecteur oc = center - r.origin();
+    %%%%%:   18-block 2
+appel   0 jamais exécuté
+appel   1 jamais exécuté
+    #####:   19:    const auto a = Vecteur::dot(r.direction(), r.direction());
+appel   0 jamais exécuté
+appel   1 jamais exécuté
+appel   2 jamais exécuté
+    #####:   20:    const auto b = -2.0 * Vecteur::dot(r.direction(), oc);
+appel   0 jamais exécuté
+appel   1 jamais exécuté
+    #####:   21:    const auto c = Vecteur::dot(oc, oc) - radius*radius;
+appel   0 jamais exécuté
+    #####:   22:    const auto discriminant = b*b - 4*a*c;
+    #####:   23:    return (discriminant >= 0);
+        -:   24:}
+        -:   25:
+        -:   26:
+        -:   27:
+        -:   28:// for (int i = 0; i <= 10000; ++i) {
+        -:   29://         std::cout << "\r\33[2K" << "ok(" << i << ")" << std::flush; // Affiche sur la même ligne
+        -:   30://         std::this_thread::sleep_for(std::chrono::milliseconds(100)); // Pause plus rapide
+        -:   31://     }
+        -:   32:
+        -:   33:#include "../src/Factory.hpp"
+        -:   34:#include "Sphere.hpp" // ta primitive concrète
+        -:   35:
+function _Z9surroundsfff called 12478140 returned 100% blocks executed 100%
+ 12478140:   36:bool surrounds(float min, float x, float max) {
+ 12478140:   37:    return min < x && x < max;
+ 12478140:   37-block 2
+branchement  0 pris 8148837 (fallthrough)
+branchement  1 pris 4329303
+  8148837:   37-block 3
+branchement  2 pris 2539289 (fallthrough)
+branchement  3 pris 5609548
+  2539289:   37-block 4
+  9938851:   37-block 5
+ 12478140:   37-block 6
+        -:   38:}
+        -:   39:
+function _Z16degreesToRadiansf called 1 returned 100% blocks executed 100%
+        1:   40:float degreesToRadians(float degrees) {
+        1:   41:    return degrees * (M_PI / 180);
+        1:   41-block 2
+        -:   42:}
+        -:   43:
+function RegisterPlugin called 0 returned 0% blocks executed 0%
+    #####:   44:extern "C" void RegisterPlugin(Factory* f) {
+function _ZZ14RegisterPluginENKUl13dataPrimitiveNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEE_clES_S5_ called 0 returned 0% blocks executed 0%
+    #####:   45:    f->registerPrimitive("nom de la primitives", [](dataPrimitive data, std::string name) -> std::shared_ptr<IPrimitive> {
+    %%%%%:   45-block 2
+appel   0 jamais exécuté
+    %%%%%:   45-block 5
+appel   1 jamais exécuté
+branchement  2 jamais exécuté (fallthrough)
+branchement  3 jamais exécuté (throw)
+    %%%%%:   45-block 6
+appel   4 jamais exécuté
+branchement  5 jamais exécuté (fallthrough)
+branchement  6 jamais exécuté (throw)
+    %%%%%:   45-block 7
+appel   7 jamais exécuté
+    %%%%%:   45-block 9
+appel   8 jamais exécuté
+    $$$$$:   45-block 11
+appel   9 jamais exécuté
+    $$$$$:   45-block 15
+    $$$$$:   45-block 16
+    $$$$$:   45-block 17
+appel  10 jamais exécuté
+    $$$$$:   45-block 19
+    #####:   46:        return std::make_shared<Sphere>(data, name); // Sphere est un exemple
+    %%%%%:   46-block 2
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:   46-block 3
+appel   3 jamais exécuté
+appel   4 jamais exécuté
+    %%%%%:   46-block 6
+        -:   47:    });
+    #####:   48:}
+        -:   49:

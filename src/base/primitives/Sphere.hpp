@@ -44,7 +44,7 @@ class Sphere final : public APrimitive {
 
         p.t = root;
         p.p = ray.at(p.t);
-        const Vecteur out_normal = (p.p - data.position) / data.radius;
+        const Vecteur out_normal = (p.p - data.position) / (p.p - data.position).length();
         p.set_face_normal(ray, out_normal);
         p.material = data.material;
         return true;

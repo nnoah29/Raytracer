@@ -1,0 +1,216 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/Raytracer.cpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Raytracer.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Raytracer.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 01/05/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#include "Raytracer.hpp"
+        -:   13:
+        -:   14:#include <fstream>
+        -:   15:#include <iostream>
+        -:   16:
+function _ZN9RaytracerC2ERK5SceneR6Render called 1 returned 100% blocks executed 100%
+        1:   17:Raytracer::Raytracer(const Scene& scene, Render& render) : _scene(scene), _render(render) {}
+        -:   18:
+function _ZNK9Raytracer6renderEv called 1 returned 0% blocks executed 72%
+        1:   19:void Raytracer::render() const
+        -:   20:{
+        1:   21:    std::ofstream out(_render.filepath);
+        1:   21-block 2
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        -:   22:
+       1*:   23:    if (!out.is_open()) throw std::runtime_error("Could not open file.");
+        1:   23-block 3
+appel   0 a retourné 1
+branchement  1 pris 0 (fallthrough)
+branchement  2 pris 1
+    %%%%%:   23-block 5
+appel   3 jamais exécuté
+appel   4 jamais exécuté
+branchement  5 jamais exécuté (fallthrough)
+branchement  6 jamais exécuté (throw)
+    %%%%%:   23-block 7
+appel   7 jamais exécuté
+    $$$$$:   23-block 34
+appel   8 jamais exécuté
+        1:   24:    out << "P3\n" << _render.width << ' ' << _render.height << "\n255\n";
+        1:   24-block 8
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   24-block 9
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        1:   24-block 10
+appel   6 a retourné 1
+branchement  7 pris 1 (fallthrough)
+branchement  8 pris 0 (throw)
+        1:   24-block 11
+appel   9 a retourné 1
+branchement 10 pris 1 (fallthrough)
+branchement 11 pris 0 (throw)
+        1:   24-block 12
+appel  12 a retourné 1
+branchement 13 pris 1 (fallthrough)
+branchement 14 pris 0 (throw)
+        -:   25:
+     1081:   26:    for (int j = 0; j < _render.height; j++) {
+        1:   26-block 13
+     1080:   26-block 26
+     1081:   26-block 27
+branchement  0 pris 1080
+branchement  1 pris 1 (fallthrough)
+     1080:   27:        std::clog << "\rLines remaining: " << (_render.height - j - 1) << ' ' << std::flush;
+     1080:   27-block 14
+appel   0 a retourné 1080
+branchement  1 pris 1080 (fallthrough)
+branchement  2 pris 0 (throw)
+     1080:   27-block 15
+appel   3 a retourné 1080
+branchement  4 pris 1080 (fallthrough)
+branchement  5 pris 0 (throw)
+     1080:   27-block 16
+appel   6 a retourné 1080
+branchement  7 pris 1080 (fallthrough)
+branchement  8 pris 0 (throw)
+     1080:   27-block 17
+appel   9 a retourné 1080
+branchement 10 pris 1080 (fallthrough)
+branchement 11 pris 0 (throw)
+  2074680:   28:        for (int i = 0; i < _render.width; i++) {
+     1080:   28-block 18
+  2073600:   28-block 24
+  2074680:   28-block 25
+branchement  0 pris 2073600
+branchement  1 pris 1080 (fallthrough)
+        -:   29:
+  2073600:   30:            Color color(0, 0, 0);
+  2073600:   30-block 19
+appel   0 a retourné 2073600
+        -:   31:            //for (int s = 0; s < sample_per_pixel; s++) {
+  2073600:   32:                Ray r = _scene.camera.generateRay(i, j);
+appel   0 a retourné 2073600
+branchement  1 pris 2073600 (fallthrough)
+branchement  2 pris 0 (throw)
+  2073600:   33:                color += traceRay(r, LIGHT_DEPTH);
+  2073600:   33-block 21
+appel   0 a retourné 2073600
+branchement  1 pris 2073600 (fallthrough)
+branchement  2 pris 0 (throw)
+  2073600:   33-block 22
+appel   3 a retourné 2073600
+    $$$$$:   33-block 36
+        -:   34:            //}
+  2073600:   35:            _render.draw_pixel(out, color);
+appel   0 a retourné 2073600
+branchement  1 pris 2073600 (fallthrough)
+branchement  2 pris 0 (throw)
+        -:   36:        }
+        -:   37:    }
+        1:   38:    std::clog << "\rDone.\n" << std::flush;
+        1:   38-block 28
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   38-block 29
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        1:   39:    out.close();
+        1:   39-block 30
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   40:    _render.display();
+        1:   40-block 31
+appel   0 a retourné 0
+branchement  1 pris 0 (fallthrough)
+branchement  2 pris 0 (throw)
+    #####:   41:}
+    %%%%%:   41-block 32
+appel   0 jamais exécuté
+    $$$$$:   41-block 38
+appel   1 jamais exécuté
+        -:   42:
+function _Z11unit_vectorRK7Vecteur called 692098 returned 100% blocks executed 100%
+   692098:   43:Vecteur unit_vector(const Vecteur& v) {
+   692098:   44:    return v / v.length();
+   692098:   44-block 2
+appel   0 a retourné 692098
+appel   1 a retourné 692098
+        -:   45:}
+        -:   46:
+        -:   47:
+function _ZNK9Raytracer8traceRayERK3Rayi called 2073600 returned 100% blocks executed 95%
+  2073600:   48:    Color Raytracer::traceRay(const Ray& ray, int depth) const
+        -:   49:    {
+        -:   50:        (void)depth;
+  2073600:   51:        PointOfImpact point;
+  2073600:   51-block 2
+appel   0 a retourné 2073600
+  2073600:   52:        if (_scene.hit(ray, 0.001f, std::numeric_limits<float>::infinity(), point)) {
+appel   0 a retourné 2073600
+appel   1 a retourné 2073600
+branchement  2 pris 2073600 (fallthrough)
+branchement  3 pris 0 (throw)
+  2073600:   52-block 5
+branchement  4 pris 1381502 (fallthrough)
+branchement  5 pris 692098
+  1381502:   53:        const Color local_color = point.material.color;
+        -:   54:
+        -:   55:        // if (depth > 0 && point.material.reflectivity > 0.0f) {
+        -:   56:        //     const Vecteur view_dir = -ray.direction().normalized();
+        -:   57:        //     const Vecteur reflect_dir = Scene::reflect(view_dir, point.normal);
+        -:   58:        //     const Ray reflected_ray(point.p + point.normal * 0.001f, reflect_dir);
+        -:   59:        //     const Color reflected_color = traceRay(reflected_ray, depth - 1);
+        -:   60:        //
+        -:   61:        //     return local_color * (1.0f - point.material.reflectivity) + reflected_color * point.material.reflectivity;
+        -:   62:        // }
+        -:   63:
+  1381502:   64:        return local_color;
+  1381502:   64-block 6
+        -:   65:    }
+   692098:   66:    if (_scene.hit(ray, 0.001f, std::numeric_limits<float>::infinity(), point)) {
+   692098:   66-block 7
+appel   0 a retourné 692098
+appel   1 a retourné 692098
+branchement  2 pris 692098 (fallthrough)
+branchement  3 pris 0 (throw)
+   692098:   66-block 9
+branchement  4 pris 0 (fallthrough)
+branchement  5 pris 692098
+    #####:   67:        return point.material.color;
+    %%%%%:   67-block 10
+        -:   68:    }
+        -:   69:
+   692098:   70:    const Vecteur unit_direction = unit_vector(ray.direction());
+   692098:   70-block 11
+appel   0 a retourné 692098
+appel   1 a retourné 692098
+branchement  2 pris 692098 (fallthrough)
+branchement  3 pris 0 (throw)
+   692098:   71:    const auto a = 0.5*(unit_direction.y + 1.0);
+   692098:   72:    return (Color(1.0, 1.0, 1.0)* (1.0-a)) + (Color(0.5, 0.7, 1.0) * a) * _scene.ambient_intensity;
+   692098:   72-block 13
+appel   0 a retourné 692098
+appel   1 a retourné 692098
+appel   2 a retourné 692098
+appel   3 a retourné 692098
+appel   4 a retourné 692098
+appel   5 a retourné 692098
+        -:   73:}
+        -:   74:
+        -:   75:
+        -:   76:

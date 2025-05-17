@@ -1,0 +1,77 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/interfaces/APrimitive.hpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Factory.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Factory.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 29/04/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#ifndef APRIMITIVE_HPP
+        -:   13:#define APRIMITIVE_HPP
+        -:   14:#include <string>
+        -:   15:
+        -:   16:#include "IPrimitive.hpp"
+        -:   17:#include "my.hpp"
+        -:   18:
+        -:   19:
+        -:   20:class APrimitive : public IPrimitive {
+        -:   21:protected:
+        -:   22:    dataPrimitive data;
+        -:   23:    std::string name;
+        -:   24:    
+        -:   25:
+        -:   26:public:
+function _ZN10APrimitiveC2ERK13dataPrimitiveRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 6 returned 100% blocks executed 58%
+        6:   27:    APrimitive(const dataPrimitive& _data, const std::string& _name) {
+        6:   27-block 2
+appel   0 a retourné 6
+appel   1 a retourné 6
+appel   2 a retourné 6
+        6:   28:        this->data = _data;
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   29:        this->name = _name;
+        6:   29-block 6
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   30:    };
+        6:   30-block 7
+    $$$$$:   30-block 8
+appel   0 jamais exécuté
+    $$$$$:   30-block 10
+appel   1 jamais exécuté
+    $$$$$:   30-block 12
+appel   2 jamais exécuté
+        -:   31:
+    #####:   32:    ~APrimitive() override = default;
+------------------
+_ZN10APrimitiveD0Ev:
+function _ZN10APrimitiveD0Ev called 0 returned 0% blocks executed 0%
+    #####:   32:    ~APrimitive() override = default;
+    %%%%%:   32-block 2
+appel   0 jamais exécuté
+appel   1 jamais exécuté
+------------------
+_ZN10APrimitiveD2Ev:
+function _ZN10APrimitiveD2Ev called 0 returned 0% blocks executed 0%
+    #####:   32:    ~APrimitive() override = default;
+    %%%%%:   32-block 2
+appel   0 jamais exécuté
+appel   1 jamais exécuté
+appel   2 jamais exécuté
+------------------
+        -:   33:    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const override = 0;
+        -:   34:};
+        -:   35:
+        -:   36:
+        -:   37:
+        -:   38:#endif //APRIMITIVE_HPP

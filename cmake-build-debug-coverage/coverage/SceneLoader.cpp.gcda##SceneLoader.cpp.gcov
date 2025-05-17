@@ -1,0 +1,1254 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/SceneLoader.cpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/SceneLoader.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/SceneLoader.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 28/04/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#include "SceneLoader.hpp"
+        -:   13:
+        -:   14:
+function _ZN11SceneLoaderC2ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEi called 1 returned 100% blocks executed 33%
+        1:   15:SceneLoader::SceneLoader(const std::string& path, int ac)
+        1:   15-block 2
+appel   0 a retourné 1
+appel   1 a retourné 1
+appel   2 a retourné 1
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        -:   16:{
+       1*:   17:    if (!std::filesystem::exists(path)) throw std::runtime_error("No Scene Found");
+        1:   17-block 6
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   17-block 7
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        1:   17-block 8
+appel   6 a retourné 1
+branchement  7 pris 0 (fallthrough)
+branchement  8 pris 1
+    %%%%%:   17-block 10
+appel   9 jamais exécuté
+appel  10 jamais exécuté
+branchement 11 jamais exécuté (fallthrough)
+branchement 12 jamais exécuté (throw)
+    %%%%%:   17-block 12
+appel  13 jamais exécuté
+    $$$$$:   17-block 22
+appel  14 jamais exécuté
+    $$$$$:   17-block 24
+    $$$$$:   17-block 25
+appel  15 jamais exécuté
+        -:   18:    try {
+        1:   19:        cfg.readFile(path.c_str());
+        1:   19-block 13
+appel   0 a retourné 1
+appel   1 a retourné 1
+branchement  2 pris 1 (fallthrough)
+branchement  3 pris 0 (throw)
+    =====:   20:    } catch (const libconfig::FileIOException& fioex) {
+    $$$$$:   20-block 27
+branchement  0 jamais exécuté (fallthrough)
+branchement  1 jamais exécuté
+branchement  2 jamais exécuté
+    $$$$$:   20-block 29
+appel   3 jamais exécuté
+    =====:   21:        std::cerr << "I/O error while reading file." << std::endl;
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    $$$$$:   21-block 31
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    =====:   22:    } catch (const libconfig::ParseException& pex) {
+    $$$$$:   22-block 32
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    $$$$$:   22-block 33
+appel   3 jamais exécuté
+    $$$$$:   22-block 45
+appel   4 jamais exécuté
+    =====:   23:        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    $$$$$:   23-block 35
+appel   3 jamais exécuté
+appel   4 jamais exécuté
+branchement  5 jamais exécuté (fallthrough)
+branchement  6 jamais exécuté (throw)
+    $$$$$:   23-block 37
+appel   7 jamais exécuté
+branchement  8 jamais exécuté (fallthrough)
+branchement  9 jamais exécuté (throw)
+    $$$$$:   23-block 38
+appel  10 jamais exécuté
+appel  11 jamais exécuté
+branchement 12 jamais exécuté (fallthrough)
+branchement 13 jamais exécuté (throw)
+    $$$$$:   23-block 40
+appel  14 jamais exécuté
+branchement 15 jamais exécuté (fallthrough)
+branchement 16 jamais exécuté (throw)
+    $$$$$:   23-block 41
+appel  17 jamais exécuté
+appel  18 jamais exécuté
+branchement 19 jamais exécuté (fallthrough)
+branchement 20 jamais exécuté (throw)
+    $$$$$:   23-block 43
+appel  21 jamais exécuté
+branchement 22 jamais exécuté (fallthrough)
+branchement 23 jamais exécuté (throw)
+    =====:   24:    }
+    $$$$$:   24-block 44
+appel   0 jamais exécuté
+    $$$$$:   24-block 47
+appel   1 jamais exécuté
+        -:   25:    //std::cout << "Scene Loading..." << std::endl;
+        1:   26:    loadCamera(cfg.lookup("camera"));
+        1:   26-block 15
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   26-block 16
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        1:   27:    loadPrimitives(cfg.lookup("primitives"));
+        1:   27-block 17
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   27-block 18
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        1:   28:    loadLights(cfg.lookup("lights"));
+        1:   28-block 19
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:   28-block 20
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        -:   29:    //std::cout << "Scene Loaded" << std::endl;
+        -:   30:    (void)ac;
+        1:   31:}
+        1:   31-block 21
+    $$$$$:   31-block 49
+appel   0 jamais exécuté
+    $$$$$:   31-block 51
+appel   1 jamais exécuté
+    $$$$$:   31-block 53
+appel   2 jamais exécuté
+    $$$$$:   31-block 55
+appel   3 jamais exécuté
+        -:   32:
+function _ZNK11SceneLoader10loadCameraERKN9libconfig7SettingE called 1 returned 100% blocks executed 100%
+        1:   33:void SceneLoader::loadCamera(const libconfig::Setting& camera) const
+        -:   34:{
+        -:   35:    //std::cout << "Camera Loading..." << std::endl;
+        1:   36:    if (camera.exists("resolution")) {
+        1:   36-block 2
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   37:        const auto& res = camera["resolution"];
+        1:   37-block 4
+appel   0 a retourné 1
+        1:   38:        if (res.exists("width")) c->resolution.width = res["width"];
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   38-block 7
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+        1:   39:        if (res.exists("height")) c->resolution.height = res["height"];
+        1:   39-block 11
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   39-block 13
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+        -:   40:    }
+        -:   41:
+        1:   42:    if (camera.exists("position")) {
+        1:   42-block 17
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   43:        const auto& pos = camera["position"];
+        1:   43-block 19
+appel   0 a retourné 1
+        1:   44:        if (pos.exists("x")) c->position.x = pos["x"];
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   44-block 22
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+        1:   45:        if (pos.exists("y")) c->position.y = pos["y"];
+        1:   45-block 26
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   45-block 28
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+        1:   46:        if (pos.exists("z")) c->position.z = pos["z"];
+        1:   46-block 32
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   46-block 34
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+        -:   47:    }
+        -:   48:
+        1:   49:    if (camera.exists("rotation")) {
+        1:   49-block 38
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   50:        const auto& rot = camera["rotation"];
+        1:   50-block 40
+appel   0 a retourné 1
+        1:   51:        if (rot.exists("x")) c->rotation.x = rot["x"];
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   51-block 43
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+        1:   52:        if (rot.exists("y")) c->rotation.y = rot["y"];
+        1:   52-block 47
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   52-block 49
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+        1:   53:        if (rot.exists("z")) c->rotation.z = rot["z"];
+        1:   53-block 53
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   53-block 55
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+        -:   54:    }
+        -:   55:
+        1:   56:    if (camera.exists("fieldOfView")) c->fov = camera["fieldOfView"];
+        1:   56-block 59
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:   56-block 61
+appel   3 a retourné 1
+appel   4 a retourné 1
+appel   5 a retourné 1
+        -:   57:    //std::cout << "Camera Loaded" << std::endl;
+        1:   58:}
+        -:   59:
+function _ZN11SceneLoader14loadPrimitivesERKN9libconfig7SettingE called 1 returned 100% blocks executed 56%
+        1:   60:void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
+        -:   61:{
+        -:   62:    //std::cout << "Primitives Loading..." << std::endl;
+        4:   63:    for (int i = 0; i < primitives.getLength(); i++) {
+        1:   63-block 2
+        3:   63-block 192
+        4:   63-block 193
+appel   0 a retourné 4
+branchement  1 pris 3
+branchement  2 pris 1 (fallthrough)
+        3:   64:        const libconfig::Setting& p = primitives[i];
+        3:   64-block 3
+appel   0 a retourné 3
+branchement  1 pris 3 (fallthrough)
+branchement  2 pris 0 (throw)
+        3:   64-block 4
+        3:   65:        std::string name = p.getName();
+        3:   65-block 6
+appel   0 a retourné 3
+branchement  1 pris 3 (fallthrough)
+branchement  2 pris 0 (throw)
+        3:   65-block 7
+appel   3 a retourné 3
+branchement  4 pris 3 (fallthrough)
+branchement  5 pris 0 (throw)
+    $$$$$:   65-block 198
+        -:   66:
+       3*:   67:        if (!p.isList()) {
+        3:   67-block 9
+appel   0 a retourné 3
+branchement  1 pris 0 (fallthrough)
+branchement  2 pris 3
+    #####:   68:            std::cerr << "Expected a list under " << name << std::endl;
+    %%%%%:   68-block 11
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:   68-block 12
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:   68-block 13
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    #####:   69:            continue;
+    %%%%%:   69-block 14
+        -:   70:        }
+        9:   71:        for (int j = 0; j < p.getLength(); j++) {
+        3:   71-block 15
+        9:   71-block 184
+appel   0 a retourné 9
+branchement  1 pris 9 (fallthrough)
+branchement  2 pris 0 (throw)
+        9:   71-block 185
+branchement  3 pris 6
+branchement  4 pris 3 (fallthrough)
+        6:   72:            const libconfig::Setting& item = p[j];
+        6:   72-block 16
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   73:            dataPrimitive data;
+        6:   73-block 17
+appel   0 a retourné 6
+        -:   74:            // Nom
+        6:   75:            data.name = name;
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        -:   76:
+        -:   77:            // Position
+        6:   78:            if (item.exists("x")) data.position.x = item["x"];
+        6:   78-block 19
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   78-block 20
+branchement  3 pris 5 (fallthrough)
+branchement  4 pris 1
+        5:   78-block 21
+appel   5 a retourné 5
+branchement  6 pris 5 (fallthrough)
+branchement  7 pris 0 (throw)
+        5:   78-block 22
+appel   8 a retourné 5
+branchement  9 pris 5 (fallthrough)
+branchement 10 pris 0 (throw)
+        5:   78-block 23
+        6:   79:            if (item.exists("y")) data.position.y = item["y"];
+        6:   79-block 24
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   79-block 25
+branchement  3 pris 5 (fallthrough)
+branchement  4 pris 1
+        5:   79-block 26
+appel   5 a retourné 5
+branchement  6 pris 5 (fallthrough)
+branchement  7 pris 0 (throw)
+        5:   79-block 27
+appel   8 a retourné 5
+branchement  9 pris 5 (fallthrough)
+branchement 10 pris 0 (throw)
+        5:   79-block 28
+        6:   80:            if (item.exists("z")) data.position.z = item["z"];
+        6:   80-block 29
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   80-block 30
+branchement  3 pris 5 (fallthrough)
+branchement  4 pris 1
+        5:   80-block 31
+appel   5 a retourné 5
+branchement  6 pris 5 (fallthrough)
+branchement  7 pris 0 (throw)
+        5:   80-block 32
+appel   8 a retourné 5
+branchement  9 pris 5 (fallthrough)
+branchement 10 pris 0 (throw)
+        5:   80-block 33
+        -:   81:
+        -:   82:            // Couleur
+        6:   83:            if (item.exists("color")) {
+        6:   83-block 34
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   83-block 35
+branchement  3 pris 6 (fallthrough)
+branchement  4 pris 0
+        6:   84:                const auto& c = item["color"];
+        6:   84-block 36
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   85:                if (c.exists("r")) data.material.color.r = c["r"];
+        6:   85-block 37
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   85-block 38
+branchement  3 pris 6 (fallthrough)
+branchement  4 pris 0
+        6:   85-block 39
+appel   5 a retourné 6
+branchement  6 pris 6 (fallthrough)
+branchement  7 pris 0 (throw)
+        6:   85-block 40
+appel   8 a retourné 6
+branchement  9 pris 6 (fallthrough)
+branchement 10 pris 0 (throw)
+        6:   85-block 41
+        6:   86:                if (c.exists("g")) data.material.color.g = c["g"];
+        6:   86-block 42
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   86-block 43
+branchement  3 pris 6 (fallthrough)
+branchement  4 pris 0
+        6:   86-block 44
+appel   5 a retourné 6
+branchement  6 pris 6 (fallthrough)
+branchement  7 pris 0 (throw)
+        6:   86-block 45
+appel   8 a retourné 6
+branchement  9 pris 6 (fallthrough)
+branchement 10 pris 0 (throw)
+        6:   86-block 46
+        6:   87:                if (c.exists("b")) data.material.color.b = c["b"];
+        6:   87-block 47
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   87-block 48
+branchement  3 pris 6 (fallthrough)
+branchement  4 pris 0
+        6:   87-block 49
+appel   5 a retourné 6
+branchement  6 pris 6 (fallthrough)
+branchement  7 pris 0 (throw)
+        6:   87-block 50
+appel   8 a retourné 6
+branchement  9 pris 6 (fallthrough)
+branchement 10 pris 0 (throw)
+        6:   87-block 51
+        6:   88:                data.material.color = data.material.color / 255.0;
+        6:   88-block 52
+appel   0 a retourné 6
+        -:   89:            }
+        -:   90:
+        -:   91:            // Propriétés géométriques
+        6:   92:            if (item.exists("r")) data.radius = item["r"]; //rayon
+        6:   92-block 53
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   92-block 54
+branchement  3 pris 5 (fallthrough)
+branchement  4 pris 1
+        5:   92-block 55
+appel   5 a retourné 5
+branchement  6 pris 5 (fallthrough)
+branchement  7 pris 0 (throw)
+        5:   92-block 56
+appel   8 a retourné 5
+branchement  9 pris 5 (fallthrough)
+branchement 10 pris 0 (throw)
+        5:   92-block 57
+       6*:   93:            if (item.exists("h")) data.height = item["h"]; //hauteur
+        6:   93-block 58
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   93-block 59
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 6
+    %%%%%:   93-block 60
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:   93-block 61
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:   93-block 62
+       6*:   94:            if (item.exists("l")) data.length = item["l"]; //longueur
+        6:   94-block 63
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   94-block 64
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 6
+    %%%%%:   94-block 65
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:   94-block 66
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:   94-block 67
+       6*:   95:            if (item.exists("w")) data.width  = item["w"]; //largeur
+        6:   95-block 68
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   95-block 69
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 6
+    %%%%%:   95-block 70
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:   95-block 71
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:   95-block 72
+        -:   96:
+        -:   97:            // Apparence
+        6:   98:            if (item.exists("shininess")){    data.material.shininess = item["shininess"]; data.material.shininess_is_define = true; }
+        6:   98-block 73
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   98-block 74
+branchement  3 pris 6 (fallthrough)
+branchement  4 pris 0
+        6:   98-block 75
+appel   5 a retourné 6
+branchement  6 pris 6 (fallthrough)
+branchement  7 pris 0 (throw)
+        6:   98-block 76
+appel   8 a retourné 6
+branchement  9 pris 6 (fallthrough)
+branchement 10 pris 0 (throw)
+        6:   98-block 77
+       6*:   99:            if (item.exists("reflectivity")){ data.material.reflectivity = item["reflectivity"]; data.material.reflectivity_is_define = true; }
+        6:   99-block 78
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:   99-block 79
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 6
+    %%%%%:   99-block 80
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:   99-block 81
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:   99-block 82
+       6*:  100:            if (item.exists("transparency")){ data.material.transparency = item["transparency"]; data.material.transparency_is_define = true; }
+        6:  100-block 83
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:  100-block 84
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 6
+    %%%%%:  100-block 85
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:  100-block 86
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:  100-block 87
+        -:  101:
+        -:  102:            // transformation
+        6:  103:            if (item.exists("translation")) {
+        6:  103-block 88
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:  103-block 89
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 6
+    #####:  104:                data.transform.translation.x = item["translation"]["x"];
+    %%%%%:  104-block 90
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  104-block 91
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  104-block 92
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    #####:  105:                data.transform.translation.y = item["translation"]["y"];
+    %%%%%:  105-block 93
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  105-block 94
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  105-block 95
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    #####:  106:                data.transform.translation.z = item["translation"]["z"];
+    %%%%%:  106-block 96
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  106-block 97
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  106-block 98
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    %%%%%:  106-block 99
+        -:  107:            }
+        6:  108:            if (item.exists("rotation")) {
+        6:  108-block 100
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:  108-block 101
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 6
+    #####:  109:                data.transform.rotation.x = item["rotation"]["x"];
+    %%%%%:  109-block 102
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  109-block 103
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  109-block 104
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    #####:  110:                data.transform.rotation.y = item["rotation"]["y"];
+    %%%%%:  110-block 105
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  110-block 106
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  110-block 107
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    #####:  111:                data.transform.rotation.z = item["rotation"]["z"];
+    %%%%%:  111-block 108
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  111-block 109
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  111-block 110
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    %%%%%:  111-block 111
+        -:  112:            }
+        6:  113:            if (item.exists("scale")) {
+        6:  113-block 112
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:  113-block 113
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 6
+    #####:  114:                data.transform.scale.x = item["scale"]["x"];
+    %%%%%:  114-block 114
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  114-block 115
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  114-block 116
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    #####:  115:                data.transform.scale.y = item["scale"]["y"];
+    %%%%%:  115-block 117
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  115-block 118
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  115-block 119
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    #####:  116:                data.transform.scale.z = item["scale"]["z"];
+    %%%%%:  116-block 120
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  116-block 121
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  116-block 122
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    %%%%%:  116-block 123
+        -:  117:            }
+        6:  118:            if (item.exists("shear")) {
+        6:  118-block 124
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:  118-block 125
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 6
+    #####:  119:                data.transform.shear.x = item["shear"]["x"];
+    %%%%%:  119-block 126
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  119-block 127
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  119-block 128
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    #####:  120:                data.transform.shear.y = item["shear"]["y"];
+    %%%%%:  120-block 129
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  120-block 130
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  120-block 131
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    #####:  121:                data.transform.shear.z = item["shear"]["z"];
+    %%%%%:  121-block 132
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  121-block 133
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  121-block 134
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    %%%%%:  121-block 135
+        -:  122:            }
+        -:  123:            // formes planes
+        6:  124:            if (item.exists("axis") && item.exists("position")) {
+        6:  124-block 136
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:  124-block 137
+branchement  3 pris 1 (fallthrough)
+branchement  4 pris 5
+        1:  124-block 138
+appel   5 a retourné 1
+branchement  6 pris 1 (fallthrough)
+branchement  7 pris 0 (throw)
+        1:  124-block 139
+branchement  8 pris 1 (fallthrough)
+branchement  9 pris 0
+        1:  124-block 140
+        5:  124-block 141
+        6:  124-block 142
+branchement 10 pris 1 (fallthrough)
+branchement 11 pris 5
+        1:  125:                std::string axis = item["axis"];
+        1:  125-block 143
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  125-block 144
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        1:  126:                float pos = item["position"];
+        1:  126-block 145
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  126-block 146
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        -:  127:
+       1*:  128:                if (axis == "X" || axis == "x") {
+        1:  128-block 147
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  128-block 148
+branchement  3 pris 1 (fallthrough)
+branchement  4 pris 0
+        1:  128-block 149
+appel   5 a retourné 1
+branchement  6 pris 1 (fallthrough)
+branchement  7 pris 0 (throw)
+        1:  128-block 150
+branchement  8 pris 0 (fallthrough)
+branchement  9 pris 1
+    %%%%%:  128-block 151
+        1:  128-block 152
+        1:  128-block 153
+branchement 10 pris 0 (fallthrough)
+branchement 11 pris 1
+    #####:  129:                    data.normal = {1, 0, 0};
+    %%%%%:  129-block 154
+appel   0 jamais exécuté
+    #####:  130:                    data.reference = {pos, 0, 0};
+appel   0 jamais exécuté
+       1*:  131:                } else if (axis == "Y" || axis == "y") {
+        1:  131-block 157
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  131-block 158
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 1
+    %%%%%:  131-block 159
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:  131-block 160
+branchement  8 jamais exécuté (fallthrough)
+branchement  9 jamais exécuté
+        1:  131-block 161
+    %%%%%:  131-block 162
+        1:  131-block 163
+branchement 10 pris 1 (fallthrough)
+branchement 11 pris 0
+        1:  132:                    data.normal = {0, 1, 0};
+        1:  132-block 164
+appel   0 a retourné 1
+        1:  133:                    data.reference = {0, pos, 0};
+appel   0 a retourné 1
+    #####:  134:                } else if (axis == "Z" || axis == "z") {
+    %%%%%:  134-block 167
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  134-block 168
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    %%%%%:  134-block 169
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:  134-block 170
+branchement  8 jamais exécuté (fallthrough)
+branchement  9 jamais exécuté
+    %%%%%:  134-block 171
+    %%%%%:  134-block 172
+    %%%%%:  134-block 173
+branchement 10 jamais exécuté (fallthrough)
+branchement 11 jamais exécuté
+    #####:  135:                    data.normal = {0, 0, 1};
+    %%%%%:  135-block 174
+appel   0 jamais exécuté
+    #####:  136:                    data.reference = {0, 0, pos};
+appel   0 jamais exécuté
+        -:  137:                }
+        1:  138:            }
+        1:  138-block 177
+appel   0 a retourné 1
+    $$$$$:  138-block 199
+appel   1 jamais exécuté
+        6:  139:            ps.push_back(std::make_shared<dataPrimitive>(data));
+        6:  139-block 179
+appel   0 a retourné 6
+branchement  1 pris 6 (fallthrough)
+branchement  2 pris 0 (throw)
+        6:  139-block 180
+appel   3 a retourné 6
+branchement  4 pris 6 (fallthrough)
+branchement  5 pris 0 (throw)
+        6:  139-block 181
+appel   6 a retourné 6
+    $$$$$:  139-block 202
+appel   7 jamais exécuté
+    $$$$$:  139-block 204
+        6:  140:        }
+appel   0 a retourné 6
+    $$$$$:  140-block 205
+appel   1 jamais exécuté
+        3:  141:    }
+        3:  141-block 186
+        3:  141-block 187
+appel   0 a retourné 3
+branchement  1 pris 3 (fallthrough)
+branchement  2 pris 0
+    $$$$$:  141-block 208
+appel   3 jamais exécuté
+        -:  142:    //std::cout << "Primitives Loaded" << std::endl;
+        1:  143:}
+        1:  143-block 195
+        -:  144:
+function _ZN11SceneLoader10loadLightsERKN9libconfig7SettingE called 1 returned 100% blocks executed 40%
+        1:  145:void SceneLoader::loadLights(const libconfig::Setting& light)
+        -:  146:{
+        -:  147:    //std::cout << "Lights Loading..." << std::endl;
+        1:  148:    if (light.exists("ambient"))
+        1:  148-block 2
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:  149:        ambient_intensity = light["ambient"];
+        1:  149-block 4
+appel   0 a retourné 1
+appel   1 a retourné 1
+        1:  150:    if (light.exists("diffuse"))
+        1:  150-block 7
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:  151:        diffuse_intensity = light["diffuse"];
+        1:  151-block 9
+appel   0 a retourné 1
+appel   1 a retourné 1
+        -:  152:
+        1:  153:    if (light.exists("point")) {
+        1:  153-block 12
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:  154:        const auto& points = light["point"];
+        1:  154-block 14
+appel   0 a retourné 1
+        2:  155:        for (int i = 0; i < points.getLength(); i++) {
+        2:  155-block 49
+appel   0 a retourné 2
+branchement  1 pris 1
+branchement  2 pris 1 (fallthrough)
+        1:  156:            const auto& pt = points[i];
+        1:  156-block 16
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  157:            dataLight l;
+        1:  157-block 17
+appel   0 a retourné 1
+        1:  158:            l.name = "point";
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  159:            l.position = {
+        1:  160:                pt["x"], pt["y"], pt["z"]
+        1:  160-block 19
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  161:            };
+        1:  161-block 20
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  161-block 21
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        1:  161-block 22
+appel   6 a retourné 1
+branchement  7 pris 1 (fallthrough)
+branchement  8 pris 0 (throw)
+        1:  161-block 23
+appel   9 a retourné 1
+branchement 10 pris 1 (fallthrough)
+branchement 11 pris 0 (throw)
+        1:  161-block 24
+appel  12 a retourné 1
+branchement 13 pris 1 (fallthrough)
+branchement 14 pris 0 (throw)
+        1:  161-block 25
+appel  15 a retourné 1
+    $$$$$:  161-block 91
+        1:  162:            if (pt.exists("color")) {
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  162-block 27
+branchement  3 pris 0 (fallthrough)
+branchement  4 pris 1
+    #####:  163:                const auto& c = pt["color"];
+    %%%%%:  163-block 28
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    #####:  164:                if (c.exists("r")) l.intensity.r = c["r"];
+    %%%%%:  164-block 29
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  164-block 30
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    %%%%%:  164-block 31
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:  164-block 32
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:  164-block 33
+    #####:  165:                if (c.exists("g")) l.intensity.g = c["g"];
+    %%%%%:  165-block 34
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  165-block 35
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    %%%%%:  165-block 36
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:  165-block 37
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:  165-block 38
+    #####:  166:                if (c.exists("b")) l.intensity.b = c["b"];
+    %%%%%:  166-block 39
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  166-block 40
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    %%%%%:  166-block 41
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:  166-block 42
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:  166-block 43
+        -:  167:            }
+        1:  168:            ls.push_back(std::make_shared<dataLight>(l));
+        1:  168-block 44
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0 (throw)
+        1:  168-block 45
+appel   3 a retourné 1
+branchement  4 pris 1 (fallthrough)
+branchement  5 pris 0 (throw)
+        1:  168-block 46
+appel   6 a retourné 1
+    $$$$$:  168-block 92
+appel   7 jamais exécuté
+    $$$$$:  168-block 94
+        1:  169:        }
+appel   0 a retourné 1
+    $$$$$:  169-block 95
+appel   1 jamais exécuté
+        -:  170:    }
+        1:  171:    if (light.exists("directional")) {
+        1:  171-block 51
+appel   0 a retourné 1
+branchement  1 pris 1 (fallthrough)
+branchement  2 pris 0
+        1:  172:        const auto& dirs = light["directional"];
+        1:  172-block 53
+appel   0 a retourné 1
+       1*:  173:        for (int i = 0; i < dirs.getLength(); i++) {
+        1:  173-block 88
+appel   0 a retourné 1
+branchement  1 pris 0
+branchement  2 pris 1 (fallthrough)
+    #####:  174:            const auto& dir = dirs[i];
+    %%%%%:  174-block 55
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    #####:  175:            dataLight l;
+    %%%%%:  175-block 56
+appel   0 jamais exécuté
+    #####:  176:            l.name = "directional";
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    #####:  177:            l.direction = {
+    #####:  178:                dir["x"], dir["y"], dir["z"]
+    %%%%%:  178-block 58
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    #####:  179:            };
+    %%%%%:  179-block 59
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  179-block 60
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  179-block 61
+appel   6 jamais exécuté
+branchement  7 jamais exécuté (fallthrough)
+branchement  8 jamais exécuté (throw)
+    %%%%%:  179-block 62
+appel   9 jamais exécuté
+branchement 10 jamais exécuté (fallthrough)
+branchement 11 jamais exécuté (throw)
+    %%%%%:  179-block 63
+appel  12 jamais exécuté
+branchement 13 jamais exécuté (fallthrough)
+branchement 14 jamais exécuté (throw)
+    %%%%%:  179-block 64
+appel  15 jamais exécuté
+    $$$$$:  179-block 98
+    #####:  180:            if (dir.exists("color")) {
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  180-block 66
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    #####:  181:                const auto& c = dir["color"];
+    %%%%%:  181-block 67
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    #####:  182:                if (c.exists("r")) l.intensity.r = c["r"];
+    %%%%%:  182-block 68
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  182-block 69
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    %%%%%:  182-block 70
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:  182-block 71
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:  182-block 72
+    #####:  183:                if (c.exists("g")) l.intensity.g = c["g"];
+    %%%%%:  183-block 73
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  183-block 74
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    %%%%%:  183-block 75
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:  183-block 76
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:  183-block 77
+    #####:  184:                if (c.exists("b")) l.intensity.b = c["b"];
+    %%%%%:  184-block 78
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  184-block 79
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    %%%%%:  184-block 80
+appel   5 jamais exécuté
+branchement  6 jamais exécuté (fallthrough)
+branchement  7 jamais exécuté (throw)
+    %%%%%:  184-block 81
+appel   8 jamais exécuté
+branchement  9 jamais exécuté (fallthrough)
+branchement 10 jamais exécuté (throw)
+    %%%%%:  184-block 82
+        -:  185:            }
+    #####:  186:            ls.push_back(std::make_shared<dataLight>(l));
+    %%%%%:  186-block 83
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:  186-block 84
+appel   3 jamais exécuté
+branchement  4 jamais exécuté (fallthrough)
+branchement  5 jamais exécuté (throw)
+    %%%%%:  186-block 85
+appel   6 jamais exécuté
+    $$$$$:  186-block 99
+appel   7 jamais exécuté
+    $$$$$:  186-block 101
+    #####:  187:        }
+appel   0 jamais exécuté
+    $$$$$:  187-block 102
+appel   1 jamais exécuté
+        -:  188:    }
+        -:  189:    //std::cout << "Lights Loaded" << std::endl;
+        1:  190:}
+        1:  190-block 90
+        -:  191:
+function _ZNK11SceneLoader11createSceneER7Factory called 1 returned 100% blocks executed 100%
+        1:  192:Scene SceneLoader::createScene(Factory& f) const {
+        1:  193:    Scene s(c, ps, ls, f);
+        1:  193-block 2
+appel   0 a retourné 1
+        1:  194:    s.ambient_intensity = ambient_intensity;
+        1:  195:    s.diffuse_intensity = diffuse_intensity;
+        1:  196:    return s;
+        -:  197:}

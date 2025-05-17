@@ -11,13 +11,17 @@
 
 #include "DirectionalLight.hpp"
 
+#include <iostream>
+
 
 Vecteur DirectionalLight::getDirectionFrom(const Point& point) const {
     (void)point;
-    return  -data.position;
+    return  data.direction;
 }
 
 Color DirectionalLight::getIntensityAt(const PointOfImpact& point) const {
-    (void)point;
-    return data.intensity;
+    const Vecteur direction = getDirectionFrom(point.p).normalized();
+    const float diff = std::max(dot(point.normal, direction), 0.0f);
+
+    return point.material.color * diff;
 }

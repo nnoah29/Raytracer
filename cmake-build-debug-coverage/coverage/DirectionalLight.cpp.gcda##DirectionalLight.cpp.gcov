@@ -1,0 +1,32 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/base/lights/DirectionalLight.cpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/lights/DirectionalLight.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/lights/DirectionalLight.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 14/05/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#include "DirectionalLight.hpp"
+        -:   13:
+        -:   14:
+function _ZNK16DirectionalLight16getDirectionFromERK7Vecteur called 0 returned 0% blocks executed 0%
+    #####:   15:Vecteur DirectionalLight::getDirectionFrom(const Point& point) const {
+        -:   16:    (void)point;
+    #####:   17:    return  data.direction;
+    %%%%%:   17-block 2
+        -:   18:}
+        -:   19:
+function _ZNK16DirectionalLight14getIntensityAtERK13PointOfImpact called 0 returned 0% blocks executed 0%
+    #####:   20:Color DirectionalLight::getIntensityAt(const PointOfImpact& point) const {
+        -:   21:    (void)point;
+    #####:   22:    return data.intensity*0.5;
+    %%%%%:   22-block 2
+appel   0 jamais exécuté
+        -:   23:}

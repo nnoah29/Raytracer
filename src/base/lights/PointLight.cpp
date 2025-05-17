@@ -14,7 +14,7 @@
 #include "IPrimitive.hpp"
 
 Vecteur PointLight::getDirectionFrom(const Point& point) const {
-    return (data.position - point).normalized();
+    return (data.position - point);
 }
 
 Color PointLight::getIntensityAt(const PointOfImpact& point) const {

@@ -162,7 +162,7 @@ typedef struct dataLight
     std::string name;
     Vecteur position;
     Vecteur direction;
-    Color intensity{1.0f, 1.0f, 1.0f};
+    Color intensity{0.01f, 0.01f, 0.01f};
 
 } dataLight;
 

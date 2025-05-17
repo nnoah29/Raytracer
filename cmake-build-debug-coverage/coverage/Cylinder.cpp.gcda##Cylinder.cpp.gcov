@@ -1,0 +1,89 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/base/primitives/Cylinder.cpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/primitives/Cylinder.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/primitives/Cylinder.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:** EPITECH PROJECT, 2024
+        -:    3:** B-OOP-400-COT-4-1-raytracer-noah.toffa
+        -:    4:** File description:
+        -:    5:** Cylinder.cpp
+        -:    6:*/
+        -:    7:
+        -:    8:#include "Cylinder.hpp"
+        -:    9:
+function _ZN8CylinderC2ER13dataPrimitiveRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE called 0 returned 0% blocks executed 0%
+    #####:   10:Cylinder::Cylinder(dataPrimitive& data, const std::string& name): APrimitive(data, name) {}
+    %%%%%:   10-block 2
+appel   0 jamais exécuté
+        -:   11:
+function _ZNK8Cylinder3hitERK3RayffR13PointOfImpact called 0 returned 0% blocks executed 0%
+    #####:   12:bool Cylinder::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const {
+    #####:   13:    Vecteur o = ray.origin();
+    %%%%%:   13-block 2
+appel   0 jamais exécuté
+    #####:   14:    Vecteur d = ray.direction();
+appel   0 jamais exécuté
+        -:   15:
+    #####:   16:    float dx = d.x, dy = d.y;
+    #####:   17:    float ox = o.x, oy = o.y;
+        -:   18:
+    #####:   19:    float A = dx*dx + dy*dy;
+    #####:   20:    float B = 2 * (dx*ox + dy*oy);
+    #####:   21:    float C = ox*ox + oy*oy - data.radius * data.radius;
+        -:   22:
+    #####:   23:    float discriminant = B*B - 4*A*C;
+    #####:   24:    if (discriminant < 0)
+branchement  0 jamais exécuté (fallthrough)
+branchement  1 jamais exécuté
+    #####:   25:        return false;
+    %%%%%:   25-block 5
+        -:   26:
+    #####:   27:    float squareroot = std::sqrt(discriminant);
+    %%%%%:   27-block 6
+appel   0 jamais exécuté
+    #####:   28:    float root = (-B - squareroot) / (2*A);
+    #####:   29:    if (!surrounds(t_min, root, t_max)) {
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:   29-block 8
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    #####:   30:        root = (-B + squareroot) / (2*A);
+    #####:   31:        if (!surrounds(t_min, root, t_max))
+    %%%%%:   31-block 9
+appel   0 jamais exécuté
+branchement  1 jamais exécuté (fallthrough)
+branchement  2 jamais exécuté (throw)
+    %%%%%:   31-block 10
+branchement  3 jamais exécuté (fallthrough)
+branchement  4 jamais exécuté
+    #####:   32:            return false;
+    %%%%%:   32-block 11
+        -:   33:    }
+        -:   34:
+    #####:   35:    float z = ray.at(root).z;
+    %%%%%:   35-block 12
+appel   0 jamais exécuté
+    #####:   36:    if (z < 0 || z > data.height)
+branchement  0 jamais exécuté (fallthrough)
+branchement  1 jamais exécuté
+    %%%%%:   36-block 14
+branchement  2 jamais exécuté (fallthrough)
+branchement  3 jamais exécuté
+    #####:   37:        return false;
+    %%%%%:   37-block 15
+        -:   38:
+    #####:   39:    p.t = root;
+    #####:   40:    p.p = ray.at(p.t);
+    %%%%%:   40-block 16
+appel   0 jamais exécuté
+        -:   41:
+    #####:   42:    Vecteur v = p.p;
+    #####:   43:    v.z = 0;
+    #####:   44:    p.set_face_normal(ray, v.normalized());
+appel   0 jamais exécuté
+appel   1 jamais exécuté
+        -:   45:
+    #####:   46:    return true;
+        -:   47:}

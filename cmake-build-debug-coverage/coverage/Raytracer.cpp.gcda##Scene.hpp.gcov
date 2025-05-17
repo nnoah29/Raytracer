@@ -1,0 +1,227 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/Scene.hpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Raytracer.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/Raytracer.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 27/04/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#ifndef SCENE_HPP
+        -:   13:#define SCENE_HPP
+        -:   14:#include <iostream>
+        -:   15:#include <memory>
+        -:   16:#include <vector>
+        -:   17:
+        -:   18:#include "Camera.hpp"
+        -:   19:#include "Factory.hpp"
+        -:   20:#include "ILight.hpp"
+        -:   21:#include "IPrimitive.hpp"
+        -:   22:
+        -:   23:using Objs = std::vector<std::shared_ptr<IPrimitive>>;
+        -:   24:using Light = std::vector<std::shared_ptr<ILight>>;
+        -:   25:
+        -:   26:class Scene {
+        -:   27:    Objs objs;
+        -:   28:    Light lights;
+        -:   29:    Factory factory;
+        -:   30:
+        -:   31:    void loadObjects(const TabDataPrimitives& ps);
+        -:   32:    void loadLights(const TabDataLights& ls);
+        -:   33:
+        -:   34:public:
+        -:   35:    float ambient_intensity{};
+        -:   36:    float diffuse_intensity{};
+        -:   37:    Camera camera;
+        -:   38:    Scene(const std::shared_ptr<dataCamera>& c, const TabDataPrimitives& ps, const TabDataLights& ls, const Factory& f);
+        -:   39:
+function _ZN5Scene7reflectERK7VecteurS2_ called 3066396 returned 100% blocks executed 100%
+  3066396:   40:    static Vecteur reflect(const Vecteur& v, const Vecteur& n) {
+  3066396:   41:        return v - (n * 2 * dot(v, n));
+  3066396:   41-block 2
+appel   0 a retourné 3066396
+branchement  1 pris 3066396 (fallthrough)
+branchement  2 pris 0 (throw)
+  3066396:   41-block 3
+appel   3 a retourné 3066396
+appel   4 a retourné 3066396
+appel   5 a retourné 3066396
+  3066396:   41-block 7
+        -:   42:    }
+        -:   43:
+function _ZNK5Scene15determine_colorER13PointOfImpact called 3066396 returned 100% blocks executed 88%
+  3066396:   44:    void determine_color(PointOfImpact& p) const
+        -:   45:    {
+  3066396:   46:        const Color ambient = p.material.color * ambient_intensity;
+  3066396:   46-block 2
+appel   0 a retourné 3066396
+  3066396:   47:        Color diffuse{0.0f, 0.0f, 0.0f};
+appel   0 a retourné 3066396
+  3066396:   48:        Color specular{0.0f, 0.0f, 0.0f};
+appel   0 a retourné 3066396
+  3066396:   49:        bool blocked = false;
+        -:   50:
+  9199188:   51:        for (const auto& l : lights) {
+appel   0 a retourné 3066396
+appel   1 a retourné 3066396
+  6132792:   51-block 66
+branchement  2 pris 3066396
+branchement  3 pris 3066396 (fallthrough)
+  3066396:   52:            Color intensity = l->getIntensityAt(p);
+  3066396:   52-block 9
+appel   0 a retourné 3066396
+appel   1 a retourné 3066396
+branchement  2 pris 3066396 (fallthrough)
+branchement  3 pris 0 (throw)
+  3066396:   53:            Vecteur light_dir = l->getDirectionFrom(p.p);
+  3066396:   53-block 11
+appel   0 a retourné 3066396
+appel   1 a retourné 3066396
+branchement  2 pris 3066396 (fallthrough)
+branchement  3 pris 0 (throw)
+  3066396:   54:            const float light_distance = light_dir.length();
+  3066396:   54-block 13
+appel   0 a retourné 3066396
+        -:   55:
+  3066396:   56:            Ray shadow_ray(p.p + (p.normal * 0.001f), light_dir);
+appel   0 a retourné 3066396
+appel   1 a retourné 3066396
+appel   2 a retourné 3066396
+  3066396:   57:            PointOfImpact shadow_poi;
+appel   0 a retourné 3066396
+ 21119295:   58:            for (const auto& obj : objs) {
+appel   0 a retourné 3066396
+appel   1 a retourné 3066396
+ 18052899:   58-block 35
+branchement  2 pris 15840898
+branchement  3 pris 2212001 (fallthrough)
+ 15840898:   59:                if (obj->hit(shadow_ray, 0.001f, light_distance, shadow_poi)) {
+ 15840898:   59-block 22
+appel   0 a retourné 15840898
+appel   1 a retourné 15840898
+branchement  2 pris 15840898 (fallthrough)
+branchement  3 pris 0 (throw)
+ 15840898:   59-block 24
+branchement  4 pris 854395 (fallthrough)
+branchement  5 pris 14986503
+   854395:   60:                    blocked = true;
+   854395:   61:                    break;
+   854395:   61-block 25
+        -:   62:                }
+        -:   63:            }
+  3066396:   64:            if (blocked) {
+  3066396:   64-block 36
+branchement  0 pris 854395 (fallthrough)
+branchement  1 pris 2212001
+   854395:   65:                diffuse += {0.0f, 0.0f, 0.0f};
+   854395:   65-block 37
+appel   0 a retourné 854395
+appel   1 a retourné 854395
+        -:   66:            } else
+  2212001:   67:                diffuse +=  intensity * diffuse_intensity;
+  2212001:   67-block 40
+appel   0 a retourné 2212001
+appel   1 a retourné 2212001
+  3066396:   68:            if (p.material.shininess_is_define) {
+  3066396:   68-block 43
+branchement  0 pris 3066396 (fallthrough)
+branchement  1 pris 0
+  3066396:   69:                Vecteur view_dir = (camera.getPosition() - p.p).normalized();
+  3066396:   69-block 44
+appel   0 a retourné 3066396
+branchement  1 pris 3066396 (fallthrough)
+branchement  2 pris 0 (throw)
+  3066396:   69-block 45
+appel   3 a retourné 3066396
+appel   4 a retourné 3066396
+    $$$$$:   69-block 71
+    $$$$$:   69-block 72
+  3066396:   70:                Vecteur reflect_dir = reflect(-light_dir, p.normal);
+appel   0 a retourné 3066396
+appel   1 a retourné 3066396
+branchement  2 pris 3066396 (fallthrough)
+branchement  3 pris 0 (throw)
+    $$$$$:   70-block 73
+  3066396:   71:                const float spec = std::pow(std::max(dot(view_dir, reflect_dir), 0.0f), p.material.shininess);
+  3066396:   71-block 49
+appel   0 a retourné 3066396
+branchement  1 pris 3066396 (fallthrough)
+branchement  2 pris 0 (throw)
+  3066396:   71-block 50
+appel   3 a retourné 3066396
+appel   4 a retourné 3066396
+    $$$$$:   71-block 74
+    $$$$$:   71-block 75
+  3066396:   72:                specular += Color(1.0f, 1.0f, 1.0f) * 0.5f * spec;
+appel   0 a retourné 3066396
+appel   1 a retourné 3066396
+appel   2 a retourné 3066396
+appel   3 a retourné 3066396
+        -:   73:            }
+        -:   74:        }
+        -:   75:
+  3066396:   76:        p.material.color = diffuse + ambient + specular;
+  3066396:   76-block 67
+appel   0 a retourné 3066396
+appel   1 a retourné 3066396
+  3066396:   77:    };
+        -:   78:
+function _ZNK5Scene3hitERK3RayffR13PointOfImpact called 2765698 returned 100% blocks executed 96%
+  2765698:   79:    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const
+        -:   80:    {
+  2765698:   81:        PointOfImpact p_temps;
+  2765698:   81-block 2
+appel   0 a retourné 2765698
+  2765698:   82:        bool hit_anything = false;
+  2765698:   83:        auto closest_so_far = t_max;
+        -:   84:
+ 22125584:   85:        for (const auto& obj : objs) {
+appel   0 a retourné 2765698
+appel   1 a retourné 2765698
+ 19359886:   85-block 20
+branchement  2 pris 16594188
+branchement  3 pris 2765698 (fallthrough)
+ 16594188:   86:            if (obj->hit(ray, t_min, closest_so_far, p_temps)) {
+ 16594188:   86-block 7
+appel   0 a retourné 16594188
+appel   1 a retourné 16594188
+branchement  2 pris 16594188 (fallthrough)
+branchement  3 pris 0 (throw)
+ 16594188:   86-block 9
+branchement  4 pris 1684894 (fallthrough)
+branchement  5 pris 14909294
+  1684894:   87:                hit_anything = true;
+  1684894:   88:                closest_so_far = p_temps.t;
+  1684894:   89:                p = p_temps;
+  1684894:   90:                determine_color(p);
+  1684894:   90-block 10
+appel   0 a retourné 1684894
+branchement  1 pris 1684894 (fallthrough)
+branchement  2 pris 0 (throw)
+        -:   91:            }
+        -:   92:        }
+  2765698:   93:        if (hit_anything) {
+  2765698:   93-block 21
+branchement  0 pris 1381502 (fallthrough)
+branchement  1 pris 1384196
+  1381502:   94:            determine_color(p);
+  1381502:   94-block 22
+appel   0 a retourné 1381502
+branchement  1 pris 1381502 (fallthrough)
+branchement  2 pris 0 (throw)
+        -:   95:        }
+  2765698:   96:        return hit_anything;
+  2765698:   96-block 23
+  2765698:   96-block 24
+        -:   97:    }
+        -:   98:};
+        -:   99:
+        -:  100:
+        -:  101:
+        -:  102:#endif //SCENE_HPP

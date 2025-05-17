@@ -19,6 +19,8 @@ class Render {
     sf::Image image;
     sf::Texture texture;
     sf::Sprite sprite;
+    static bool loadPPM_P3(const std::string& filename, std::vector<sf::Uint8>& pixels, unsigned& width, unsigned& height);
+
 
     public:
     std::string filepath;
@@ -26,7 +28,7 @@ class Render {
     Render(int width, int height, const std::string& filename);
 
     static void draw_pixel(std::ostream& out, const Color& c);
-    void display();
+    void display() const;
 };
 
 

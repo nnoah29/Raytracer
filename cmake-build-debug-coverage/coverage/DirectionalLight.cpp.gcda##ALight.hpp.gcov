@@ -1,0 +1,60 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/src/interfaces/ALight.hpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/lights/DirectionalLight.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/base/lights/DirectionalLight.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 14/05/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#ifndef ALIGHT_HPP
+        -:   13:#define ALIGHT_HPP
+        -:   14:#include "Color.hpp"
+        -:   15:#include "ILight.hpp"
+        -:   16:#include "IPrimitive.hpp"
+        -:   17:#include "my.hpp"
+        -:   18:#include "Vecteur.hpp"
+        -:   19:
+        -:   20:
+        -:   21:class ALight : public ILight {
+        -:   22:protected:
+        -:   23:    dataLight data;
+        -:   24:    std::string name;
+        -:   25:    public:
+        -:   26:public:
+        -:   27:    ALight(const dataLight& _data, const std::string& _name) {
+        -:   28:        this->data = _data;
+        -:   29:        this->name = _name;
+        -:   30:    };
+        -:   31:
+    #####:   32:    ~ALight() override = default;
+------------------
+_ZN6ALightD0Ev:
+function _ZN6ALightD0Ev called 0 returned 0% blocks executed 0%
+    #####:   32:    ~ALight() override = default;
+    %%%%%:   32-block 2
+appel   0 jamais exécuté
+appel   1 jamais exécuté
+------------------
+_ZN6ALightD2Ev:
+function _ZN6ALightD2Ev called 0 returned 0% blocks executed 0%
+    #####:   32:    ~ALight() override = default;
+    %%%%%:   32-block 2
+appel   0 jamais exécuté
+appel   1 jamais exécuté
+appel   2 jamais exécuté
+------------------
+        -:   33:    Vecteur getDirectionFrom(const Point& point) const override = 0;
+        -:   34:    Color getIntensityAt(const PointOfImpact& point) const override = 0;
+        -:   35:
+        -:   36:};
+        -:   37:
+        -:   38:
+        -:   39:
+        -:   40:#endif //ALIGHT_HPP

@@ -1,0 +1,43 @@
+        -:    0:Source:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/includes/Color.hpp
+        -:    0:Graph:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/SceneLoader.cpp.gcno
+        -:    0:Data:/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage/CMakeFiles/raytracer.dir/src/SceneLoader.cpp.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2:**  _                                              _      ___    ___  
+        -:    3:** | |                                            | |    |__ \  / _ \
+        -:    4:** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+        -:    5:** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+        -:    6:** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+        -:    7:** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+        -:    8:**          __/ |     on 24/04/25.                                          
+        -:    9:**         |___/ 
+        -:   10:*/
+        -:   11:
+        -:   12:#ifndef COLOR_HPP
+        -:   13:#define COLOR_HPP
+        -:   14:
+        -:   15:
+        -:   16:
+        -:   17:class Color {
+        -:   18:    public:
+        -:   19:    float r, g, b;
+        -:   20:
+function _ZN5ColorC2Efff called 0 returned 0% blocks executed 0%
+    #####:   21:    Color(float r, float g, float b) : r(r), g(g), b(b) {}
+        -:   22:    Color() = default;
+        -:   23:
+        -:   24:    Color operator*(float f)        const { return {r * f,   g * f,   b * f  }; }
+        -:   25:    Color operator*(const Color& c) const { return {r * c.r, g * c.g, b * c.b}; }
+        -:   26:    Color operator+(const Color& c) const { return {r + c.r, g + c.g, b + c.b}; }
+        -:   27:    Color operator+=(const Color& c) { r += c.r; g += c.g; b += c.b; return *this; }
+        -:   28:    Color operator-=(const Color& c) { r -= c.r; g -= c.g; b -= c.b; return *this; }
+function _ZNK5ColordvEf called 6 returned 100% blocks executed 100%
+        6:   29:    Color operator/(float x) const {float _r = r / x; float _g =  g / x; float _b = b / x ; return {_r, _g, _b}; }
+        6:   29-block 2
+appel   0 a retourné 6
+        6:   29-block 4
+        -:   30:};
+        -:   31:
+        -:   32:
+        -:   33:
+        -:   34:#endif //COLOR_HPP

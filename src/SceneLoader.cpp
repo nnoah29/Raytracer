@@ -164,6 +164,7 @@ void SceneLoader::loadLights(const libconfig::Setting& light)
                 if (c.exists("r")) l.intensity.r = c["r"];
                 if (c.exists("g")) l.intensity.g = c["g"];
                 if (c.exists("b")) l.intensity.b = c["b"];
+
             }
             ls.push_back(std::make_shared<dataLight>(l));
         }
@@ -182,6 +183,7 @@ void SceneLoader::loadLights(const libconfig::Setting& light)
                 if (c.exists("r")) l.intensity.r = c["r"];
                 if (c.exists("g")) l.intensity.g = c["g"];
                 if (c.exists("b")) l.intensity.b = c["b"];
+                l.intensity = l.intensity / 255.0;
             }
             ls.push_back(std::make_shared<dataLight>(l));
         }

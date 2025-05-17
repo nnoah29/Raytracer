@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "RAYTRACER",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "cone::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cone-Debug-e158d8b0c6cf73d31fe4.json",
+					"name" : "cone",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "cylinder::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cylinder-Debug-0bb65dae661eb739ef73.json",
+					"name" : "cylinder",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "fclean::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-fclean-Debug-8759b6fe9a243b22dc77.json",
+					"name" : "fclean",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "raytracer::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-raytracer-Debug-93a4da1b11563304d9ba.json",
+					"name" : "raytracer",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage",
+		"source" : "/home/nnoah/_WORKS/SCHooL_/RAYTRACER_"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

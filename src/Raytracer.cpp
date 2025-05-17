@@ -24,15 +24,15 @@ void Raytracer::render() const
     out << "P3\n" << _render.width << ' ' << _render.height << "\n255\n";
 
     for (int j = 0; j < _render.height; j++) {
-        std::clog << "\rLines remaining: " << (_render.height - j - 1) << ' ' << std::flush;
+        std::clog << "\rLines remaining: " << (_render.height - j) << ' ' << std::flush;
         for (int i = 0; i < _render.width; i++) {
 
             Color color(0, 0, 0);
-            //for (int s = 0; s < sample_per_pixel; s++) {
+            for (int s = 0; s < sample_per_pixel; s++) {
                 Ray r = _scene.camera.generateRay(i, j);
                 color += traceRay(r, LIGHT_DEPTH);
-            //}
-            _render.draw_pixel(out, color);
+            }
+            Render::draw_pixel(out, color);
         }
     }
     std::clog << "\rDone.\n" << std::flush;
@@ -62,9 +62,6 @@ Vecteur unit_vector(const Vecteur& v) {
         // }
 
         return local_color;
-    }
-    if (_scene.hit(ray, 0.001f, std::numeric_limits<float>::infinity(), point)) {
-        return point.material.color;
     }
 
     const Vecteur unit_direction = unit_vector(ray.direction());
