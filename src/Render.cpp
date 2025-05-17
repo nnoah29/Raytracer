@@ -107,7 +107,7 @@ void Render::display() const
     if (!loadPPM_P3(filepath, pixels, width, height))
         return;
 
-    sf::RenderWindow window(sf::VideoMode(width/2, height/2), "Affichage PPM P3", sf::Style::Default);
+    sf::RenderWindow window(sf::VideoMode(width, height), "Affichage PPM P3", sf::Style::Default);
     window.setFramerateLimit(60);
 
     sf::Texture texture;

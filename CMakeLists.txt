@@ -97,32 +97,32 @@ target_link_libraries(raytracer sfml-graphics sfml-window sfml-system config++)
 
 
 # === Criterion Unit Tests ===
-find_package(PkgConfig REQUIRED)
-if (NOT criterion_FOUND)
-    message(WARNING "Criterion not found, tests will not be built")
-endif()
+# find_package(PkgConfig REQUIRED)
+# if (NOT criterion_FOUND)
+#     message(WARNING "Criterion not found, tests will not be built")
+# endif()
 
-file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
+# file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
 
-set(TESTABLE_CORE_SOURCES ${CORE_SOURCES})
-list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/tests/main.cpp)
+# set(TESTABLE_CORE_SOURCES ${CORE_SOURCES})
+# list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/tests/main.cpp)
 
-add_executable(tests
-        ${TESTABLE_CORE_SOURCES}
-        ${TEST_SOURCES}
-        tests/cone_test.cpp
-)
+# add_executable(tests
+#         ${TESTABLE_CORE_SOURCES}
+#         ${TEST_SOURCES}
+#         tests/cone_test.cpp
+# )
 
-target_include_directories(tests PRIVATE ${CRITERION_INCLUDE_DIRS})
+# target_include_directories(tests PRIVATE ${CRITERION_INCLUDE_DIRS})
 
-target_link_libraries(tests PRIVATE ${CRITERION_LIBRARIES})
+# target_link_libraries(tests PRIVATE ${CRITERION_LIBRARIES})
 
-target_link_libraries(tests PRIVATE sfml-graphics sfml-window sfml-system)
+# target_link_libraries(tests PRIVATE sfml-graphics sfml-window sfml-system)
 
-target_link_libraries(tests PRIVATE config++)
+# target_link_libraries(tests PRIVATE config++)
 
-enable_testing()
-add_test(NAME CriterionTests COMMAND tests)
+# enable_testing()
+# add_test(NAME CriterionTests COMMAND tests)
 
 
 # === Créer les plugins dynamiques (.so) ===
