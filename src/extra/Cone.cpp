@@ -17,7 +17,7 @@ Cone::Cone(dataPrimitive& data, const std::string& name): APrimitive(data, name)
 
 bool Cone::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const
 {
-    const Vecteur axis = data.normal.normalized();
+    const Vecteur axis = -data.normal.normalized();
     const Vecteur x = ray.origin() - data.position;
 
     const float k = std::tan(data.corner);
