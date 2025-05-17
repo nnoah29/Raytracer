@@ -26,7 +26,7 @@ class Raytracer {
 private:
     const Scene& _scene;
     Render& _render;
-    int sample_per_pixel = 10;
+    int sample_per_pixel = 1;
 
     Color traceRay(const Ray& ray, int depth = 0) const;
 };

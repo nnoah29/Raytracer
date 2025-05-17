@@ -151,6 +151,7 @@ foreach(plugin_src ${EXTRA_SOURCES})
             src/base/lights/DirectionalLight.hpp
             src/base/primitives/Cone.cpp
             src/base/primitives/Cone.hpp
+            utilitaires/utilitaires.cpp
     )
     set_target_properties(${plugin_name} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${PLUGINS_DIR}

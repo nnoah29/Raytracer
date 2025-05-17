@@ -48,7 +48,7 @@ bool cylinder::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) c
     Vecteur v = p.p;
     v.z = 0;
     p.set_face_normal(ray, v.normalized());
-
+    p.material = data.material;
     return true;
 }
 
