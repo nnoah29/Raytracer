@@ -8,7 +8,8 @@
 #ifndef CONE_HPP
 #define CONE_HPP
 
-#include "APrimitive.hpp"
+#include "../interfaces/APrimitive.hpp"
+#include "../../../includes/Vecteur.hpp"
 
 class Cone final: public APrimitive {
 public:

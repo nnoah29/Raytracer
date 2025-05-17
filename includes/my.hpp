@@ -19,7 +19,9 @@
 #include "Color.hpp"
 #include <array>
 #include <cmath>
+#include <iostream>
 #include <memory>
+#include <ostream>
 #include <vector>
 
 typedef struct Resolution {
@@ -32,17 +34,20 @@ typedef struct Transform {
     Vecteur rotation    = {0.0f, 0.0f, 0.0f};
     Vecteur scale       = {1.0f, 1.0f, 1.0f};
     Vecteur shear       = {0.0f, 0.0f, 0.0f};
+    std::array<std::array<float, 3>, 3> matrix {};
     std::string at_t;
     std::string at_r;
+    std::string at_m;
     std::string at_sc;
     std::string at_sh;
-    std::array<std::array<float, 3>, 3> matrix {};
 
     Vecteur applyTranslation(const Vecteur& pt) const {
         return pt + translation;
     }
 
     Vecteur applyRotation(Vecteur& pt) const {
+        std::cout << "rotation1" << std::endl;
+
         // Rotation autour de X
         const float cosx = std::cos(rotation.x);
         const float sinx = std::sin(rotation.x);

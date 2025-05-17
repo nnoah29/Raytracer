@@ -1,11 +1,17 @@
 /*
-** EPITECH PROJECT, 2024
-** B-OOP-400-COT-4-1-raytracer-noah.toffa
-** File description:
-** Cone.cpp
+**  _                                              _      ___    ___  
+** | |                                            | |    |__ \  / _ \
+** | |_Created _       _ __   _ __    ___    __ _ | |__     ) || (_) |
+** | '_ \ | | | |     | '_ \ | '_ \  / _ \  / _` || '_ \   / /  \__, |
+** | |_) || |_| |     | | | || | | || (_) || (_| || | | | / /_    / / 
+** |_.__/  \__, |     |_| |_||_| |_| \___/  \__,_||_| |_||____|  /_/ 
+**          __/ |     on 28/04/25.                                          
+**         |___/ 
 */
 
-#include"Cone.hpp"
+#include "Cone.hpp"
+#include "../Factory.hpp"
+
 
 Cone::Cone(dataPrimitive& data, const std::string& name): APrimitive(data, name) {}
 
@@ -50,4 +56,10 @@ bool Cone::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const
     p.set_face_normal(ray, normal);
     p.material = data.material;
     return true;
+}
+
+extern "C" void RegisterPlugin(Factory* f) {
+    f->registerPrimitive("cones", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
+        return std::make_shared<Cone>(data, name);
+    });
 }

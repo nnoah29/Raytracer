@@ -27,6 +27,12 @@ private:
     float ambient_intensity{};
     float diffuse_intensity{};
 
+    static void applyTranslation(dataPrimitive& data);
+    static void applyRotation(dataPrimitive& data);
+    static void appyShear(dataPrimitive& data);
+    static void applyScale(dataPrimitive& data);
+    static void applyMatrix(dataPrimitive& data);
+
     void loadCamera(const libconfig::Setting& camera) const;
     void loadPrimitives(const libconfig::Setting& primitives);
     void loadLights(const libconfig::Setting& light);

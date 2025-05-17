@@ -57,29 +57,75 @@ void SceneLoader::loadCamera(const libconfig::Setting& camera) const
     //std::cout << "Camera Loaded" << std::endl;
 }
 
-void applyTranslation(dataPrimitive& data)
+void SceneLoader::applyTranslation(dataPrimitive& data)
 {
-    data = data;
+    if (data.transform.at_t == "position") {
+        data.position = data.transform.applyTranslation(data.position);
+        return;
+    }
+    if (data.transform.at_t == "axis") {
+        data.normal = data.transform.applyTranslation(data.normal);
+        data.reference = data.transform.applyTranslation(data.reference);
+        return;
+    }
+    throw std::runtime_error("bof...");
 }
 
-void applyRotation(dataPrimitive& data)
+void SceneLoader::applyRotation(dataPrimitive& data)
 {
-    data = data;
+    if (data.transform.at_r == "position") {
+        data.position = data.transform.applyRotation(data.position);
+        return;
+    }
+    if (data.transform.at_r == "axis") {
+        std::cout << "rotation" << std::endl;
+        data.normal = data.transform.applyRotation(data.normal);
+        data.reference = data.transform.applyRotation(data.reference);
+        return;
+    }
+    throw std::runtime_error("bof...");
 }
 
-void appyShear(dataPrimitive& data) {
-    data = data;
+void SceneLoader::appyShear(dataPrimitive& data) {
+    if (data.transform.at_sh == "position") {
+        data.position = data.transform.appyShear(data.position);
+        return;
+    }
+    if (data.transform.at_sh == "axis") {
+        data.normal = data.transform.appyShear(data.normal);
+        data.reference = data.transform.appyShear(data.reference);
+        return;
+    }
+    throw std::runtime_error("bof...");
 
 }
 
-void applyScale(dataPrimitive& data)
+void SceneLoader::applyScale(dataPrimitive& data)
 {
-    data = data;
+    if (data.transform.at_sc == "position") {
+        data.position = data.transform.applyScale(data.position);
+        return;
+    }
+    if (data.transform.at_sc == "axis") {
+        data.normal = data.transform.applyScale(data.normal);
+        data.reference = data.transform.applyScale(data.reference);
+        return;
+    }
+    throw std::runtime_error("bof...");
 }
 
-void applyMatrix(dataPrimitive& data)
+void SceneLoader::applyMatrix(dataPrimitive& data)
 {
-    data = data;
+    if (data.transform.at_m == "position") {
+        data.position = data.transform.applyMatrix(data.position);
+        return;
+    }
+    if (data.transform.at_m == "axis") {
+        data.normal = data.transform.applyMatrix(data.normal);
+        data.reference = data.transform.applyMatrix(data.reference);
+        return;
+    }
+    throw std::runtime_error("bof...");
 }
 
 void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
@@ -100,6 +146,7 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
             bool rotation_is_define = false;
             bool scale_is_define = false;
             bool shear_is_define = false;
+            bool matrix_is_define = false;
             // Nom
             data.name = name;
 
@@ -142,6 +189,7 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
                 }
             }
             if (item.exists("rotation")) {
+                std::cout << "rotation" << std::endl;
                 const auto& r = item["rotation"];
                 rotation_is_define = true;
                 data.transform.rotation.x = r["x"];
@@ -174,6 +222,25 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
                     data.transform.at_sh = at;
                 }
             }
+            if (item.exists("matrix")) {
+                const auto& m = item["matrix"];
+                const auto& m_t = m["trans"];
+                matrix_is_define = true;
+                data.transform.matrix[0][0] = m_t[0];
+                data.transform.matrix[0][1] = m_t[1];
+                data.transform.matrix[0][2] = m_t[2];
+                data.transform.matrix[1][0] = m_t[3];
+                data.transform.matrix[1][1] = m_t[4];
+                data.transform.matrix[1][2] = m_t[5];
+                data.transform.matrix[2][0] = m_t[6];
+                data.transform.matrix[2][1] = m_t[7];
+                data.transform.matrix[2][2] = m_t[8];
+                if (m.exists("at")) {
+                    const std::string at = m["at"];
+                    data.transform.at_m = at;
+                }
+
+            }
 
             // formes planes
             if (item.exists("axis")) {
@@ -198,11 +265,12 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
                 }
             }
 
+            // apply les transformation
             if (translation_is_define) applyTranslation(data);
             if (rotation_is_define) applyRotation(data);
             if (scale_is_define) applyScale(data);
             if (shear_is_define) appyShear(data);
-
+            if (matrix_is_define) applyMatrix(data);
 
             ps.push_back(std::make_shared<dataPrimitive>(data));
         }

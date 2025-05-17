@@ -56,8 +56,8 @@ file(GLOB_RECURSE EXTRA_SOURCES
 add_executable(raytracer ${CORE_SOURCES}
         src/Scene.hpp
         src/SceneLoader.hpp
-        src/extra/cone.hpp
-        src/extra/cylinder.hpp
+        src/extra/Cone.hpp
+        src/extra/Cylinder.hpp
         src/base/camera/Camera.hpp
         src/interfaces/ICamera.hpp
         src/interfaces/ILight.hpp
@@ -83,8 +83,7 @@ add_executable(raytracer ${CORE_SOURCES}
         src/base/lights/PointLight.hpp
         src/base/lights/DirectionalLight.cpp
         src/base/lights/DirectionalLight.hpp
-        src/base/primitives/Cone.cpp
-        src/base/primitives/Cone.hpp)
+)
 
 add_custom_command(TARGET raytracer POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:raytracer> ${CMAKE_SOURCE_DIR}/raytracer
@@ -129,8 +128,9 @@ target_link_libraries(raytracer sfml-graphics sfml-window sfml-system config++)
 foreach(plugin_src ${EXTRA_SOURCES})
     get_filename_component(plugin_name ${plugin_src} NAME_WE)
     add_library(${plugin_name} SHARED ${plugin_src}
-            src/extra/cone.hpp
-            src/extra/cylinder.hpp
+            includes/Vecteur.hpp
+            src/extra/Cone.hpp
+            src/extra/Cylinder.hpp
             src/interfaces/ICamera.hpp
             src/interfaces/ILight.hpp
             src/interfaces/IPrimitive.hpp
@@ -138,7 +138,6 @@ foreach(plugin_src ${EXTRA_SOURCES})
             includes/Color.hpp
             includes/my.hpp
             includes/Ray.hpp
-            includes/Vecteur.hpp
             src/Factory.cpp
             src/Factory.hpp
             includes/conf.hpp
@@ -149,8 +148,7 @@ foreach(plugin_src ${EXTRA_SOURCES})
             src/base/lights/PointLight.hpp
             src/base/lights/DirectionalLight.cpp
             src/base/lights/DirectionalLight.hpp
-            src/base/primitives/Cone.cpp
-            src/base/primitives/Cone.hpp
+            utilitaires/vector_operation.cpp
             utilitaires/utilitaires.cpp
     )
     set_target_properties(${plugin_name} PROPERTIES

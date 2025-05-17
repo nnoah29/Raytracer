@@ -9,16 +9,15 @@
 **         |___/ 
 */
 
-#ifndef CONE_HPP
-#define CONE_HPP
+#ifndef CYLINDER_HPP
+#define CYLINDER_HPP
 
-#include "APrimitive.hpp"
 
-class cone final: public APrimitive {
-public:
-    cone(dataPrimitive& data, const std::string& name);
 
-    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const override;
+class cylinder {
+
 };
 
-#endif // CONE_HPP
+
+
+#endif //CYLINDER_HPP

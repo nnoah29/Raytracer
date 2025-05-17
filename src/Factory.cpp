@@ -13,7 +13,7 @@
 
 #include <ranges>
 
-#include "Cone.hpp"
+// #include "Cone.hpp"
 #include "Sphere.hpp"
 #include "Plane.hpp"
 #include "base/lights/DirectionalLight.hpp"
@@ -27,9 +27,9 @@ Factory::Factory()
     registerPrimitive("planes", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
         return std::make_shared<Plane>(data, name);
     });
-    registerPrimitive("cones", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
-        return std::make_shared<Cone>(data, name);
-    });
+    // registerPrimitive("cones", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
+    //     return std::make_shared<Cone>(data, name);
+    // });
     registerLight("point", [](dataLight data, const std::string& name) -> std::shared_ptr<ILight> {
         return std::make_shared<PointLight>(data, name);
     });
