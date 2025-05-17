@@ -46,8 +46,6 @@ typedef struct Transform {
     }
 
     Vecteur applyRotation(Vecteur& pt) const {
-        std::cout << "rotation1" << std::endl;
-
         // Rotation autour de X
         const float cosx = std::cos(rotation.x);
         const float sinx = std::sin(rotation.x);

@@ -78,7 +78,6 @@ void SceneLoader::applyRotation(dataPrimitive& data)
         return;
     }
     if (data.transform.at_r == "axis") {
-        std::cout << "rotation" << std::endl;
         data.normal = data.transform.applyRotation(data.normal);
         data.reference = data.transform.applyRotation(data.reference);
         return;
@@ -189,7 +188,6 @@ void SceneLoader::loadPrimitives(const libconfig::Setting& primitives)
                 }
             }
             if (item.exists("rotation")) {
-                std::cout << "rotation" << std::endl;
                 const auto& r = item["rotation"];
                 rotation_is_define = true;
                 data.transform.rotation.x = r["x"];
