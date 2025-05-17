@@ -97,8 +97,10 @@ target_link_libraries(raytracer sfml-graphics sfml-window sfml-system config++)
 
 
 # === Criterion Unit Tests ===
-find_package(PkgConfig REQUIRED)  # Trouver pkg-config
-pkg_check_modules(CRITERION REQUIRED criterion)  # Utiliser pkg-config pour trouver Criterion
+find_package(PkgConfig REQUIRED)
+if (NOT criterion_FOUND)
+    message(WARNING "Criterion not found, tests will not be built")
+endif()
 
 file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
 

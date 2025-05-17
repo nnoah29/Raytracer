@@ -16,40 +16,69 @@
 
 Raytracer::Raytracer(const Scene& scene, Render& render) : _scene(scene), _render(render) {}
 
+
+#include <thread>
+#include <vector>
+#include <sstream>
+#include <mutex>
+
 void Raytracer::render() const
 {
-    std::ofstream out(_render.filepath);
+    std::vector<std::stringstream> buffers(NB_THREADS);
+    std::vector<std::thread> threads;
+    int lines_per_thread = _render.height / NB_THREADS;
 
+    std::atomic<int> lines_done(0);
+
+    auto render_part = [&](int thread_id, int start_y, int end_y) {
+        std::stringstream& out = buffers[thread_id];
+        for (int j = start_y; j < end_y; ++j) {
+            const int remaining = _render.height - ++lines_done;
+            std::clog << "\rLines remaining: " << remaining << std::flush;
+            for (int i = 0; i < _render.width; ++i) {
+                Color color(0, 0, 0);
+                for (int s = 0; s < sample_per_pixel; s++) {
+                    Ray r = _scene.camera.generateRay(i, j);
+                    color += traceRay(r, LIGHT_DEPTH);
+                }
+                color = color / static_cast<float>(sample_per_pixel);
+                Render::draw_pixel(out, color);
+            }
+        }
+    };
+
+    for (int t = 0; t < NB_THREADS; ++t) {
+        int start = t * lines_per_thread;
+        int end = (t == NB_THREADS - 1) ? _render.height : start + lines_per_thread;
+        threads.emplace_back(render_part, t, start, end);
+    }
+
+    for (auto& th : threads)
+        th.join();
+
+    std::ofstream out(_render.filepath);
     if (!out.is_open()) throw std::runtime_error("Could not open file.");
     out << "P3\n" << _render.width << ' ' << _render.height << "\n255\n";
 
-    for (int j = 0; j < _render.height; j++) {
-        std::clog << "\rLines remaining: " << (_render.height - j) << ' ' << std::flush;
-        for (int i = 0; i < _render.width; i++) {
+    for (auto& buf : buffers)
+        out << buf.str();
 
-            Color color(0, 0, 0);
-            for (int s = 0; s < sample_per_pixel; s++) {
-                Ray r = _scene.camera.generateRay(i, j);
-                color += traceRay(r, LIGHT_DEPTH);
-            }
-            Render::draw_pixel(out, color);
-        }
-    }
-    std::clog << "\rDone.\n" << std::flush;
     out.close();
-    //_render.display();
+    std::clog << "\rDone.                       \n" << std::flush;
+    _render.display();
 }
+
 
 Vecteur unit_vector(const Vecteur& v) {
     return v / v.length();
 }
 
 
-    Color Raytracer::traceRay(const Ray& ray, int depth) const
-    {
-        (void)depth;
-        PointOfImpact point;
-        if (_scene.hit(ray, 0.001f, std::numeric_limits<float>::infinity(), point)) {
+Color Raytracer::traceRay(const Ray& ray, int depth) const
+{
+    (void)depth;
+    PointOfImpact point;
+    if (_scene.hit(ray, 0.001f, std::numeric_limits<float>::infinity(), point)) {
         const Color local_color = point.material.color;
 
         // if (depth > 0 && point.material.reflectivity > 0.0f) {

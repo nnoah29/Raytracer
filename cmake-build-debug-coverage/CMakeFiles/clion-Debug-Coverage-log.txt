@@ -1,0 +1,9 @@
+/home/nnoah/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/nnoah/.local/share/JetBrains/Toolbox/apps/clion/bin/ninja/linux/x64/ninja -DCMAKE_CXX_FLAGS=--coverage -DCMAKE_C_FLAGS=--coverage -G Ninja -S /home/nnoah/_WORKS/SCHooL_/RAYTRACER_ -B /home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage
+-- Found SFML 2.6.1 in /usr/local/lib/cmake/SFML
+CMake Warning at CMakeLists.txt:102 (message):
+  Criterion not found, tests will not be built
+
+
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/nnoah/_WORKS/SCHooL_/RAYTRACER_/cmake-build-debug-coverage
