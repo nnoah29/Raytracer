@@ -119,7 +119,7 @@ void Render::display() const
     while (window.isOpen()) {
         sf::Event event{};
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)){
+            if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Space))){
                 window.close();
             }
         }
