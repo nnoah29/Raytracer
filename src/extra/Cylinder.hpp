@@ -12,12 +12,13 @@
 #ifndef CYLINDER_HPP
 #define CYLINDER_HPP
 
+#include "APrimitive.hpp"
 
+class Cylinder final: public APrimitive {
+public:
+    Cylinder(dataPrimitive& data, const std::string& name);
 
-class cylinder {
-
+    bool hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const override;
 };
 
-
-
-#endif //CYLINDER_HPP
+#endif // CYLINDER_HPP
