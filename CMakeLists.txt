@@ -95,6 +95,34 @@ add_custom_command(TARGET raytracer POST_BUILD
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 target_link_libraries(raytracer sfml-graphics sfml-window sfml-system config++)
 
+
+# === Criterion Unit Tests ===
+find_package(PkgConfig REQUIRED)  # Trouver pkg-config
+pkg_check_modules(CRITERION REQUIRED criterion)  # Utiliser pkg-config pour trouver Criterion
+
+file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
+
+set(TESTABLE_CORE_SOURCES ${CORE_SOURCES})
+list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/tests/main.cpp)
+
+add_executable(tests
+        ${TESTABLE_CORE_SOURCES}
+        ${TEST_SOURCES}
+        tests/cone_test.cpp
+)
+
+target_include_directories(tests PRIVATE ${CRITERION_INCLUDE_DIRS})
+
+target_link_libraries(tests PRIVATE ${CRITERION_LIBRARIES})
+
+target_link_libraries(tests PRIVATE sfml-graphics sfml-window sfml-system)
+
+target_link_libraries(tests PRIVATE config++)
+
+enable_testing()
+add_test(NAME CriterionTests COMMAND tests)
+
+
 # === Créer les plugins dynamiques (.so) ===
 foreach(plugin_src ${EXTRA_SOURCES})
     get_filename_component(plugin_name ${plugin_src} NAME_WE)
