@@ -2,4 +2,5 @@ cmake-build-debug
 build
 .idea
 .qodo
+cmake-build-debug-coverage
 raytracer
