@@ -38,7 +38,6 @@ private:
     void loadLights(const libconfig::Setting& light);
 public:
     SceneLoader(const std::string& path, int ac);
-
     Scene createScene(Factory& f) const;
 };
 

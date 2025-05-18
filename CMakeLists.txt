@@ -69,8 +69,6 @@ list(APPEND TESTABLE_SOURCES ${SRC_DIR}/Render.cpp)
 add_executable(raytracer ${CORE_SOURCES}
         src/Scene.hpp
         src/SceneLoader.hpp
-        src/extra/Cone.hpp
-        src/extra/Cylinder.hpp
         src/base/camera/Camera.hpp
         src/interfaces/ICamera.hpp
         src/interfaces/ILight.hpp

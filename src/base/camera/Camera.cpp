@@ -45,6 +45,23 @@ void Camera::setFOV(float fov){
     this->fov = fov;
 }
 
+Viewport::Viewport(float fov, float aspect_ratio, const local3D& l, Resolution r)
+{
+    const float theta = degreesToRadians(fov);
+    const float h = std::tan(theta / 2.0f);
+    height = 2.0f * h;
+    width  = aspect_ratio * height;
+
+    horizontal =  l.u * width;
+    vertical   = -l.v * height;
+
+    D_u = horizontal / static_cast<float>(r.width);
+    D_v = vertical   / static_cast<float>(r.height);
+
+    const auto upper_left_corner = l.origin - (l.w) - (horizontal * 0.5f) - (vertical * 0.5f);
+    pixel_00 = upper_left_corner + (D_u + D_v) * 0.5f;
+}
+
 Camera::Camera(float fov, Resolution resolution, Point position, Vecteur rotation) {
     this->fov = fov;
     this->resolution = resolution;
@@ -65,7 +82,7 @@ Camera::Camera(float fov, Resolution resolution, Point position, Vecteur rotatio
     viewport = Viewport(fov, aspectRatio, l, resolution);
 };
 
-Vecteur applyRotation(const Vecteur &dir, const Vecteur &rotation) {
+Vecteur Camera::applyRotation(const Vecteur &dir, const Vecteur &rotation) {
     // Conversion en radians
     const float pitch = rotation.x * M_PI / 180.0f; // rotation autour de X
     const float yaw   = rotation.y * M_PI / 180.0f; // rotation autour de Y
@@ -99,12 +116,11 @@ Vecteur applyRotation(const Vecteur &dir, const Vecteur &rotation) {
     return rotated.normalized();
 }
 
-double random_double() {
-    // Returns a random real in [0,1).
+double Camera::random_double() {
     return std::rand() / (RAND_MAX + 1.0);
 }
-Vecteur sample_square() {
-    // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
+
+Vecteur Camera::sample_square() {
     return Vecteur(random_double() - 0.5, random_double() - 0.5, 0);
 }
 

@@ -36,26 +36,8 @@ typedef struct Viewport
     Vecteur D_v;
     Point pixel_00;
 
-
-    Viewport(float fov, float aspect_ratio, const local3D& l, Resolution r)
-    {
-        const float theta = degreesToRadians(fov);
-        const float h = std::tan(theta / 2.0f);
-        height = 2.0f * h;
-        width  = aspect_ratio * height;
-
-        horizontal =  l.u * width;
-        vertical   = -l.v * height;
-
-        D_u = horizontal / static_cast<float>(r.width);
-        D_v = vertical   / static_cast<float>(r.height);
-
-        const auto upper_left_corner = l.origin - (l.w) - (horizontal * 0.5f) - (vertical * 0.5f);
-        pixel_00 = upper_left_corner + (D_u + D_v) * 0.5f;
-    }
     Viewport() = default;
-
-
+    Viewport(float fov, float aspect_ratio, const local3D& l, Resolution r);
 } Viewport;
 
 class Camera final : public ICamera {
@@ -87,10 +69,12 @@ public:
     void setPosition(const Vecteur& position) override;
     void setRotation(const Vecteur& rotation) override;
     void setFOV(float fov) override;
+    static Vecteur sample_square();
     Ray generateRay(int i, int j) const;
 
     Camera(float fov, Resolution resolution, Point position, Vecteur rotation);
-
+    static Vecteur applyRotation(const Vecteur& dir, const Vecteur& rotation);
+    static double random_double();
 };
 
 
