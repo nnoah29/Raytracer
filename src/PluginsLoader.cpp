@@ -36,8 +36,16 @@ void PluginsLoader::load(const std::string& path, Factory* factory)
 {
     if (!std::filesystem::exists(path)) throw std::runtime_error("No Plugins Found");
     void* handle = dlopen(path.c_str(), RTLD_LAZY);
-    if (!handle)
-        throw std::runtime_error("❌ Failed to load plugin: " + path);
+    if (!handle) {
+        const char* dlopen_error = dlerror();
+        std::string error_msg = "❌ Failed to load plugin: " + path;
+        if (dlopen_error) {
+            error_msg += " (dlerror: ";
+            error_msg += dlopen_error;
+            error_msg += ")";
+        }
+        throw std::runtime_error(error_msg);
+    }
 
     const auto registerFunc = reinterpret_cast<PluginRegisterFunc>(dlsym(handle, "RegisterPlugin"));
     if (!registerFunc) {
