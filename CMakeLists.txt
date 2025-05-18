@@ -25,20 +25,20 @@ set(PLUGINS_DIR plugins)
 
 # === Inclure les headers ===
 include_directories(
-    ${INCLUDES_DIR}
-    ${SRC_DIR}/base/camera
-    ${SRC_DIR}/base/primitives
-    ${SRC_DIR}/interfaces
-    ${UTILS_DIR}
+        ${INCLUDES_DIR}
+        ${SRC_DIR}/base/camera
+        ${SRC_DIR}/base/primitives
+        ${SRC_DIR}/interfaces
+        ${UTILS_DIR}
 )
 
 # === Définir les sources du Core (hors src/extra) ===
 file(GLOB_RECURSE CORE_SOURCES
-    ${APP_DIR}/*.cpp
-    ${SRC_DIR}/base/**/*.cpp
-    ${SRC_DIR}/interfaces/*.cpp
-    ${UTILS_DIR}/*.cpp
-    ${SRC_DIR}/*.cpp
+        ${APP_DIR}/*.cpp
+        ${SRC_DIR}/base/**/*.cpp
+        ${SRC_DIR}/interfaces/*.cpp
+        ${UTILS_DIR}/*.cpp
+        ${SRC_DIR}/*.cpp
 )
 # Exclure les fichiers de src/extra
 foreach(file ${CORE_SOURCES})
@@ -49,8 +49,21 @@ endforeach()
 
 # === Définir les sources pour les plugins dynamiques ===
 file(GLOB_RECURSE EXTRA_SOURCES
-    ${EXTRA_DIR}/*.cpp
+        ${EXTRA_DIR}/*.cpp
 )
+
+# === Définir les sources testables (pour les tests unitaires) ===
+file(GLOB_RECURSE TESTABLE_SOURCES
+        ${SRC_DIR}/base/**/*.cpp
+        ${SRC_DIR}/interfaces/*.cpp
+        ${UTILS_DIR}/*.cpp
+)
+# Ajouter explicitement Factory.cpp aux sources testables
+list(APPEND TESTABLE_SOURCES ${SRC_DIR}/Factory.cpp)
+# Ajouter d'autres fichiers du répertoire src si nécessaire
+list(APPEND TESTABLE_SOURCES ${SRC_DIR}/Scene.cpp)
+list(APPEND TESTABLE_SOURCES ${SRC_DIR}/SceneLoader.cpp)
+list(APPEND TESTABLE_SOURCES ${SRC_DIR}/Render.cpp)
 
 # === Executable principal ===
 add_executable(raytracer ${CORE_SOURCES}
@@ -86,7 +99,7 @@ add_executable(raytracer ${CORE_SOURCES}
 )
 
 add_custom_command(TARGET raytracer POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:raytracer> ${CMAKE_SOURCE_DIR}/raytracer
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:raytracer> ${CMAKE_SOURCE_DIR}/raytracer
 )
 
 
@@ -94,34 +107,42 @@ add_custom_command(TARGET raytracer POST_BUILD
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 target_link_libraries(raytracer sfml-graphics sfml-window sfml-system config++)
 
+#=== units tests ====
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CRITERION REQUIRED criterion)
 
-# === Criterion Unit Tests ===
-# find_package(PkgConfig REQUIRED)
-# if (NOT criterion_FOUND)
-#     message(WARNING "Criterion not found, tests will not be built")
-# endif()
+if (CRITERION_FOUND)
+    # Exécutable de test
+    add_executable(tests
+            tests/lights_test.cpp
+            tests/factory_test.cpp
+            tests/camera_test.cpp
+            tests/scene_test.cpp  # Ajout du nouveau fichier de test
+            ${TESTABLE_SOURCES}
+    )
 
-# file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
+    target_include_directories(tests PRIVATE
+            ${CRITERION_INCLUDE_DIRS}
+            ${INCLUDES_DIR}
+            ${SRC_DIR}/base/camera
+            ${SRC_DIR}/base/primitives
+            ${SRC_DIR}/interfaces
+            ${UTILS_DIR}
+    )
 
-# set(TESTABLE_CORE_SOURCES ${CORE_SOURCES})
-# list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/tests/main.cpp)
+    target_link_libraries(tests PRIVATE
+            ${CRITERION_LIBRARIES}
+            sfml-graphics
+            sfml-window
+            sfml-system
+            config++
+    )
 
-# add_executable(tests
-#         ${TESTABLE_CORE_SOURCES}
-#         ${TEST_SOURCES}
-#         tests/cone_test.cpp
-# )
-
-# target_include_directories(tests PRIVATE ${CRITERION_INCLUDE_DIRS})
-
-# target_link_libraries(tests PRIVATE ${CRITERION_LIBRARIES})
-
-# target_link_libraries(tests PRIVATE sfml-graphics sfml-window sfml-system)
-
-# target_link_libraries(tests PRIVATE config++)
-
-# enable_testing()
-# add_test(NAME CriterionTests COMMAND tests)
+    enable_testing()
+    add_test(NAME CriterionTests COMMAND tests)
+else()
+    message(WARNING "Criterion not found, tests will not be built")
+endif()
 
 
 # === Créer les plugins dynamiques (.so) ===
@@ -152,20 +173,19 @@ foreach(plugin_src ${EXTRA_SOURCES})
             utilitaires/utilitaires.cpp
     )
     set_target_properties(${plugin_name} PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${PLUGINS_DIR}
+            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/${PLUGINS_DIR}
     )
 endforeach()
 
 # === Cible cleanl ===
 add_custom_target(fclean
-    COMMAND ${CMAKE_COMMAND} --build . --target clean
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/CMakeFiles
-    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/CMakeCache.txt
-    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/Makefile
-    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/cmake_install.cmake
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${PLUGINS_DIR}
-    COMMAND ${CMAKE_COMMAND} -E remove raytracer
-    COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_SOURCE_DIR}/raytracer
-    COMMENT "🧹 [FCLEAN] Full clean : build files, plugins, binaries removed."
+        COMMAND ${CMAKE_COMMAND} --build . --target clean
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/CMakeFiles
+        COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/CMakeCache.txt
+        COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/Makefile
+        COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_BINARY_DIR}/cmake_install.cmake
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${PLUGINS_DIR}
+        COMMAND ${CMAKE_COMMAND} -E remove raytracer
+        COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_SOURCE_DIR}/raytracer
+        COMMENT "🧹 [FCLEAN] Full clean : build files, plugins, binaries removed."
 )
-

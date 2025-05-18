@@ -46,8 +46,6 @@ public:
     float length() const {
         return std::sqrt(lengthSquared());
     }
-
-
 };
 
 using Point = Vecteur;
