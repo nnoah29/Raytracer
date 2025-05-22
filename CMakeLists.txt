@@ -54,7 +54,7 @@ find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 target_link_libraries(raycore PUBLIC sfml-graphics sfml-window sfml-system config++)
 
 # === Executable principal ===
-add_executable(raytracer ${APP_DIR}/main.cpp)  # remplace par le point d'entrée réel
+add_executable(raytracer ${APP_DIR}/main.cpp)
 
 target_link_libraries(raytracer PRIVATE raycore)
 

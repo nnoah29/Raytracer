@@ -41,7 +41,8 @@ int main(int argc, char *argv[])
         Scene scene = loader_s.createScene(factory);
         Render render(WEIGHT_IMG, HEIGHT_IMG, "exemple");
         Raytracer raytracer(scene, render);
-        raytracer.render();
+        if (antialiasing) raytracer.render();
+        else raytracer.renderLive();
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return 84;
