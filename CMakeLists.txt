@@ -67,14 +67,14 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(CRITERION REQUIRED criterion)
 
 if (CRITERION_FOUND)
-    file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
+    file(GLOB_RECURSE TEST_SOURCES test/*.cpp)
 
-    add_executable(tests ${TEST_SOURCES})
+    add_executable(test ${TEST_SOURCES})
     target_include_directories(tests PRIVATE ${CRITERION_INCLUDE_DIRS})
     target_link_libraries(tests PRIVATE raycore ${CRITERION_LIBRARIES})
 
     enable_testing()
-    add_test(NAME CriterionTests COMMAND tests)
+    add_test(NAME CriterionTests COMMAND test)
 else()
     message(WARNING "Criterion not found, tests will not be built")
 endif()
