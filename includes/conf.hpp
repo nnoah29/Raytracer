@@ -17,6 +17,6 @@
 #define ASPECT_RATIO 1920.0f / 1080.0f;
 #define LIGHT_DEPTH 10
 #define SCREENSHORT_DIR ""
-#define NB_THREADS 4
+#define NB_THREADS 8
 
 #endif //CONF_HPP
