@@ -17,7 +17,7 @@
 #include <mutex>
 #include <fstream>
 #include <iostream>
-bool antialiasing = false;
+bool antialiasing = true;
 
 
 Raytracer::Raytracer(Scene& scene, Render& render) : _scene(scene), _render(render)

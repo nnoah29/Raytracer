@@ -32,6 +32,8 @@
 int main(int argc, char *argv[])
 {
     try {
+        if (argc < 2)
+            throw std::runtime_error("Not enough arguments");
         Factory factory;
         PluginsLoader     loader_p(argv, &factory);
         const SceneLoader loader_s(std::string(argv[1]), argc);

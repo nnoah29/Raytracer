@@ -15,7 +15,10 @@ PluginsLoader::PluginsLoader(char *argv[], Factory* f) {
     _factory = f;
     int pos = -1;
     for (int i = 0; argv[i] != nullptr; i++)
+    {
         if (std::string(argv[i]) == "-p") pos = i + 1;
+        if (std::string(argv[i]) == "-l" || std::string(argv[i]) == "--live") antialiasing = false;
+    }
     if (pos == -1) return;
     if (argv[pos] == nullptr) throw std::runtime_error("No Plugins Found");
     for (int i = pos; argv[i] != nullptr; i++) {

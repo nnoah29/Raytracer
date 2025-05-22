@@ -16,42 +16,48 @@
 
 Cylinder::Cylinder(dataPrimitive& data, const std::string& name): APrimitive(data, name) {}
 
-bool Cylinder::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const {
-    const Vecteur origin = ray.origin() - data.position;
-    const Vecteur direction = ray.direction();
+bool Cylinder::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const
+{
+    Vecteur axis = data.normal.normalized();
+    Vecteur x = ray.origin() - data.position;
 
-    const float a = direction.x * direction.x + direction.y * direction.y;
-    const float b = 2.0f * (origin.x * direction.x + origin.y * direction.y);
-    const float c = origin.x * origin.x + origin.y * origin.y - data.radius * data.radius;
+    Vecteur d = ray.direction();
+    float dv = dot(d, axis);
+    float xv = dot(x, axis);
 
-    const float discriminant = b * b - 4 * a * c;
-    if (discriminant < 0)
-        return false;
+    Vecteur d_perp = d - axis * dv;
+    Vecteur x_perp = x - axis * xv;
 
-    const float sqrtD = std::sqrt(discriminant);
-    float t = (-b - sqrtD) / (2 * a);
+    float a = dot(d_perp, d_perp);
+    float b = 2.0f * dot(d_perp, x_perp);
+    float c = dot(x_perp, x_perp) - data.radius * data.radius;
+
+    float discriminant = b * b - 4 * a * c;
+    if (discriminant < 0) return false;
+
+    float sqrt_disc = std::sqrt(discriminant);
+    float t = (-b - sqrt_disc) / (2 * a);
     if (t < t_min || t > t_max) {
-        t = (-b + sqrtD) / (2 * a);
+        t = (-b + sqrt_disc) / (2 * a);
         if (t < t_min || t > t_max)
             return false;
     }
 
-    const Vecteur hit = ray.at(t);
-    float z_local = hit.z - data.position.z;
-    if (z_local < 0 || z_local > data.height)
-        return false;
+    Vecteur hit_point = ray.at(t);
 
-    Vecteur normal = hit - data.position;
-    normal.z = 0;
-    normal = normal.normalized();
+    Vecteur v = hit_point - data.position;
+    float h = dot(v, axis);
+    if (data.height != 0)
+        if (h < 0 || h > data.height) return false;
+
+    Vecteur normal = (v - axis * h).normalized();
 
     p.t = t;
-    p.p = hit;
+    p.p = hit_point;
     p.set_face_normal(ray, normal);
     p.material = data.material;
     return true;
 }
-
 extern "C" void RegisterPlugin(Factory* f) {
     f->registerPrimitive("cylinders", [](dataPrimitive data, const std::string& name) -> std::shared_ptr<IPrimitive> {
         return std::make_shared<Cylinder>(data, name);
