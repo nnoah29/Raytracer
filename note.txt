@@ -1,0 +1,5 @@
+x: vecteur de la distance entre le sommet de l'objet et l'orgine du rayon
+xv: determiner si le rayon est bien sur le cone
+dv: savoir si le rayon fuit le cone ou va vers le cone
+apex_to_hit: vecteur de la disance qui part de la pointe du cone jusqu'au point ou le rayon touche le cone.
+

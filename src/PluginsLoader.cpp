@@ -42,7 +42,7 @@ void PluginsLoader::load(const std::string& path, Factory* factory)
     void* handle = dlopen(path.c_str(), RTLD_LAZY);
     if (!handle) {
         const char* dlopen_error = dlerror();
-        std::string error_msg = "❌ Failed to load plugin: " + path;
+        std::string error_msg = "Failed to load plugin: " + path;
         if (dlopen_error) {
             error_msg += " (dlerror: ";
             error_msg += dlopen_error;
@@ -54,7 +54,7 @@ void PluginsLoader::load(const std::string& path, Factory* factory)
     const auto registerFunc = reinterpret_cast<PluginRegisterFunc>(dlsym(handle, "RegisterPlugin"));
     if (!registerFunc) {
         dlclose(handle);
-        throw std::runtime_error("❌ Symbol 'RegisterPlugin' not found in plugin: " + path);
+        throw std::runtime_error("Symbol 'RegisterPlugin' not found in plugin: " + path);
     }
 
     // Appeler le plugin pour qu'il s'enregistre lui-même dans la factory
