@@ -69,7 +69,7 @@ pkg_check_modules(CRITERION REQUIRED criterion)
 if (CRITERION_FOUND)
     file(GLOB_RECURSE TEST_SOURCES test/*.cpp)
 
-    add_executable(test ${TEST_SOURCES})
+    add_executable(tests ${TEST_SOURCES})
     target_include_directories(tests PRIVATE ${CRITERION_INCLUDE_DIRS})
     target_link_libraries(tests PRIVATE raycore ${CRITERION_LIBRARIES})
 
