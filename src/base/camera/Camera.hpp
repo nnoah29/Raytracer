@@ -43,7 +43,6 @@ typedef struct Viewport
 class Camera final : public ICamera {
 protected:
     Resolution resolution{};
-    Point position; //center
     Vecteur rotation;
     float fov = 0;
 
@@ -56,6 +55,7 @@ protected:
 
 
 public:
+    Point position; //center
     float aspectRatio = 1920.0f / 1080.0f;
     int max_depth = LIGHT_DEPTH;
     Viewport viewport;

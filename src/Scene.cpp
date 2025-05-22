@@ -69,7 +69,7 @@ bool Scene::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) cons
             hit_anything = true;
             closest_so_far = p_temps.t;
             p = p_temps;
-            determine_color(p);
+            // determine_color(p);
         }
     }
     if (hit_anything) {

@@ -12,10 +12,10 @@
 Plane::Plane(dataPrimitive& data, const std::string& name): APrimitive(data, name) {}
 
 bool Plane::hit(const Ray& ray, float t_min, float t_max, PointOfImpact& p) const {
-    Vecteur normal = data.normal.normalized();
-    Vecteur reference = data.reference;
+    const Vecteur normal = data.normal.normalized();
+    const Vecteur reference = data.reference;
 
-    float discriminant = dot(normal, ray.direction());
+    const float discriminant = dot(normal, ray.direction());
     if (discriminant == 0.0f)
         return false;
 

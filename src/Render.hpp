@@ -28,7 +28,7 @@ class Render {
     Render(int width, int height, const std::string& filename);
 
     static void draw_pixel(std::ostream& out, const Color& c);
-    void display() const;
+    static void display(std::vector<sf::Uint8> pixels, unsigned width, unsigned height) ;
 };
 
 

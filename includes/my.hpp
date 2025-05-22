@@ -24,6 +24,8 @@
 #include <ostream>
 #include <vector>
 
+extern bool antialiasing;
+
 typedef struct Resolution {
     int width;
     int height;

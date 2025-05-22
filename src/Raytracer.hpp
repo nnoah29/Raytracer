@@ -17,16 +17,24 @@
 #include "Scene.hpp"
 
 
+    using pixel_buffer = std::pair<std::vector<sf::Uint8>, std::vector<std::stringstream>>;
 class Raytracer {
     public:
-    Raytracer(const Scene& scene, Render& render);
+
+    Raytracer(Scene& scene, Render& render);
 
     void render() const;
+    std::vector<sf::Uint8> render_core() const;
+    void handleKeyCode(sf::RenderWindow& window, const sf::Event& event) const;
+    void renderLive() const;
 
 private:
-    const Scene& _scene;
+    Scene& _scene;
     Render& _render;
     int sample_per_pixel = 10;
+
+
+
 
     Color traceRay(const Ray& ray, int depth = 0) const;
 };

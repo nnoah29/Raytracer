@@ -19,6 +19,7 @@ PluginsLoader::PluginsLoader(char *argv[], Factory* f) {
     if (pos == -1) return;
     if (argv[pos] == nullptr) throw std::runtime_error("No Plugins Found");
     for (int i = pos; argv[i] != nullptr; i++) {
+        if (argv[i][0] == '-') break;
         load(argv[i], f);
     }
 }

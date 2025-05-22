@@ -10,8 +10,10 @@
 */
 
 #include "Camera.hpp"
+#include "../../../includes/my.hpp"
 
 #include <iostream>
+#include <random>
 
 Vecteur Camera::getPosition() const{
     return position;
@@ -121,15 +123,22 @@ double Camera::random_double() {
 }
 
 Vecteur Camera::sample_square() {
-    return Vecteur(random_double() - 0.5, random_double() - 0.5, 0);
+    return {static_cast<float>(random_double() - 0.5), static_cast<float>(random_double() - 0.5), 0};
+}
+
+Vecteur sample_square_seed(int i, int j)
+{
+    std::mt19937 rng (i * 48487884548 ^ j * 885484848848);
+    std::uniform_real_distribution<float> dist(-0.5f, 0.5f);
+    return {dist(rng), dist(rng), 0};
 }
 
 Ray Camera::generateRay(int i, int j) const
 {
-    const auto offset = sample_square();
-    const auto pixel = viewport.pixel_00
-               + (viewport.D_u * (i + offset.x))
-               + (viewport.D_v * (j + offset.y));
+    Vecteur offset{0, 0, 0};
+    if (antialiasing)
+        offset = sample_square();
+    const Vecteur pixel = viewport.pixel_00 + (viewport.D_u * (i + offset.x)) + (viewport.D_v * (j + offset.y));
 
     const auto origin = position;
     auto direction = pixel - origin;

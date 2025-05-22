@@ -37,19 +37,15 @@ bool Render::loadPPM_P3(const std::string& filename, std::vector<sf::Uint8>& pix
         std::cerr << "Erreur lors de l'ouverture du fichier PPM.\n";
         return false;
     }
-
     std::string line, magic;
     std::getline(file, magic);
-
     while (std::getline(file, line)) {
         if (line[0] != '#') break;
     }
     std::istringstream iss(line);
     iss >> width >> height;
-
     int maxVal = 0;
     file >> maxVal;
-
     int r, g, b;
     pixels.reserve(width * height * 4);
     while (file >> r >> g >> b) {
@@ -58,7 +54,6 @@ bool Render::loadPPM_P3(const std::string& filename, std::vector<sf::Uint8>& pix
         pixels.push_back(static_cast<sf::Uint8>(b));
         pixels.push_back(255);
     }
-
     if (pixels.size() != width * height * 4) {
         std::cerr << "Erreur : nombre de pixels incorrect.\n";
         return false;
@@ -84,7 +79,6 @@ void Render::draw_pixel(std::ostream& out, const Color& c) {
         if (x > 1.0f) return 1.0f;
         return x;
     };
-
     const auto r = linearing(c.r);
     const auto g = linearing(c.g);
     const auto b = linearing(c.b);
@@ -92,28 +86,16 @@ void Render::draw_pixel(std::ostream& out, const Color& c) {
     const int r_byte = static_cast<int>(255.0f * clamp(r)); // +0.5f pour arrondir correctement
     const int g_byte = static_cast<int>(255.0f * clamp(g));
     const int b_byte = static_cast<int>(255.0f * clamp(b));
-
-    if (r_byte > 255 || g_byte > 255 || b_byte > 255)
-        std::cerr << "Warning: RGB out of bounds: " << r_byte << " " << g_byte << " " << b_byte << "\n";
-
     out << r_byte << " " << g_byte << " " << b_byte << "\n";
 }
 
-void Render::display() const
+void Render::display(std::vector<sf::Uint8> pixels, unsigned width, unsigned height)
 {
-    std::vector<sf::Uint8> pixels;
-    unsigned width = 0, height = 0;
-
-    if (!loadPPM_P3(filepath, pixels, width, height))
-        return;
-
-    sf::RenderWindow window(sf::VideoMode(width, height), "Affichage PPM P3", sf::Style::Default);
+    sf::RenderWindow window(sf::VideoMode(width/2, height/2), "Ratracing", sf::Style::Default);
     window.setFramerateLimit(60);
-
     sf::Texture texture;
     texture.create(width, height);
     texture.update(pixels.data());
-
     sf::Sprite sprite(texture);
 
     while (window.isOpen()) {
@@ -128,3 +110,4 @@ void Render::display() const
         window.display();
     }
 }
+
