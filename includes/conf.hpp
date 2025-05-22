@@ -16,7 +16,7 @@
 #define HEIGHT_IMG 1080
 #define ASPECT_RATIO 1920.0f / 1080.0f;
 #define LIGHT_DEPTH 10
-#define SCREENSHORT_DIR ""
+#define SCREENSHORT_DIR "../screenshots/"
 #define NB_THREADS 8
 
 #endif //CONF_HPP

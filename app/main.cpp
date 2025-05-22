@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
         const SceneLoader loader_s(std::string(argv[1]), argc);
 
         Scene scene = loader_s.createScene(factory);
-        Render render(WEIGHT_IMG, HEIGHT_IMG, "exemple");
+        std::string name = std::filesystem::path(argv[1]).stem();
+        Render render(WEIGHT_IMG, HEIGHT_IMG, name);
         Raytracer raytracer(scene, render);
         if (antialiasing) raytracer.render();
         else raytracer.renderLive();
