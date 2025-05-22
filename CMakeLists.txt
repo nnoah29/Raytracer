@@ -74,7 +74,7 @@ if (CRITERION_FOUND)
     target_link_libraries(tests PRIVATE raycore ${CRITERION_LIBRARIES})
 
     enable_testing()
-    add_test(NAME CriterionTests COMMAND test)
+    add_test(NAME CriterionTests COMMAND tests)
 else()
     message(WARNING "Criterion not found, tests will not be built")
 endif()
